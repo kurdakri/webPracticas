@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
 <?php
-echo "Registro de Empresas"
+require_once("../../layouts/mainRAC/header.html");
 ?>
+</head>
+<body>
+<?php
+require_once("../../layouts/mainRAC/menu.html");
+require_once("../../layouts/mainRAC/registroEmpresa.html");
+?>
+</body>
+</html>
