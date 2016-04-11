@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Coordinador-Practicas ESEI</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../layouts/coordinador/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../layouts/coordinador/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../../layouts/coordinador/css/plugins/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../../layouts/coordinador/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="../../views/coordinador/principal.php">Coordinador</a>
+            </div>
+            <!-- Top Menu Items -->
+			<ul class="nav navbar-right top-nav">
+						<li>
+                            <a href="mensajes.php"><i class="fa fa-fw fa-envelope"></i>Mensajes</a>
+                        </li>
+                        <li>
+                            <a href="perfil.php"><i class="fa fa-fw fa-gear"></i>Perfil</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-power-off"></i>Log Out</a>
+                        </li>
+			</ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li class="active">
+                        <a href="../../views/coordinador/principal.php"><i class="fa fa-fw fa-dashboard"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="calendario.php"><i class="fa fa-fw fa-table"></i>Gestion del Calendario</a>
+                    </li>
+                    <li>
+                        <a href="empresas.php"><i class="fa fa-fw fa-edit"></i>Gestion de Empresas</a>
+                    </li>
+                    <li>
+                        <a href="publicaciones.php"><i class="fa fa-fw fa-edit"></i>Publicar Ofertas</a>
+                    </li>
+                    <li>
+                        <a href="asignacionesAE.php"><i class="fa fa-fw fa-edit"></i>Asignaciones Alumno-Empresa</a>
+                    </li>
+                    <li>
+                        <a href="asignacionesAT.php"><i class="fa fa-fw fa-edit"></i>Asignaciones Alumno-Tutor</a>
+                    </li>
+                    <li>
+                        <a href="tutores.php"><i class="fa fa-fw fa-edit"></i>Gestion de Tutores</a>
+                    </li>
+                    <li>
+                        <a href="anulaciones.php"><i class="fa fa-fw fa-edit"></i>Cambios y Anulaciones</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Panel Coordinador
+                        </h1>
+                    </div>
+                </div>
+                <!-- /.row -->
+			
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i>Calendario</h3>
+                            </div>
+							<a href="calendario.php"> <img src ="../../layouts/coordinador/images/calendario.jpg"></a> 
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+				
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i>Empresas</h3>
+                            </div>
+							<a href="empresas.php"> <img src ="../../layouts/coordinador/images/empresas.png"></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+				
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i>Publicaciones</h3>
+                            </div>
+							<a href="publicaciones.php"> <img src ="../../layouts/coordinador/images/publicaciones.jpg"></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+				
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i>Asignaciones Alumno-Empresa</h3>
+                            </div>
+							<a href="asignacionesAE.php"> <img src ="../../layouts/coordinador/images/asignacionesAE.png"></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+				
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i>Asignaciones Alumno-Tutor</h3>
+                            </div>
+							<a href="asignacionesAT.php"> <img src ="../../layouts/coordinador/images/asignacionesAT.jpg"></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+				
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i>Gestion de Tutores</h3>
+                            </div>
+							<a href="tutores.php"> <img src ="../../layouts/coordinador/images/tutores.jpg"></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+				
+               <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i>Cambios y Anulaciones</h3>
+                            </div>
+							<a href="anulaciones.php"> <img src ="../../layouts/coordinador/images/anulaciones.jpg"></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="js/plugins/morris/raphael.min.js"></script>
+    <script src="js/plugins/morris/morris.min.js"></script>
+    <script src="js/plugins/morris/morris-data.js"></script>
+
+</body>
+
+</html>
