@@ -11,7 +11,7 @@
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-compass"></i> Estudiante</h4>
+                        <h4><i class="fa fa-fw fa-compass"></i> Estudiantes</h4>
                     </div>
                     <div class="panel-body">
                         <p>Si eres un estudiante haz click en el boton Mostrar Formulario para acceder al formulario de registro para estudiantes.</p>
@@ -22,33 +22,11 @@
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-compass"></i> Tutor</h4>
+                        <h4><i class="fa fa-fw fa-compass"></i> Empresas</h4>
                     </div>
                     <div class="panel-body">
-                        <p>Si eres un tutor haz click en el boton Mostrar Formulario para acceder al formulario de registro para tutores.</p>
-                        <a href="registroTutor.php" class="btn btn-default">Mostrar Formulario</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-compass"></i> Empresa</h4>
-                    </div>
-                    <div class="panel-body">
-                        <p>Si eres una empresa haz click en el boton Mostrar Formulario para acceder al formulario de registro para empresas.</p>
-                        <a href="registroEmpresa.php" class="btn btn-default">Mostrar Formulario</a>
-                    </div>
-                </div>
-            </div>
-			<div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-compass"></i> Coordinador</h4>
-                    </div>
-                    <div class="panel-body">
-                        <p>Si vas a registrarte como coordinador de las practicas haz click en el boton Mostrar Formulario para acceder al formulario de registro.</p>
-                        <a href="registroCoordinador.php" class="btn btn-default">Mostrar Formulario</a>
+                        <p>Si eres una empresa interesada en ofertar prácticas, ponte en contacto con el coordinador de las prácticas en la siguiente dirección:</p>
+						<p>Email:<?php if(isset($_GET["email"])){echo $_GET["email"];} ?> </p>
                     </div>
                 </div>
             </div>
