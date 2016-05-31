@@ -59,6 +59,23 @@ class Estudiante{
             return $toret;
         }
 	}
+
+	public function selectAll(){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from estudiante';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }		
+	}
 	
 	public function insert(){
         $this->con = $this->db->getConnection();
@@ -88,9 +105,9 @@ class Estudiante{
         }
 	}
 	
-	public function delete(){
+	public function delete($id){
 		$this->con = $this->db->getConnection();
-		$sql = 'delete from estudiante where login="'.$this->login.'"';
+		$sql = 'delete from estudiante where login="'.$id.'"';
 	    $result = mysql_query($sql,$this->con);
 	    if($result == true){
 			$this->db->endConnection();	

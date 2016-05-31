@@ -48,6 +48,23 @@ class Tutor{
         }
 	}
 	
+	public function selectAll(){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from tutor';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }		
+	}
+	
 	public function insert(){
         $this->con = $this->db->getConnection();
 		$sql = 'insert into tutor(nombre,apellidos,dni,telefono,email,login,password,departamento,centro) values("' . $this->nombre . '","' .$this->apellidos. '","' .$this->dni. '","' .$this->telefono. '","' .$this->email. '","' .$this->login. '","' .$this->password. '","' .$this->departamento. '","' .$this->centro. '")';
@@ -76,9 +93,9 @@ class Tutor{
         }
 	}
 	
-	public function delete(){
+	public function delete($id){
 		$this->con = $this->db->getConnection();
-		$sql = 'delete from tutor where login="'.$this->login.'"';
+		$sql = 'delete from tutor where login="'.$id.'"';
 	    $result = mysql_query($sql,$this->con);
 	    if($result == true){
 			$this->db->endConnection();	

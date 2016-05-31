@@ -7,13 +7,27 @@
                     Formulario de Acceso
                 </h2>
             </div>
+			<?php
+				if(isset($_GET["msg"])){
+					$msg = $_GET["msg"];
+					echo $msg;
+				}
+			?>
 				<div class="col-sm-6 col-md-4 col-md-offset-4">
 					<h1 class="text-center login-title"></h1>
 					<div class="account-wall">
-						<form class="form-signin">
-						<input type="text" class="form-control" placeholder="Usuario" required autofocus>
+						<form class="form-signin" action="../../controllers/ValidationsController.php" method="POST" id="login">
+						<input type="text" name="user" class="form-control" placeholder="Usuario" required autofocus>
 						</br>
-						<input type="password" class="form-control" placeholder="Password" required>
+						<input type="password" name="password" class="form-control" placeholder="Password" required>
+						</br>
+						<select class="form-control" name="userList" form="login">
+							<option value="Coordinador">Coordinador</option>
+							<option value="Estudiante">Estudiante</option>
+							<option value="Empresa">Empresa</option>
+							<option value="Tutor">Tutor</option>
+						</select>
+						</br>
 						</br>
 						<button class="btn btn-sm btn-default btn-block" type="submit">
 							Acceder</button>
@@ -28,7 +42,7 @@
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright &copy; Your Website 2014</p>
+                    <p>Copyright &copy; TFGPracticasESEI 2016</p>
                 </div>
             </div>
         </footer>

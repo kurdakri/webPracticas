@@ -36,22 +36,25 @@ function registroEstudiantes(){
 	}else{
 		$pan = 1;
 	}
-	$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay);
-	$boolean = $e->insert();
-	if($boolean == false){
-		?>
-		<script>
-			alert("Error de registro. Inténtelo más tarde");
-		</script>
-		<?php
-		header("Location: ../views/mainRAC/registroEstudiante.php");
+	$existe = $e->select($log);
+	if($existe == false){
+		$e = new Estudiante();
+		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay);
+		$boolean = $e->insert();
+		if($boolean == false){
+			$msg="Error de registro. Inténtelo más tarde";
+			header("Location: ../views/mainRAC/registroEstudiante.php?msg=$msg");
+		}else{
+			?>
+			<script>
+				alert("Registrado con éxito.");
+			</script>
+			<?php
+			header("Location: ../views/mainRAC/acceso.php");
+		}		
 	}else{
-		?>
-		<script>
-			alert("Registrado con éxito.");
-		</script>
-		<?php
-		header("Location: ../views/mainRAC/acceso.php");
+			$msg="El login de usuario ya existe. Elija otro login.";
+			header("Location: ../views/mainRAC/registroEstudiante.php?msg=$msg");		
 	}
 }
 
@@ -76,15 +79,22 @@ function registroEstudiantesC(){
 	}else{
 		$pan = 1;
 	}
-	$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay);
-	$boolean = $e->insert();
-	if($boolean == false){
-		$msg="Error de registro. Inténtelo más tarde";
-		header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+	$existe = $e->select($log);
+	if($existe == false){
+		$e = new Estudiante();
+		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay);
+		$boolean = $e->insert();
+		if($boolean == false){
+			$msg="Error de registro. Inténtelo más tarde";
+			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+		}else{
+			$msg="Registrado con éxito.";
+			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+		}			
 	}else{
-		$msg="Registrado con éxito.";
+		$msg="El login de usuario ya existe en el sistema. Elija otro login.";
 		header("Location: ../views/coordinador/usuarios.php?msg=$msg");
-	}	
+	}
 }
 
 function registroTutores(){
@@ -98,15 +108,23 @@ function registroTutores(){
 	$pas = $_POST["clave1"];
 	$dep = $_POST["departamento"];
 	$cen = $_POST["centro"];
-	$t->set($nom,$ape,$dn,$tel,$ema,$log,$pas,$dep,$cen);
-	$boolean = $t->insert();
-	if($boolean == false){
-		$msg="Error de registro. Inténtelo más tarde";
-		header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+	$existe = $t->select($log);
+	if($existe == false){
+		$t = new Tutor();
+		$t->set($nom,$ape,$dn,$tel,$ema,$log,$pas,$dep,$cen);
+		$boolean = $t->insert();
+		if($boolean == false){
+			$msg="Error de registro. Inténtelo más tarde";
+			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+		}else{
+			$msg="Registrado con éxito.";
+			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+		}			
 	}else{
-		$msg="Registrado con éxito.";
-		header("Location: ../views/coordinador/usuarios.php?msg=$msg");
-	}		
+		$msg="El login de usuario ya existe en el sistema. Elija otro login.";
+		header("Location: ../views/coordinador/usuarios.php?msg=$msg");		
+	}
+	
 }
 
 function registroEmpresas(){
@@ -123,14 +141,22 @@ function registroEmpresas(){
 	$noT = $_POST["nombreTutor"];
 	$caT = $_POST["cargoTutor"];
 	$tar = $_POST["tareas"];
-	$e->set($cen,$tel,$loc,$pro,$ema,$cal,$nom,$pas,$log,$noT,$caT,$tar);
-	$boolean = $e->insert();
-	if($boolean == false){
-		$msg="Error de registro. Inténtelo más tarde";
-		header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+	$existe = $e->select($log);
+	if($existe == false){
+		$e = new Empresa();
+		$e->set($cen,$tel,$loc,$pro,$ema,$cal,$nom,$pas,$log,$noT,$caT,$tar);
+		$boolean = $e->insert();
+		if($boolean == false){
+			$msg="Error de registro. Inténtelo más tarde";
+			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+		}else{
+			$msg="Registrado con éxito.";
+			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+		}	
 	}else{
-		$msg="Registrado con éxito.";
-		header("Location: ../views/coordinador/usuarios.php?msg=$msg");
-	}	
+		$msg="El login de usuario ya existe en el sistema. Elija otro login.";
+		header("Location: ../views/coordinador/usuarios.php?msg=$msg");			
+	}
+	
 }
 ?>

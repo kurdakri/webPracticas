@@ -3,5 +3,5 @@ session_start();
 if($_SESSION["validated"] != "Coordinador"){
 header("Location: ../mainRAC/acceso.php");
 }
-require_once("../../layouts/coordinador/altaEmpresas.html");
+require_once("../../layouts/coordinador/bajaEmpresas.html");
 ?>
