@@ -4,6 +4,7 @@ require_once("database.php");
 class Eventos{
 	private $db;
 	private $con;
+	private $nombreEvento;
 	private $tipoEvento;
 	private $fecha;
 	
@@ -12,14 +13,32 @@ class Eventos{
         $this->db = new Database();		
 	}
 
-	public function set($tip,$fec){
+	public function set($nev,$tip,$fec){
+		$this->nombreEvento = $nev;
 		$this->tipoEvento = $tip;
 		$this->fecha = $fec;
+	}
+
+	public function selectAll(){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from eventos';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
 	}
 	
 	public function select($id){
 		$this->con = $this->db->getConnection();
-		$sql = 'select * from eventos where tipoEvento="' . $id . '"';
+		$sql = 'select * from eventos where nombreEvento="' . $id . '"';
         $result = mysql_query($sql, $this->con);
         if (mysql_num_rows($result) == 0) {
 			$this->db->endConnection();
@@ -36,7 +55,7 @@ class Eventos{
 	
 	public function insert(){
         $this->con = $this->db->getConnection();
-		$sql = 'insert into eventos(tipoEvento,Fecha) values("' . $this->tipoEvento . '","' .$this->fecha. '")';
+		$sql = 'insert into eventos(nombreEvento,tipoEvento,Fecha) values("' . $this->nombreEvento . '","' . $this->tipoEvento . '","' .$this->fecha. '")';
         $result = mysql_query($sql, $this->con);
         if ($result == true) {
 			$this->db->endConnection();
@@ -50,7 +69,7 @@ class Eventos{
 	
 	public function update($id){
 		$this->con = $this->db->getConnection();
-		$sql = 'update eventos set tipoEvento="' . $this->tipoEvento . '",Fecha="' . $this->fecha . '" where login="' . $id.'"';
+		$sql = 'update eventos set nombreEvento="' . $this->nombreEvento . '",tipoEvento="' . $this->tipoEvento . '",Fecha="' . $this->fecha . '" where nombreEvento="' . $id.'"';
         $result = mysql_query($sql, $this->con);
         if ($result == true) {
 			$this->db->endConnection();
@@ -62,9 +81,9 @@ class Eventos{
         }
 	}
 	
-	public function delete(){
+	public function delete($id){
 		$this->con = $this->db->getConnection();
-		$sql = 'delete from eventos where tipoEvento="'.$this->tipoEvento.'"';
+		$sql = 'delete from eventos where nombreEvento="'.$id.'"';
 	    $result = mysql_query($sql,$this->con);
 	    if($result == true){
 			$this->db->endConnection();	

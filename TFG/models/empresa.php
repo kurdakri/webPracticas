@@ -54,6 +54,40 @@ class Empresa{
         }		
 	}
 	
+	public function selectById($id){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from empresa where idEmpresa="' . $id . '"';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
+	}
+	
+	public function selectByName($name){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from empresa where nombre="' . $name . '"';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
+	}
+	
 	public function select($login){
 		$this->con = $this->db->getConnection();
 		$sql = 'select * from empresa where login="' . $login . '"';
