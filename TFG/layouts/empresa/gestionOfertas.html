@@ -82,7 +82,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Mensajes a usuarios
+                            Enviar oferta de pr&aacute;cticas
                         </h1>
                     </div>
                 </div>
@@ -101,16 +101,35 @@
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Mensaje a un usuario</b></h3>
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Formulario</b></h3>
                             </div> 
-							<form class="form-signin" name="f1" action="../../controllers/EmpresaController.php" method="POST">
-							Asunto:<input type="text" name="asunto" class="form-control" required>
+							<form class="form-signin" name="f1" action="../../controllers/EmpresaController.php" method="POST" id="login">
+							Titulo:<input type="text" name="titulo" class="form-control" placeholder="Titulo identificador de la practica" required>
 							</br>
-							Remitente:<input type="text" name="remitente" class="form-control" required>
+							Descripci&oacute;n:<textarea name="descripcion" rows="10" cols="40" class="form-control" required></textarea>
 							</br>
-							Destinatario:<input type="text" name="destinatario" class="form-control" required>
+							Nombre de la empresa:<input type="text" name="nombreEmpresa" class="form-control" placeholder="Nombre de la empresa" required>
 							</br>
-							Mensaje:<textarea name="mensaje" rows="10" cols="40" class="form-control" required></textarea>
+							Per&iacute;odo:
+							<select class="form-control" name="periodo" form="login">
+								<option value="primero">Primer cuatrimestre</option>
+								<option value="segundo">Segundo cuatrimestre</option>
+							</select>
+							</br>
+							Titulaci&oacute;n:
+							<select class="form-control" name="titulacion" form="login">
+								<option value="grado">Grado</option>
+								<option value="master">M&aacute;ster</option>
+								<option value="indiferente">Indiferente</option>
+							</select>
+							</br>
+							Fecha de inicio:<input type="date" name="inicio" class="form-control" required>
+							</br>
+							Fecha de finalizaci&oacute;n:<input type="date" name="fin" class="form-control" required>
+							</br>
+							Horario de trabajo durante la pr&aacute;ctica:<input type="text" name="horario" class="form-control" placeholder="ej: 10:00-17:00" required>
+							</br>
+							Proyecto formativo:<textarea name="pformativo" rows="10" cols="40" class="form-control" required></textarea>
 							</br>						
 							<button class="btn btn-sm btn-default btn-block" type="submit">
 								Enviar</button>
