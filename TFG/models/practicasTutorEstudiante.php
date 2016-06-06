@@ -39,6 +39,57 @@ class PracticasTutorEstudiante{
         }
 	}
 	
+	public function selectByIdE($id){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from practicas_tutor_estudiante where Practicas_Empresa_idEmpresa="' . $id . '"';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
+	}
+
+	public function selectByIdEs($id){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from practicas_tutor_estudiante where Estudiante_idEstudiante="' . $id . '"';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
+	}
+
+	public function selectByIdT($id){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from practicas_tutor_estudiante where Tutor_idTutor="' . $id . '"';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
+	}		
+	
 	public function selectAll(){
 		$this->con = $this->db->getConnection();
 		$sql = 'select * from practicas_tutor_estudiante';

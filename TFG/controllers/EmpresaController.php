@@ -2,6 +2,10 @@
 require_once("../models/empresa.php");
 require_once("../models/coordinador.php");
 require_once("../models/eventos.php");
+require_once("../models/estudiante.php");
+require_once("../models/tutor.php");
+require_once("../models/practicas.php");
+require_once("../models/practicasTutorEstudiante.php");
 require_once('phpmailer/class.phpmailer.php');
 require_once('phpmailer/class.smtp.php');
 
@@ -19,6 +23,10 @@ if(isset($_GET["action"])){
 		listarFormularios();
 	}
 	
+	if($action == "asignaciones"){
+		listarAsignaciones();
+	}
+	
 }else{
 	if(isset($_POST["login"])&isset($_POST["clave1"])&isset($_POST["nombre"])&isset($_POST["email"])&isset($_POST["telefono"])&isset($_POST["centro"])&isset($_POST["localidad"])&isset($_POST["provincia"])&isset($_POST["calle"])&isset($_POST["nTutor"])&isset($_POST["cTutor"])&isset($_POST["tareas"])){
 		modificarPerfil();
@@ -30,6 +38,57 @@ if(isset($_GET["action"])){
 	
 	if(isset($_POST["titulo"])&isset($_POST["descripcion"])&isset($_POST["nombreEmpresa"])&isset($_POST["periodo"])&isset($_POST["titulacion"])&isset($_POST["inicio"])&isset($_POST["fin"])&isset($_POST["horario"])&isset($_POST["pformativo"])){
 		enviarOferta();
+	}
+}
+
+function listarAsignaciones(){
+	session_start();
+	$loginEmpresa = $_SESSION["name"];
+	$e = new Empresa();
+	$empresa = $e->select($loginEmpresa);
+	$idEmpresa = $empresa[0]["idEmpresa"];
+	
+	$e = new PracticasTutorEstudiante();
+	$boolean = $e->selectByIdE($idEmpresa);
+	if($boolean == false){
+		$msg = "No tiene ninguna practica asignada actualmente";
+		header("Location: ../views/empresa/asignaciones.php?msg=$msg");
+	}else{
+		$i=0;
+		$toret = array();
+		
+		foreach($boolean as $asignada){
+			$idPractica = $asignada["Practicas_idPracticas"];
+			$idTutor = $asignada["Tutor_idTutor"];
+			$idEstudiante = $asignada["Estudiante_idEstudiante"];
+
+			$e = new Practicas();
+			$bool = $e->selectById($idPractica);
+			$toret[$i]["nombrePractica"] = $bool[0]["titulo"];
+			$toret[$i]["inicioPractica"] = $bool[0]["inicio"];
+			$toret[$i]["finPractica"] = $bool[0]["fin"];
+			$toret[$i]["horarioPractica"] = $bool[0]["horario"];
+
+			$e = new Tutor();
+			$bool = $e->selectById($idTutor);
+			$toret[$i]["nombreTutor"] = $bool[0]["nombre"];
+			$toret[$i]["apellidosTutor"] = $bool[0]["apellidos"];
+			$toret[$i]["emailTutor"] = $bool[0]["email"];
+			$toret[$i]["telefonoTutor"] = $bool[0]["telefono"];
+
+			$e = new Estudiante();
+			$bool = $e->selectById($idEstudiante);
+			$toret[$i]["nombreEstudiante"] = $bool[0]["nombre"];
+			$toret[$i]["apellidosEstudiante"] = $bool[0]["apellidos"];
+			$toret[$i]["emailEstudiante"] = $bool[0]["email"];
+			$toret[$i]["telefonoEstudiante"] = $bool[0]["telefono"];
+			$toret[$i]["titulacionEstudiante"] = $bool[0]["titulacion"];
+			
+			$i = $i+1;
+		}
+		
+		$datos = json_encode($toret);
+		header("Location: ../views/empresa/asignaciones.php?datos=$datos");
 	}
 }
 

@@ -520,7 +520,7 @@ function eliminarPractica(){
 		$p = new Practicas();
 		$boolean = $p->delete($idP);
 		if($boolean == false){
-			$msg = "No se ha podido eliminar la práctica";
+			$msg = "No se ha podido eliminar la práctica porque ya ha sido asignada.";
 			header("Location: ../views/coordinador/ofertas.php?msg2=$msg");
 		}else{
 			listarPracticas();

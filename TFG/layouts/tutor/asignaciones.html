@@ -48,10 +48,10 @@
                             <a href="mensajes.php"><i class="fa fa-fw fa-envelope"></i>Mensajes</a>
                         </li>
                         <li>
-                            <a href="perfil.php"><i class="fa fa-fw fa-gear"></i>Perfil</a>
+                            <a href="../../controllers/TutorController.php?action=verPerfil"><i class="fa fa-fw fa-gear"></i>Perfil</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-power-off"></i>Log Out</a>
+                            <a href="../../controllers/TutorController.php?action=logout"><i class="fa fa-fw fa-power-off"></i>Log Out</a>
                         </li>
 			</ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
@@ -61,16 +61,13 @@
                         <a href="../../views/tutor/principal.php"><i class="fa fa-fw fa-dashboard"></i>Home</a>
                     </li>
                     <li>
-                        <a href="asignaciones.php"><i class="fa fa-fw fa-edit"></i>Consultar Asignaciones</a>
+                        <a href="../../controllers/TutorController.php?action=asignaciones"><i class="fa fa-fw fa-edit"></i>Consultar Asignaciones</a>
                     </li>
                     <li>
-                        <a href="formularios.php"><i class="fa fa-fw fa-edit"></i>Gestion de Formularios</a>
+                        <a href="../../controllers/TutorController.php?action=formularios"><i class="fa fa-fw fa-edit"></i>Gestion de Formularios</a>
                     </li>
                     <li>
-                        <a href="solicitudes.php"><i class="fa fa-fw fa-edit"></i>Gestion de Solicitudes</a>
-                    </li>
-                    <li>
-                        <a href="anulaciones.php"><i class="fa fa-fw fa-edit"></i>Anulaciones y Cambios</a>
+                        <a href="solicitudes.php"><i class="fa fa-fw fa-edit"></i>Solicitar Tutorizaci&oacute;n</a>
                     </li>
                 </ul>
             </div>
@@ -90,17 +87,71 @@
                     </div>
                 </div>
                 <!-- /.row -->
-			
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Practicas Asignadas</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
+				
+				<?php
+					if(isset($_GET["msg"])){
+						$msg = $_GET["msg"];
+						echo "<b>$msg</b>";
+						echo "</br>";
+						echo "</br>";
+					}
+
+					if(isset($_GET["datos"])){
+						$datos = json_decode($_GET["datos"],true);
+						foreach($datos as $emp){
+							echo "<div class='row'>";
+							echo "<div class='col-lg-12'>";
+							echo "<div class='panel panel-default'>";
+							
+							echo "<div class='panel-heading'>";
+								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>".$emp["nombrePractica"]."</h3>";
+							echo "</div>";
+							
+							echo "<li>";
+								echo "Fecha de inicio:".$emp["inicioPractica"];
+							echo "</li>";
+							echo "<li>";
+								echo "Fecha de fin:".$emp["finPractica"];
+							echo "</li>";
+							echo "<li>";
+								echo "Horario:".$emp["horarioPractica"];
+							echo "</li>";
+							echo "<li>";
+								echo "Empresa:".$emp["nombreEmpresa"];
+							echo "</li>";
+							echo "<li>";
+								echo "Tutor de la empresa:".$emp["nombreTutorE"];
+							echo "</li>";
+							echo "<li>";
+								echo "Cargo del tutor de la empresa:".$emp["cargoTutorE"];
+							echo "</li>";
+							echo "<li>";
+								echo "Telefono de la empresa:".$emp["telefonoEmpresa"];
+							echo "</li>";
+							echo "<li>";
+								echo "Correo electr&oacute;nico de la empresa:".$emp["emailEmpresa"];
+							echo "</li>";
+							echo "<li>";
+								echo "Direcci&oacute;n de la empresa:".$emp["calleEmpresa"].",".$emp["localidadEmpresa"].",".$emp["provinciaEmpresa"];
+							echo "</li>";
+							echo "<li>";
+								echo "Nombre del estudiante:".$emp["nombreEstudiante"]." ".$emp["apellidosEstudiante"];
+							echo "</li>";
+							echo "<li>";
+								echo "Correo electr&oacute;nico del estudiante:".$emp["emailEstudiante"];
+							echo "</li>";
+							echo "<li>";
+								echo "Tel&eacute;fono del estudiante:".$emp["telefonoEstudiante"];
+							echo "</li>";
+							
+							echo "</div>";
+							echo "</div>";
+							echo "</div>";
+							echo "</br>";
+							echo "</br>";
+						}
+					}
+				?>	
 								
             </div>
             <!-- /.container-fluid -->
