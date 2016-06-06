@@ -48,10 +48,10 @@
                             <a href="mensajes.php"><i class="fa fa-fw fa-envelope"></i>Mensajes</a>
                         </li>
                         <li>
-                            <a href="perfil.php"><i class="fa fa-fw fa-gear"></i>Perfil</a>
+                            <a href="../../controllers/EstudianteController.php?action=verPerfil"><i class="fa fa-fw fa-gear"></i>Perfil</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-power-off"></i>Log Out</a>
+                            <a href="../../controllers/EstudianteController.php?action=logout"><i class="fa fa-fw fa-power-off"></i>Log Out</a>
                         </li>
 			</ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
@@ -64,10 +64,10 @@
                         <a href="asignaciones.php"><i class="fa fa-fw fa-edit"></i>Consultar Asignaciones</a>
                     </li>
                     <li>
-                        <a href="formularios.php"><i class="fa fa-fw fa-edit"></i>Gestion de Formularios</a>
+                        <a href="../../controllers/EstudianteController.php?action=formularios"><i class="fa fa-fw fa-edit"></i>Gestion de Formularios</a>
                     </li>
                     <li>
-                        <a href="solicitudes.php"><i class="fa fa-fw fa-edit"></i>Gestion de Solicitudes</a>
+                        <a href="../../controllers/EstudianteController.php?action=listarPracticas"><i class="fa fa-fw fa-edit"></i>Solicitar Pr&aacute;ctica</a>
                     </li>
                     <li>
                         <a href="anulaciones.php"><i class="fa fa-fw fa-edit"></i>Anulaciones y Cambios</a>
@@ -80,39 +80,121 @@
         <div id="page-wrapper">
 
             <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Perfil de Usuario
-                        </h1>
-                    </div>
-                </div>
-                <!-- /.row -->
+				<?php
+					if(isset($_GET["msg"])){
+						$msg = $_GET["msg"];
+						echo $msg;
+					}
+					
+					if(isset($_GET["datos"])){
+						$datos = json_decode($_GET["datos"],true);
+						foreach($datos as $emp){
+							echo "<div class='row'>";
+							echo "<div class='col-lg-12'>";
+							echo "<div class='panel panel-default'>";
+							
+							echo "<div class='panel-heading'>";
+								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>Perfil Actual</h3>";
+							echo "</div>";
+							
+							echo "<li>";
+								echo "Login:".$emp["login"];
+							echo "</li>";
+							echo "<li>";
+								echo "Password:".$emp["password"];
+							echo "</li>";
+							echo "<li>";
+								echo "Nombre:".$emp["nombre"];
+							echo "</li>";
+							echo "<li>";
+								echo "Apellidos:".$emp["apellidos"];
+							echo "</li>";
+							echo "<li>";
+								echo "Gmail:".$emp["email"];
+							echo "</li>";
+							echo "<li>";
+								echo "Telefono:".$emp["telefono"];
+							echo "</li>";
+							echo "<li>";
+								echo "DNI:".$emp["dni"];
+							echo "</li>";
+							echo "<li>";
+								echo "Fecha de Nacimiento:".$emp["fechaNac"];
+							echo "</li>";
+							echo "<li>";
+								echo "Campus:".$emp["campus"];
+							echo "</li>";
+							echo "<li>";
+								echo "Facultad:".$emp["facultad"];
+							echo "</li>";
+							echo "<li>";
+								echo "Titulaci&oacute;n:".$emp["titulacion"];
+							echo "</li>";
+							echo "<li>";
+								echo "Curso:".$emp["curso"];
+							echo "</li>";
+							echo "<li>";
+								echo "Año de Inicio de Titulaci&oacute;n:".$emp["inicioTitulacion"];
+							echo "</li>";
+							echo "<li>";
+								echo "Año pr&aacute;cticas anteriores:".$emp["pAntesYear"];
+							echo "</li>";
+							
+							echo "</div>";
+							echo "</div>";
+							echo "</div>";
+						}
+					}
+				?>
+				
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title"><i class="fa fa-fw"></i>Formulario de Modificaci&oacute;n</h3>
+							</div>
+							<form class="form-signin" name="f1" onsubmit="return checkPass(this)" action="../../controllers/EstudianteController.php" method="POST" id="login">
+								Login:<input type="text" name="login" class="form-control" required autofocus>
+								</br>
+								Password:<input type="password" name="clave1" class="form-control" required>
+								</br>
+								Repite Password:<input type="password" name="clave2" class="form-control" required>
+								</br>
+								Nombre:<input type="text" name="nombre" class="form-control" required>
+								</br>
+								Apellidos:<input type="text" name="apellidos" class="form-control" required>
+								</br>
+								Gmail:<input type="text" name="email" class="form-control" required>
+								</br>
+								Telefono:<input type="text" name="telefono" class="form-control" required>
+								</br>
+								DNI:<input type="text" name="dni" class="form-control" required>
+								</br>
+								Fecha de Nacimiento:<input type="date" name="fNac" class="form-control" required>
+								</br>
+								Campus:<input type="text" name="campus" class="form-control" required>
+								</br>
+								Facultad:<input type="text" name="facultad" class="form-control" required>
+								</br>
+								Titulaci&oacute;n:
+								<select class="form-control" name="titulacion" form="login">
+								<option value="Grado">Grado</option>
+								<option value="Master">Master</option>
+								</select>
+								</br>
+								Curso:<input type="text" name="curso" class="form-control" required>
+								</br>
+								Año de inicio de la titulaci&oacute;n:<input type="text" name="aInicio" class="form-control" required>
+								</br>
+								Año de pr&aacute;cticas anteriores(si se han hecho):<input type="text" name="pAntesYear" class="form-control">
+								</br>
+								<button class="btn btn-sm btn-default btn-block" type="submit">
+									Enviar</button>
+							</form>
+						</div>
+					</div>
+				</div>
 			
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Perfil Actual</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
-				
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Formulario de Modificacion</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->				
-				
             </div>
             <!-- /.container-fluid -->
 
@@ -132,6 +214,20 @@
     <script src="js/plugins/morris/raphael.min.js"></script>
     <script src="js/plugins/morris/morris.min.js"></script>
     <script src="js/plugins/morris/morris-data.js"></script>
+	
+	<!-- script Custom -->
+	<script language="JavaScript">
+			function checkPass(f){
+				clave1 = f.clave1.value
+				clave2 = f.clave2.value
+				if(clave1 != clave2){
+					alert("|INFO| Las password deben coincidir");
+					return false;
+				}else{
+					return true;
+				}
+			}
+	</script>
 
 </body>
 

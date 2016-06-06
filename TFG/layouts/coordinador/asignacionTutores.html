@@ -61,7 +61,7 @@
                         <a href="../../views/coordinador/principal.php"><i class="fa fa-fw fa-dashboard"></i>Home</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=eventos"><i class="fa fa-fw fa-table"></i>Gesti&oacute;n del Calendario</a>
+                        <a href="../../controllers/CoordinadorController.php?action=eventos"><i class="fa fa-fw fa-table"></i>Gestion del Calendario</a>
                     </li>
                     <li>
                         <a href="usuarios.php"><i class="fa fa-fw fa-edit"></i>Administraci&oacute;n de Usuarios</a>
@@ -88,57 +88,79 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Baja de Tutores
+                            Asignaciones de Tutores y creaci&oacute;n definitiva de las pr&aacute;cticas
                         </h1>
                     </div>
                 </div>
                 <!-- /.row -->
+			
+				
 				<?php
-					if(isset($_GET["msg"])){
-						$msg = $_GET["msg"];
-						echo $msg;
-					}
-					
-					if(isset($_GET["datos"])){
-						$datos = unserialize($_GET["datos"]);
-						foreach($datos as $tutor){
-							echo "<div class='row'>";
-							echo "<div class='col-lg-12'>";
-							echo "<div class='panel panel-default'>";
-							
-							echo "<div class='panel-heading'>";
-								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>".$tutor["login"]."</h3>";
-							echo "</div>";
-							
-							echo "<li>";
-								echo "Nombre:".$tutor["nombre"];
-							echo "</li>";
-							echo "<li>";
-								echo "Apellidos:".$tutor["apellidos"];
-							echo "</li>";
-							echo "<li>";
-								echo "DNI:".$tutor["dni"];
-							echo "</li>";
-							echo "<li>";
-								echo "Gmail:".$tutor["email"];
-							echo "</li>";
-							echo "<li>";
-								echo "Telefono:".$tutor["telefono"];
-							echo "</li>";
-							echo "<li>";
-								echo "Departamento:".$tutor["departamento"];
-							echo "</li>";
-							echo "<li>";
-								echo "Centro:".$tutor["centro"];
-							echo "</li>";
-							
-							echo "<a href='../../controllers/BajasController.php?tipo=Tutor&login=".$tutor["login"]."' class='btn btn-default'>Dar de Baja</a>";
-							echo "</div>";
-							echo "</div>";
-							echo "</div>";
-						}
-					}
+				if(isset($_GET["msg"])){
+					$msg = $_GET["msg"];
+					echo "<b>$msg</b>";
+				}
 				?>
+				
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Asignar Tutor</b></h3>
+                            </div> 
+							<form class="form-signin" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login">
+							Nombre de la pr&aacute;ctica:<input type="text" name="nPractica" class="form-control" required>
+							</br>
+							DNI del tutor:<input type="text" name="dniTutor" class="form-control" required>
+							</br>					
+							<button class="btn btn-sm btn-default btn-block" type="submit">
+								Asignar Tutor</button>
+							</form>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->	
+				
+				<br>
+				<br>
+				
+				<a href="../../controllers/CoordinadorController.php?action=verPracticasCompleto" class="btn btn-sm btn-default btn-block">Mostrar asignaciones realizadas</a>
+				
+				<br>
+				<br>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><br>Listado de practicas asignadas a estudiantes sin tutor</br></h3>
+                            </div> 
+							<?php
+								if(isset($_GET["datos"])){
+									$practicas = json_decode($_GET["datos"],true);
+									foreach($practicas as $practica){
+										echo "</br><div class='panel panel-default'>";
+										echo "<div class='panel-heading'>";
+										echo "<b>".$practica["nombrePractica"]."</b>";
+										echo "</div>";
+										
+										echo "<li>";
+										echo "<b>Asignada a estudiante:</b>".$practica["nombreEstudiante"];
+										echo "</li>";
+										echo "<li>";
+										echo "<b>Con ID:</b>".$practica["Estudiante_idEstudiante"];
+										echo "</li>";
+										echo "<a href='../../controllers/CoordinadorController.php?action=eliminarAsignacionEstudiante&id=".$practica["Practicas_idPracticas"]."' class='btn btn-sm btn-default btn-block'>Eliminar Asignacion</a>";										
+																			
+										echo "</div>";
+									}
+								}
+							?>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+											
             </div>
             <!-- /.container-fluid -->
 
@@ -158,20 +180,7 @@
     <script src="js/plugins/morris/raphael.min.js"></script>
     <script src="js/plugins/morris/morris.min.js"></script>
     <script src="js/plugins/morris/morris-data.js"></script>
-	
-	<!-- script Custom -->
-	<script language="JavaScript">
-			function checkPass(f){
-				clave1 = f.clave1.value
-				clave2 = f.clave2.value
-				if(clave1 != clave2){
-					alert("|INFO| Las password deben coincidir");
-					return false;
-				}else{
-					return true;
-				}
-			}
-	</script>
+
 
 </body>
 

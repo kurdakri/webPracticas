@@ -70,13 +70,10 @@
                         <a href="../../controllers/CoordinadorController.php?action=ofertasPracticas"><i class="fa fa-fw fa-edit"></i>Gesti&oacute;n de las ofertas de empresas</a>
                     </li>
                     <li>
-                        <a href="asignacionesAT.php"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
+                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
                     </li>
                     <li>
-                        <a href="tutores.php"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
-                    </li>
-                    <li>
-                        <a href="anulaciones.php"><i class="fa fa-fw fa-edit"></i>Gesti&oacute;n de Cambios y Anulaciones</a>
+                        <a href="../../controllers/CoordinadorController.php?action=listarPracticas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
                     </li>
                 </ul>
             </div>
@@ -100,7 +97,7 @@
 				<div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-default">
-						<form class="form-signin" name="f1" onsubmit="return checkPass(this)" action="../../controllers/RegistroController.php?tipo=EstudianteC" method="POST">
+						<form class="form-signin" name="f1" onsubmit="return checkPass(this)" action="../../controllers/RegistroController.php?tipo=EstudianteC" method="POST" id="login">
 						Nombre:<input type="text" name="nombre" class="form-control" placeholder="ej: Pedro" required autofocus>
 						</br>
 						Apellidos:<input type="text" name="apellidos" class="form-control" placeholder="ej: Real Vidal" required>
@@ -123,7 +120,11 @@
 						</br>
 						Facultad:<input type="text" name="facultad" class="form-control" placeholder="ej: ESEI" required>
 						</br>
-						Titulaci&oacute;n:<input type="text" name="titulacion" class="form-control" placeholder="ej: Grado en Ingenier&iacute;a Inform&aacute;tica" required>
+						Titulaci&oacute;n:
+						<select class="form-control" name="titulacion" form="login">
+						<option value="Grado">Grado</option>
+						<option value="Master">Master</option>
+						</select>
 						</br>
 						Curso:<input type="text" name="curso" class="form-control" placeholder="ej: 4" required>
 						</br>

@@ -15,12 +15,45 @@ class PracticasTutorEstudiante{
         $this->db = new Database();		
 	}
 
-	public function set($id,$idT,$idPs,$idEm,$idEs){
-		$this->idP = $id;
+	public function set($idT,$idPs,$idEm,$idEs){
 		$this->fkidTutor = $idT;
 		$this->fkidPracticas = $idPs;
 		$this->fkidEmpresa = $idEm;
 		$this->fkidEstudiante = $idEs;
+	}
+	
+	public function selectByIdP($id){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from practicas_tutor_estudiante where Practicas_idPracticas="' . $id . '"';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
+	}
+	
+	public function selectAll(){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from practicas_tutor_estudiante';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
 	}
 	
 	public function select($id){
@@ -42,7 +75,7 @@ class PracticasTutorEstudiante{
 	
 	public function insert(){
         $this->con = $this->db->getConnection();
-		$sql = 'insert into practicas_tutor_estudiante(idPracticas_Tutor_Estudiante,Tutor_idTutor,Practicas_idPracticas,Practicas_Empresa_idEmpresa,Estudiante_idEstudiante) values("' . $this->idP . '","' .$this->fkidTutor. '","' .$this->fkidPracticas. '","' .$this->fkidEmpresa. '","' .$this->fkidEstudiante. '")';
+		$sql = 'insert into practicas_tutor_estudiante(Tutor_idTutor,Practicas_idPracticas,Practicas_Empresa_idEmpresa,Estudiante_idEstudiante) values("' .$this->fkidTutor. '","' .$this->fkidPracticas. '","' .$this->fkidEmpresa. '","' .$this->fkidEstudiante. '")';
         $result = mysql_query($sql, $this->con);
         if ($result == true) {
 			$this->db->endConnection();
@@ -81,5 +114,20 @@ class PracticasTutorEstudiante{
 			return false;
 	    }
 	}
+	
+	public function deleteById($id){
+		$this->con = $this->db->getConnection();
+		$sql = 'delete from practicas_tutor_estudiante where Practicas_idPracticas="'.$id.'"';
+	    $result = mysql_query($sql,$this->con);
+	    if($result == true){
+			$this->db->endConnection();	
+			return true;
+	    }else{
+			echo("Error");
+			$this->db->endConnection();
+			return false;
+	    }
+	}
+	
 }
 ?>

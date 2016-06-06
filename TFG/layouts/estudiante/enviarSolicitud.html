@@ -85,58 +85,81 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Formularios de Prácticas
+                            Formulario de Solicitud
                         </h1>
                     </div>
                 </div>
-                <!-- /.row -->
+                <!-- /.row -->	
 
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
-						echo "<b>$msg</b>";
-						echo "</br>";
-						echo "</br>";
+						echo $msg;
 					}
-
-					if(isset($_GET["datos"])){
-						$datos = json_decode($_GET["datos"],true);
-						foreach($datos as $emp){
-							echo "<div class='row'>";
-							echo "<div class='col-lg-12'>";
-							echo "<div class='panel panel-default'>";
-							
-							echo "<div class='panel-heading'>";
-								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>Informe</h3>";
-							echo "</div>";
-							
-							echo "<li>";
-								echo "Nombre:".$emp["nombreEvento"];
-							echo "</li>";
-							echo "<li>";
-								echo "Fecha Tope:".$emp["Fecha"];
-							echo "</li>";
-							$fActual = strftime("%Y-%m-%d",time());
-							if($fActual <= $emp["Fecha"]){
-								echo "<li>";
-									echo "Estado:<font color='green'>Disponible</font>";
-								echo "</li>";
-							}else{
-								echo "<li>";
-									echo "Estado:<font color='red'>Plazo Finalizado</font>";
-								echo "</li>";							
-							}
-							
-							echo "</div>";
-							echo "</div>";
-							echo "</div>";
-							echo "</br>";
-							echo "</br>";
-						}
-						echo "<a href='http://esei.uvigo.es/index.php?id=177' target='_blank' class='btn btn-sm btn-default btn-block'>Ver Formularios</a>";
-					}
-				?>				
+				?>
 				
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title"><i class="fa fa-fw"></i>Rellena los campos</h3>
+							</div>
+							<form class="form-signin" name="f1" onsubmit="return checkPass(this)" action="../../controllers/EstudianteController.php" method="POST" id="login">
+								Alumno/a:<input type="text" name="alumno" class="form-control" required autofocus>
+								</br>
+								DNI:<input type="text" name="dni" class="form-control" required>
+								</br>
+								Email:<input type="text" name="email" class="form-control" required>
+								</br>
+								Curso Academico:<input type="text" name="curso" class="form-control" required>
+								</br>
+								Titulacion:<input type="text" name="titulacion" class="form-control" required>
+								</br>
+								<b>Listado de empresas ordenados por orden de preferencia</b>
+								<br>
+								<br>
+								<b>Empresa1:</b><input type="text" name="emp1" class="form-control" required>
+								</br>
+								Tutor:<input type="text" name="tut1" class="form-control" required>
+								</br>
+								Periodo:<input type="text" name="per1" class="form-control" required>
+								</br>
+								<br>
+								<b>Empresa2:</b><input type="text" name="emp2" class="form-control" required>
+								</br>
+								Tutor:<input type="text" name="tut2" class="form-control" required>
+								</br>
+								Periodo:<input type="text" name="per2" class="form-control" required>
+								</br>
+								<br>
+								<b>Empresa3:</b><input type="text" name="emp3" class="form-control" required>
+								</br>
+								Tutor:<input type="text" name="tut3" class="form-control" required>
+								</br>
+								Periodo:<input type="text" name="per3" class="form-control" required>
+								</br>
+								<br>
+								<b>Empresa4:</b><input type="text" name="emp4" class="form-control" required>
+								</br>
+								Tutor:<input type="text" name="tut4" class="form-control" required>
+								</br>
+								Periodo:<input type="text" name="per4" class="form-control" required>
+								</br>
+								<br>
+								<b>Empresa5:</b><input type="text" name="emp5" class="form-control" required>
+								</br>
+								Tutor:<input type="text" name="tut5" class="form-control" required>
+								</br>
+								Periodo:<input type="text" name="per5" class="form-control" required>
+								</br>
+
+								<button class="btn btn-sm btn-default btn-block" type="submit">
+									Enviar</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			
             </div>
             <!-- /.container-fluid -->
 

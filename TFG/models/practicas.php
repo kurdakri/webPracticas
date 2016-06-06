@@ -48,6 +48,23 @@ class Practicas{
         }
 	}
 	
+	public function selectById($id){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from practicas where idPracticas="' . $id . '"';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
+	}
+	
 	public function select($id){
 		$this->con = $this->db->getConnection();
 		$sql = 'select * from practicas where titulo="' . $id . '"';

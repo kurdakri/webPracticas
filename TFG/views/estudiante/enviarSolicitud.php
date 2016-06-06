@@ -3,5 +3,5 @@ session_start();
 if($_SESSION["validated"] != "Estudiante"){
 header("Location: ../mainRAC/acceso.php");
 }
-require_once("../../layouts/estudiante/formularios.html");
+require_once("../../layouts/estudiante/enviarSolicitud.html");
 ?>
