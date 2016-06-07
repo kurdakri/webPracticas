@@ -19,12 +19,15 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `mydb`
 --
+CREATE DATABASE IF NOT EXISTS mydb;
+USE mydb;
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `coordinador`
 --
+
 
 CREATE TABLE IF NOT EXISTS `coordinador` (
   `idCoordinador` int(11) NOT NULL AUTO_INCREMENT,
@@ -269,3 +272,8 @@ ALTER TABLE `practicas_tutor_estudiante`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- PRIVILEGIOS DE USUARIO
+CREATE USER 'mydbuser'@'localhost' IDENTIFIED BY 'mydbpass';
+GRANT ALL PRIVILEGES ON mydb.* TO 'mydbuser'@'localhost';
+FLUSH PRIVILEGES;
