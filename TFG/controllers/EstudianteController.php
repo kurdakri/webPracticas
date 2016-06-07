@@ -52,6 +52,63 @@ if(isset($_GET["action"])){
 		solicitarCambio();
 	}
 	
+	if(isset($_POST["enviarInforme"])){
+		enviarInforme();
+	}
+	
+}
+
+function enviarInforme(){
+	$destinatario = $_POST["cTutor"];
+	$file = $_FILES["archivo"];
+	session_start();
+	$loginEstudiante = $_SESSION["name"];
+	$e = new Estudiante();
+	$estudiante = $e->select($loginEstudiante);
+	$nombreEstudiante = $estudiante[0]["nombre"];
+	$remitente = $estudiante[0]["email"];
+	
+	$correo = new PHPMailer();
+	$smtp = new SMTP();
+
+	$correo->IsSMTP();
+	$correo->SMTPAuth=true;
+	$correo->SMTPSecure='tls';
+	$correo->Host="smtp.gmail.com";
+	$correo->Port=587;
+	$correo->Username="tfgpracticasesei@gmail.com";
+	$correo->Password="tfgpracticas";
+	$correo->Timeout=30;
+	$correo->Charset='UTF-8';
+	
+	
+	//Decimos quien envía el correo
+	$correo->SetFrom("tfgpracticasesei@gmail.com","");
+
+	//Para indicar a quien tiene que responder el correo
+	$correo->AddReplyTo($remitente,"");
+
+	//Destinatario del correo
+	$correo->AddAddress($destinatario,"");
+
+	//Asunto del mensaje
+	$correo->Subject = "Informe de realizacion de practicas del estudiante: ";
+
+	//Contenido del mensaje
+	$correo->IsHTML(false);
+	$correo->Body = " ";
+	
+
+	//ARCHIVOS ADJUNTOS
+	$correo->AddAttachment($file["tmp_name"],$file["name"]);
+
+	if(!$correo->Send()){
+		$msg="Error:".$correo->ErrorInfo;
+		header("Location: ../views/estudiante/enviarFormulario.php?msg=$msg");
+	}else{
+		$msg="Mensaje enviado con éxito";
+		header("Location: ../views/estudiante/enviarFormulario.php?msg=$msg");
+	}
 }
 
 function consultarAsignaciones(){

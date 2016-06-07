@@ -9,19 +9,19 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Empresa-Practicas ESEI</title>
+    <title>Estudiante-Practicas ESEI</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="../../layouts/empresa/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../layouts/estudiante/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="../../layouts/empresa/css/sb-admin.css" rel="stylesheet">
+    <link href="../../layouts/estudiante/css/sb-admin.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="../../layouts/empresa/css/plugins/morris.css" rel="stylesheet">
+    <link href="../../layouts/estudiante/css/plugins/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="../../layouts/empresa/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../../layouts/estudiante/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -40,7 +40,7 @@
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="../../views/empresa/principal.php">Empresa</a>
+                <a class="navbar-brand" href="../../views/estudiante/principal.php">Estudiante</a>
             </div>
             <!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav">
@@ -48,26 +48,29 @@
                             <a href="mensajes.php"><i class="fa fa-fw fa-envelope"></i>Mensajes</a>
                         </li>
                         <li>
-                            <a href="../../controllers/EmpresaController.php?action=verPerfil"><i class="fa fa-fw fa-gear"></i>Perfil</a>
+                            <a href="../../controllers/EstudianteController.php?action=verPerfil"><i class="fa fa-fw fa-gear"></i>Perfil</a>
                         </li>
                         <li>
-                            <a href="../../controllers/EmpresaController.php?action=logout"><i class="fa fa-fw fa-power-off"></i>Log Out</a>
+                            <a href="../../controllers/EstudianteController.php?action=logout"><i class="fa fa-fw fa-power-off"></i>Log Out</a>
                         </li>
 			</ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
-                        <a href="../../views/empresa/principal.php"><i class="fa fa-fw fa-dashboard"></i>Home</a>
+                        <a href="../../views/estudiante/principal.php"><i class="fa fa-fw fa-dashboard"></i>Home</a>
                     </li>
                     <li>
-                        <a href="../../controllers/EmpresaController.php?action=asignaciones"><i class="fa fa-fw fa-edit"></i>Consultar Asignaciones</a>
+                        <a href="../../controllers/EstudianteController.php?action=asignaciones"><i class="fa fa-fw fa-edit"></i>Consultar Asignaciones</a>
                     </li>
                     <li>
-                        <a href="../../controllers/EmpresaController.php?action=formularios"><i class="fa fa-fw fa-edit"></i>Gestion de Formularios</a>
+                        <a href="../../controllers/EstudianteController.php?action=formularios"><i class="fa fa-fw fa-edit"></i>Gestion de Formularios</a>
                     </li>
                     <li>
-                        <a href="gestionOfertas.php"><i class="fa fa-fw fa-edit"></i>Gestion de Ofertas</a>
+                        <a href="../../controllers/EstudianteController.php?action=listarPracticas"><i class="fa fa-fw fa-edit"></i>Solicitar Pr&aacute;ctica</a>
+                    </li>
+                    <li>
+                        <a href="anulaciones.php"><i class="fa fa-fw fa-edit"></i>Anulaciones y Cambios</a>
                     </li>
                 </ul>
             </div>
@@ -82,12 +85,11 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Informes a entregar y plazos
+                            Envia un informe
                         </h1>
                     </div>
                 </div>
                 <!-- /.row -->
-				
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
@@ -95,45 +97,27 @@
 						echo "</br>";
 						echo "</br>";
 					}
-
-					if(isset($_GET["datos"])){
-						$datos = json_decode($_GET["datos"],true);
-						foreach($datos as $emp){
-							echo "<div class='row'>";
-							echo "<div class='col-lg-12'>";
-							echo "<div class='panel panel-default'>";
-							
-							echo "<div class='panel-heading'>";
-								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>Informe</h3>";
-							echo "</div>";
-							
-							echo "<li>";
-								echo "Nombre:".$emp["nombreEvento"];
-							echo "</li>";
-							echo "<li>";
-								echo "Fecha Tope:".$emp["Fecha"];
-							echo "</li>";
-							$fActual = strftime("%Y-%m-%d",time());
-							if($fActual <= $emp["Fecha"]){
-								echo "<li>";
-									echo "Estado:<font color='green'>Disponible</font>";
-								echo "</li>";
-							}else{
-								echo "<li>";
-									echo "Estado:<font color='red'>Plazo Finalizado</font>";
-								echo "</li>";							
-							}
-							
-							echo "</div>";
-							echo "</div>";
-							echo "</div>";
-							echo "</br>";
-							echo "</br>";
-						}
-						echo "<a href='http://esei.uvigo.es/index.php?id=177' target='_blank' class='btn btn-sm btn-default btn-block'>Ver Formularios</a>";
-						echo "<a href='enviarFormulario.php' class='btn btn-sm btn-default btn-block'>Enviar Formulario</a>";
-					}
-				?>			
+				?>
+				
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Datos de envio</b></h3>
+                            </div> 
+							<form enctype="multipart/form-data" class="form-signin" name="f1" action="../../controllers/EstudianteController.php" method="POST">
+							Correo del tutor(destinatario):<input type="text" name="cTutor" class="form-control" required>
+							</br>
+							Archivo adjunto(informe):<input type="file" name="archivo" class="form-control" required>
+							</br>						
+							<button class="btn btn-sm btn-default btn-block" type="submit">
+								Enviar</button>
+							<input type="hidden" name="enviarInforme">
+							</form>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->	
 				
             </div>
             <!-- /.container-fluid -->
