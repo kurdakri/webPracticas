@@ -217,18 +217,27 @@ function modificarPerfil(){
 	$dep = $_POST["departamento"];
 	$cen = $_POST["centro"];
 	$t = new Tutor();
-	$t->set($nom,$ape,$dn,$tel,$ema,$log,$pas,$dep,$cen);
-	$boolean = $t->update($idActual);
-	if($boolean == false){
-		$msg = "Error modificando el perfil. Inténtelo de nuevo";
-		header("Location: ../views/tutor/perfil.php?msg=$msg");
+	$tutor = $t->select($log);
+	if($tutor == false){
+		$t = new Tutor();
+		$t->set($nom,$ape,$dn,$tel,$ema,$log,$pas,$dep,$cen);
+		$boolean = $t->update($idActual);
+		if($boolean == false){
+			$msg = "Error modificando el perfil. Inténtelo de nuevo";
+			header("Location: ../views/tutor/perfil.php?msg=$msg");
+		}else{
+			echo $idActual;
+			$_SESSION["validated"] = "";
+			session_destroy();
+			$msg = "Datos del perfil modificados. Loguee de nuevo";
+			header("Location: ../views/mainRAC/acceso.php?msg=$msg");
+		}
 	}else{
-		echo $idActual;
-		$_SESSION["validated"] = "";
-		session_destroy();
-		$msg = "Datos del perfil modificados. Loguee de nuevo";
-		header("Location: ../views/mainRAC/acceso.php?msg=$msg");
-	}	
+			$msg = "El usuario introducido ya existe. Inténtelo con otro login.";
+			header("Location: ../views/tutor/perfil.php?msg=$msg");		
+	}
+	
+	
 }
 
 function verPerfil(){

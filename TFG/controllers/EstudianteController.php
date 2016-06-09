@@ -519,17 +519,24 @@ function modificarPerfil(){
 		$pan = 1;
 	}
 	$e = new Estudiante();
-	$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay);
-	$boolean = $e->update($idActual);
-	if($boolean == false){
-		$msg = "Error modificando el perfil. Inténtelo de nuevo";
-		header("Location: ../views/estudiante/perfil.php?msg=$msg");
+	$estudiante = $e->select($log);
+	if($estudiante == false){
+		$e = new Estudiante();
+		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay);
+		$boolean = $e->update($idActual);
+		if($boolean == false){
+			$msg = "Error modificando el perfil. Inténtelo de nuevo";
+			header("Location: ../views/estudiante/perfil.php?msg=$msg");
+		}else{
+			echo $idActual;
+			$_SESSION["validated"] = "";
+			session_destroy();
+			$msg = "Datos del perfil modificados. Loguee de nuevo";
+			header("Location: ../views/mainRAC/acceso.php?msg=$msg");
+		}		
 	}else{
-		echo $idActual;
-		$_SESSION["validated"] = "";
-		session_destroy();
-		$msg = "Datos del perfil modificados. Loguee de nuevo";
-		header("Location: ../views/mainRAC/acceso.php?msg=$msg");
+			$msg = "Debe introducir un login de usuario que no exista en el sistema para modificar los datos";
+			header("Location: ../views/estudiante/perfil.php?msg=$msg");			
 	}	
 }
 

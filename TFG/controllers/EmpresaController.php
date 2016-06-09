@@ -273,17 +273,24 @@ function modificarPerfil(){
 	$caT = $_POST["cTutor"];
 	$tar = $_POST["tareas"];
 	$e = new Empresa();
-	$e->set($cen,$tel,$loc,$pro,$ema,$cal,$nom,$pas,$log,$noT,$caT,$tar);
-	$boolean = $e->update($idActual);
-	if($boolean == false){
-		$msg = "Error modificando el perfil. Inténtelo de nuevo";
-		header("Location: ../views/empresa/perfil.php?msg=$msg");
+	$empresa = $e->select($log);
+	if($empresa == false){
+		$e = new Empresa();
+		$e->set($cen,$tel,$loc,$pro,$ema,$cal,$nom,$pas,$log,$noT,$caT,$tar);
+		$boolean = $e->update($idActual);
+		if($boolean == false){
+			$msg = "Error modificando el perfil. Inténtelo de nuevo";
+			header("Location: ../views/empresa/perfil.php?msg=$msg");
+		}else{
+			echo $idActual;
+			$_SESSION["validated"] = "";
+			session_destroy();
+			$msg = "Datos del perfil modificados. Loguee de nuevo";
+			header("Location: ../views/mainRAC/acceso.php?msg=$msg");
+		}	
 	}else{
-		echo $idActual;
-		$_SESSION["validated"] = "";
-		session_destroy();
-		$msg = "Datos del perfil modificados. Loguee de nuevo";
-		header("Location: ../views/mainRAC/acceso.php?msg=$msg");
+			$msg = "Debe modificar el login de usuario por otro que no exista en el sistema.";
+			header("Location: ../views/empresa/perfil.php?msg=$msg");		
 	}
 }
 
