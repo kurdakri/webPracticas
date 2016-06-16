@@ -73,7 +73,7 @@
                         <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=listarPracticas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
                     </li>
                 </ul>
             </div>
@@ -98,7 +98,7 @@
 				<?php
 				if(isset($_GET["msg"])){
 					$msg = $_GET["msg"];
-					echo "<b>$msg</b>";
+					echo "<b style='color:red'>$msg</b>";
 				}
 				?>
 
@@ -106,35 +106,44 @@
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><br>Listado de practicas asignadas definitivamente</br></h3>
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Listado de practicas asignadas definitivamente</b></h3>
                             </div> 
+							
+							<div>
+							<table class="table">
+							<thead>
+								<tr>
+									<th>Nombre Practica</th>
+									<th>Estudiante Asignado</th>
+									<th>Tutor Academico</th>
+									<th>Nombre Empresa</th>
+									<th>Tutor Empresa</th>
+									<th></th>
+								<tr>
+							</thead>
+							<tbody>
 							<?php
 								if(isset($_GET["datos"])){
 									$practicas = json_decode($_GET["datos"],true);
 									foreach($practicas as $practica){
-										echo "</br><div class='panel panel-default'>";
-										echo "<div class='panel-heading'>";
-										echo "<b>".$practica["practica"]."</b>";
-										echo "</div>";
-										
-										echo "<li>";
-										echo "<b>Estudiante:</b>".$practica["estudianteN"]." ".$practica["estudianteA"];
-										echo "</li>";
-										echo "<li>";
-										echo "<b>Tutor Academico:</b>".$practica["tutorN"]." ".$practica["tutorA"];
-										echo "</li>";
-										echo "<li>";
-										echo "<b>Empresa:</b>".$practica["empresa"];
-										echo "</li>";
-										echo "<li>";
-										echo "<b>Tutor Empresa:</b>".$practica["empresaTutor"];
-										echo "</li>";
-										echo "<a href='../../controllers/CoordinadorController.php?action=eliminarAsignacionTutor&id=".$practica["idPractica"]."' class='btn btn-sm btn-default btn-block'>Eliminar Asignacion</a>";
-																			
-										echo "</div>";
+										echo "<tr>";
+										echo "<td>".$practica["practica"]."</td>";
+										echo "<td>".$practica["estudianteN"]."</td>";
+										echo "<td>".$practica["tutorN"]."</td>";
+										echo "<td>".$practica["empresa"]."</td>";
+										echo "<td>".$practica["empresaTutor"]."</td>";
+										echo "<td>";
+										echo "<a href='../../controllers/CoordinadorController.php?action=eliminarAsignacionTutor&id=".$practica["idPractica"]."' class='btn btn-sm btn-default btn-block'>Eliminar</a>";
+										echo "</td>";
+										echo "</tr>";
+
 									}
 								}
 							?>
+							</tbody>
+							</table>
+							</div>							
+							
                         </div>
                     </div>
                 </div>

@@ -31,6 +31,7 @@ function registroEstudiantes(){
 	$cur = $_POST["curso"];
 	$ini = $_POST["aInicio"];
 	$pay = $_POST["pAntesYear"];
+	$expA = $_POST["expA"];
 	if($pay == ""){
 		$pan = 0;
 	}else{
@@ -39,7 +40,7 @@ function registroEstudiantes(){
 	$existe = $e->select($log);
 	if($existe == false){
 		$e = new Estudiante();
-		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay);
+		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay,$expA);
 		$boolean = $e->insert();
 		if($boolean == false){
 			$msg="Error de registro. Inténtelo más tarde";
@@ -74,6 +75,7 @@ function registroEstudiantesC(){
 	$cur = $_POST["curso"];
 	$ini = $_POST["aInicio"];
 	$pay = $_POST["pAntesYear"];
+	$expA = $_POST["expA"];
 	if($pay == ""){
 		$pan = 0;
 	}else{
@@ -82,7 +84,7 @@ function registroEstudiantesC(){
 	$existe = $e->select($log);
 	if($existe == false){
 		$e = new Estudiante();
-		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay);
+		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay,$expA);
 		$boolean = $e->insert();
 		if($boolean == false){
 			$msg="Error de registro. Inténtelo más tarde";

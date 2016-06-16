@@ -73,7 +73,7 @@
                         <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=listarPracticas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
                     </li>
                 </ul>
             </div>
@@ -106,10 +106,17 @@
 							echo "<div class='col-lg-12'>";
 							echo "<div class='panel panel-default'>";
 							
-							echo "<div class='panel-heading'>";
-								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>".$empresa["login"]."</h3>";
+							echo "<div class='panel-heading'>";		
+								echo '<b>'.$empresa["nombre"].'</b>';
+								echo '<div style="float:right">';
+								echo "<a href='../../controllers/BajasController.php?tipo=Empresa&login=".$empresa["login"]."' >Dar de Baja</a>";
+								echo '</div>';
 							echo "</div>";
 							
+							$aux = "'".$empresa["nombre"]."'";										
+							echo '<a href="#" onclick="cambiar('.$aux.');return false;">Ver Info</a>';	
+							
+							echo '<div id="'.$empresa["nombre"].'" style="display:none;">';
 							echo "<li>";
 								echo "Nombre:".$empresa["nombre"];
 							echo "</li>";
@@ -140,8 +147,8 @@
 							echo "<li>";
 								echo "Tareas:".$empresa["tareas"];
 							echo "</li>";
+							echo '</div>';
 							
-							echo "<a href='../../controllers/BajasController.php?tipo=Empresa&login=".$empresa["login"]."' class='btn btn-default'>Dar de Baja</a>";
 							echo "</div>";
 							echo "</div>";
 							echo "</div>";
@@ -180,6 +187,18 @@
 					return true;
 				}
 			}
+	</script>
+	
+	<script type="text/javascript">
+		function cambiar(esto){
+			vista = document.getElementById(esto).style.display;
+			
+			if(vista == 'none')
+				vista='block';
+			else
+				vista='none';
+			document.getElementById(esto).style.display=vista;
+		}
 	</script>
 
 </body>

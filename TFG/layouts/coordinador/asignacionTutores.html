@@ -73,7 +73,7 @@
                         <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=listarPracticas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
                     </li>
                 </ul>
             </div>
@@ -98,33 +98,12 @@
 				<?php
 				if(isset($_GET["msg"])){
 					$msg = $_GET["msg"];
-					echo "<b>$msg</b>";
+					echo "<b style='color:red'>$msg</b>";
 				}
 				?>
 				
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Asignar Tutor</b></h3>
-                            </div> 
-							<form class="form-signin" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login">
-							Nombre de la pr&aacute;ctica:<input type="text" name="nPractica" class="form-control" required>
-							</br>
-							DNI del tutor:<input type="text" name="dniTutor" class="form-control" required>
-							</br>					
-							<button class="btn btn-sm btn-default btn-block" type="submit">
-								Asignar Tutor</button>
-							</form>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->	
 				
-				<br>
-				<br>
-				
-				<a href="../../controllers/CoordinadorController.php?action=verPracticasCompleto" class="btn btn-sm btn-default btn-block">Mostrar asignaciones realizadas</a>
+				<a href="../../controllers/CoordinadorController.php?action=verPracticasCompleto" class="btn btn-sm btn-default btn-block"><b>Mostrar asignaciones realizadas</b></a>
 				
 				<br>
 				<br>
@@ -133,29 +112,51 @@
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><br>Listado de practicas asignadas a estudiantes sin tutor</br></h3>
-                            </div> 
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Asignaciones Pendientes</b></h3>
+                            </div>
+							
+							<div>
+							<table class="table">
+							<thead>
+								<tr>
+									<th>Nombre Practica</th>
+									<th>Estudiante Asignado</th>
+									<th>Tutor</th>
+									<th></th>
+								<tr>
+							</thead>
+							<tbody>
 							<?php
-								if(isset($_GET["datos"])){
+								if(isset($_GET["datos"])&isset($_GET["datos2"])){
 									$practicas = json_decode($_GET["datos"],true);
+									$listaTutores = json_decode($_GET["datos2"],true);
+									$i=0;
 									foreach($practicas as $practica){
-										echo "</br><div class='panel panel-default'>";
-										echo "<div class='panel-heading'>";
-										echo "<b>".$practica["nombrePractica"]."</b>";
-										echo "</div>";
-										
-										echo "<li>";
-										echo "<b>Asignada a estudiante:</b>".$practica["nombreEstudiante"];
-										echo "</li>";
-										echo "<li>";
-										echo "<b>Con ID:</b>".$practica["Estudiante_idEstudiante"];
-										echo "</li>";
-										echo "<a href='../../controllers/CoordinadorController.php?action=eliminarAsignacionEstudiante&id=".$practica["Practicas_idPracticas"]."' class='btn btn-sm btn-default btn-block'>Eliminar Asignacion</a>";										
-																			
-										echo "</div>";
+										echo "<tr>";
+										echo "<td>".$practica["nombrePractica"]."</td>";
+										echo "<td>".$practica["nombreEstudiante"]."</td>";
+										echo '<form action="../../controllers/CoordinadorController.php" method="POST" id="'.$practica["nombrePractica"].'">';
+										echo '<td>
+											 <select name="seleccionar" form="'.$practica["nombrePractica"].'">';
+										foreach($listaTutores as $tutor){
+											echo '<option value="'.$tutor["idTutor"].'">'.$tutor["login"].'</option>';
+										}
+										echo "</select>
+										</td>";
+										echo "<td>";
+										echo '<input type="hidden" name="idPractica" value="'.$practica["Practicas_idPracticas"].'"/>';
+										echo '<input type="submit" value="Asignar"/>';
+										echo "</td>";
+										echo '</form>';
+										echo "</tr>";
+										$i++;
 									}
 								}
 							?>
+							</tbody>
+							</table>
+							</div>
+							
                         </div>
                     </div>
                 </div>
@@ -175,6 +176,8 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+	
+	
 
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>

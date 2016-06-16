@@ -114,38 +114,52 @@ function listarAsignaciones(){
 		$i=0;
 		$toret = array();
 		
+		$encuentra=false;
 		foreach($boolean as $asignada){
 			$idPractica = $asignada["Practicas_idPracticas"];
 			$idTutor = $asignada["Tutor_idTutor"];
 			$idEstudiante = $asignada["Estudiante_idEstudiante"];
+			
+			if($idTutor == -1){
+				
+			}else{
+				$encuentra=true;
+				$e = new Practicas();
+				$bool = $e->selectById($idPractica);
+				$toret[$i]["nombrePractica"] = $bool[0]["titulo"];
+				$toret[$i]["inicioPractica"] = $bool[0]["inicio"];
+				$toret[$i]["finPractica"] = $bool[0]["fin"];
+				$toret[$i]["horarioPractica"] = $bool[0]["horario"];
 
-			$e = new Practicas();
-			$bool = $e->selectById($idPractica);
-			$toret[$i]["nombrePractica"] = $bool[0]["titulo"];
-			$toret[$i]["inicioPractica"] = $bool[0]["inicio"];
-			$toret[$i]["finPractica"] = $bool[0]["fin"];
-			$toret[$i]["horarioPractica"] = $bool[0]["horario"];
+				$e = new Tutor();
+				$bool = $e->selectById($idTutor);
+				$toret[$i]["nombreTutor"] = $bool[0]["nombre"];
+				$toret[$i]["apellidosTutor"] = $bool[0]["apellidos"];
+				$toret[$i]["emailTutor"] = $bool[0]["email"];
+				$toret[$i]["telefonoTutor"] = $bool[0]["telefono"];
 
-			$e = new Tutor();
-			$bool = $e->selectById($idTutor);
-			$toret[$i]["nombreTutor"] = $bool[0]["nombre"];
-			$toret[$i]["apellidosTutor"] = $bool[0]["apellidos"];
-			$toret[$i]["emailTutor"] = $bool[0]["email"];
-			$toret[$i]["telefonoTutor"] = $bool[0]["telefono"];
+				$e = new Estudiante();
+				$bool = $e->selectById($idEstudiante);
+				$toret[$i]["nombreEstudiante"] = $bool[0]["nombre"];
+				$toret[$i]["apellidosEstudiante"] = $bool[0]["apellidos"];
+				$toret[$i]["emailEstudiante"] = $bool[0]["email"];
+				$toret[$i]["telefonoEstudiante"] = $bool[0]["telefono"];
+				$toret[$i]["titulacionEstudiante"] = $bool[0]["titulacion"];				
+			}
 
-			$e = new Estudiante();
-			$bool = $e->selectById($idEstudiante);
-			$toret[$i]["nombreEstudiante"] = $bool[0]["nombre"];
-			$toret[$i]["apellidosEstudiante"] = $bool[0]["apellidos"];
-			$toret[$i]["emailEstudiante"] = $bool[0]["email"];
-			$toret[$i]["telefonoEstudiante"] = $bool[0]["telefono"];
-			$toret[$i]["titulacionEstudiante"] = $bool[0]["titulacion"];
+
 			
 			$i = $i+1;
 		}
 		
-		$datos = json_encode($toret);
-		header("Location: ../views/empresa/asignaciones.php?datos=$datos");
+		if($encuentra == true){
+			$datos = json_encode($toret);
+			header("Location: ../views/empresa/asignaciones.php?datos=$datos");			
+		}else{
+			$msg = "No tiene ninguna practica asignada actualmente";
+			header("Location: ../views/empresa/asignaciones.php?datos=$datos");
+		}
+		
 	}
 }
 

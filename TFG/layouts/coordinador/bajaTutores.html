@@ -73,7 +73,7 @@
                         <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=listarPracticas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
                     </li>
                 </ul>
             </div>
@@ -107,8 +107,16 @@
 							echo "<div class='panel panel-default'>";
 							
 							echo "<div class='panel-heading'>";
-								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>".$tutor["login"]."</h3>";
+								echo "<b>".$tutor["nombre"]."</b>";
+								echo '<div style="float:right">';
+								echo "<a href='../../controllers/BajasController.php?tipo=Tutor&login=".$tutor["login"]."'>Dar de Baja</a>";
+								echo '</div>';
 							echo "</div>";
+		
+							$aux = "'".$tutor["nombre"]."'";										
+							echo '<a href="#" onclick="cambiar('.$aux.');return false;">Ver Info</a>';	
+							
+							echo '<div id="'.$tutor["nombre"].'" style="display:none;">';
 							
 							echo "<li>";
 								echo "Nombre:".$tutor["nombre"];
@@ -131,8 +139,8 @@
 							echo "<li>";
 								echo "Centro:".$tutor["centro"];
 							echo "</li>";
+							echo '</div>';
 							
-							echo "<a href='../../controllers/BajasController.php?tipo=Tutor&login=".$tutor["login"]."' class='btn btn-default'>Dar de Baja</a>";
 							echo "</div>";
 							echo "</div>";
 							echo "</div>";
@@ -171,6 +179,18 @@
 					return true;
 				}
 			}
+	</script>
+	
+	<script type="text/javascript">
+		function cambiar(esto){
+			vista = document.getElementById(esto).style.display;
+			
+			if(vista == 'none')
+				vista='block';
+			else
+				vista='none';
+			document.getElementById(esto).style.display=vista;
+		}
 	</script>
 
 </body>

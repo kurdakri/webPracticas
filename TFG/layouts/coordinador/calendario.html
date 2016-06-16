@@ -73,7 +73,7 @@
                         <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignación de Tutores</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=listarPracticas"><i class="fa fa-fw fa-edit"></i>Asignación Estudiante-Empresa</a>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignación Estudiante-Empresa</a>
                     </li>
                 </ul>
             </div>
@@ -90,35 +90,6 @@
                         <h1 class="page-header">
                             Gestión de Eventos del calendario de pr&aacute;cticas
                         </h1>
-                    </div>
-                </div>
-                <!-- /.row -->
-			
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Listado de Eventos</h3>
-                            </div> 
-							<?php
-								if(isset($_GET["datos"])){
-									$eventos = unserialize($_GET["datos"]);
-									foreach($eventos as $evento){
-										echo "<b>EVENTO</b>";
-										echo "</br>";
-										echo "<b>Nombre:</b>".$evento["nombreEvento"];
-										echo "</br>";
-										echo "<b>Tipo:</b>".$evento["tipoEvento"];
-										echo "</br>";
-										echo "<b>Fecha tope:</b>".$evento["Fecha"];
-										echo "</br>";
-										echo "<a href='../../controllers/CoordinadorController.php?action=borrarEvento&id=".$evento["nombreEvento"]."' class='btn btn-default'>Eliminar</a>";
-										echo "</br>";
-										echo "</br>";
-									}
-								}
-							?>
-                        </div>
                     </div>
                 </div>
                 <!-- /.row -->
@@ -152,39 +123,64 @@
 							Fecha:<input type="date" name="fecha" class="form-control" placeholder="Fecha limite de entrega" required>
 							</br>
 							<button class="btn btn-sm btn-default btn-block" type="submit">
-								Enviar</button>
+								<b>Enviar</b></button>
 							</form>
                         </div>
                     </div>
                 </div>
                 <!-- /.row -->
-
+				
+				<br>
+				<br>
+			
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Modificar Evento</h3>
+                                <h3 class="panel-title"><i class="fa fa-fw"></i>Listado de Eventos</h3>
                             </div> 
-							<form class="form-signin" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login2">
-							Nombre de Evento:<input type="text" name="nEv" class="form-control" placeholder="Nombre identificador del evento" required>
-							</br>
-							Tipo de Evento:
-							<select class="form-control" name="tEv" form="login2">
-								<option value="Tutor">Tutor</option>
-								<option value="Estudiante Grado">Estudiante Grado</option>
-								<option value="Estudiante Master">Estudiante Master</option>
-								<option value="Empresa">Empresa</option>
-							</select>
-							</br>
-							Fecha:<input type="date" name="fca" class="form-control" placeholder="Fecha limite de entrega" required>
-							</br>
-							<button class="btn btn-sm btn-default btn-block" type="submit">
-								Enviar</button>
-							</form>
+							<div id="info" style="display:none;">
+							<?php
+								if(isset($_GET["datos"])){
+									$eventos = unserialize($_GET["datos"]);
+									foreach($eventos as $evento){
+										echo "<b>EVENTO</b>";
+										echo "</br>";
+										echo "<b>Nombre:</b>".$evento["nombreEvento"];
+										echo "</br>";
+										echo "<b>Tipo:</b>".$evento["tipoEvento"];
+										echo "</br>";
+										echo "<b>Fecha tope:</b>".$evento["Fecha"];
+										echo "</br>";
+										echo "<a href='../../controllers/CoordinadorController.php?action=borrarEvento&id=".$evento["nombreEvento"]."' class='btn btn-default'>Eliminar</a>";
+										$aux = "'".$evento["nombreEvento"]."'";										
+										echo '<a href="#" onclick="cambiar('.$aux.');return false;" class="btn btn-default">Modificar</a>';	
+										echo "</br>";
+										echo "</br>";
+										echo "<div id='".$evento["nombreEvento"]."' style='display:none;'>";
+										echo '<form class="form-signin" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login2">';
+										echo 'Introduce nueva fecha:<input type="date" name="fca" class="form-control" placeholder="Fecha limite de entrega" required>';
+										echo '<br>';
+										echo '<input type="hidden" name="nEv" value="'.$evento["nombreEvento"].'">';
+										echo '<input type="hidden" name="tEv" value="'.$evento["tipoEvento"].'">';
+										echo '<button class="btn btn-sm btn-default btn-block" type="submit">
+												Enviar</button>';
+										echo '</form>';
+										echo '<br>';
+										echo '</div>';
+									}
+								}
+							?>
+							</div>
+							<a href="#" onclick="cambiar('info');return false;">+Ver Listado</a>
                         </div>
                     </div>
                 </div>
-                <!-- /.row -->					
+                <!-- /.row -->
+				
+				<br>
+				<br>
+			
 											
             </div>
             <!-- /.container-fluid -->
@@ -200,6 +196,18 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+	
+	<script type="text/javascript">
+		function cambiar(esto){
+			vista = document.getElementById(esto).style.display;
+			
+			if(vista == 'none')
+				vista='block';
+			else
+				vista='none';
+			document.getElementById(esto).style.display=vista;
+		}
+	</script>
 
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>

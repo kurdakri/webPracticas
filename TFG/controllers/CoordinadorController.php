@@ -56,6 +56,19 @@ require_once('phpmailer/class.smtp.php');
 			eliminarAsignacionEstudiante();
 		}
 		
+		if($action == "verSolicitantes"){
+			verSolicitantes();
+		}
+		
+		if($action == "realizarAsignaciones"){
+			realizarAsignaciones($_GET["datos"]);
+		}
+		
+		if($action == "eliminarAsignaciones"){
+			eliminarAsignaciones();
+		}
+		
+		
 	}else{
 		if(isset($_POST["login"])&isset($_POST["clave1"])&isset($_POST["nombre"])&isset($_POST["email"])&isset($_POST["telefono"])){
 			modificarPerfil();
@@ -65,7 +78,7 @@ require_once('phpmailer/class.smtp.php');
 			crearEvento();
 		}
 		
-		if(isset($_POST["tEv"])&isset($_POST["fca"])&isset($_POST["nEv"])){
+		if(isset($_POST["fca"])&isset($_POST["nEv"])){
 			modificarEvento();
 		}
 
@@ -85,14 +98,248 @@ require_once('phpmailer/class.smtp.php');
 			enviarMensajeMultiple();
 		}
 		
-		if(isset($_POST["nPractica"])&isset($_POST["nEmpresa"])&isset($_POST["dni"])){
+		if(isset($_POST["nPractica"])&isset($_POST["dni"])){
 			asignarEE();
 		}
 		
 		if(isset($_POST["nPractica"])&isset($_POST["dniTutor"])){
 			asignarTutorPractica();
 		}
+		
+		if(isset($_POST["seleccionar"])&isset($_POST["idPractica"])){
+			asignarTutor();
+		}
+		
 	}
+	
+function asignarTutor(){
+	$idTutor = $_POST["seleccionar"];
+	$idPractica = $_POST["idPractica"];
+	$p = new PracticasTutorEstudiante();
+	$boolean = $p->updateTutor($idTutor,$idPractica);
+	if($boolean == false){
+		$msg = "No se ha asignado";
+		header("Location: ../views/coordinador/asignacionTutores.php?msg=$msg");
+	}else{
+		listarPracticasAsignadas();
+	}
+}
+	
+function eliminarAsignaciones(){
+	$e = new PracticasTutorEstudiante();
+	$e->truncate();
+	verSolicitantes();
+}
+	
+function realizarAsignaciones($array){
+	$estudiantes = json_decode($array,true);//estudiantes que requieren asignaciones
+	$p = new Practicas();
+	$practicas = $p->selectAll();
+	$p = new PracticasTutorEstudiante();
+	$pAsignadas = $p->selectAll();
+	if($pAsignadas == false){
+		
+	}else{
+		foreach($pAsignadas as $pAsignada){
+			$id = $pAsignada["Practicas_idPracticas"];
+			$i=0;
+			foreach($practicas as $practica){
+				if($practica["idPracticas"] == $id){
+					unset($practicas[$i]);
+				}
+				$i++;
+			}
+		}
+	}//$practicas contiene practicas que no han sido asignadas todavia al llamar a la funcion
+	
+	$auxiliar = false;
+	//El bucle siguiente se repite mientras queden estudiantes
+	while(count($estudiantes) > 0){
+		if(count($practicas) == 0){
+			$msg = "Se han asignado todas las practicas disponibles. Quedan estudiantes sin asignar.";
+			header("Location: ../views/coordinador/asignacionEE.php?msg=$msg");
+		}else{
+			$notaMax = -1;
+			$iselect = -1;
+			$j=0;
+			$estudianteSeleccionado = null;
+			foreach($estudiantes as $estudiante){
+				$nota = $estudiante["mediaExpediente"];
+				if($nota > $notaMax){
+					$estudianteSeleccionado = $estudiante;
+					$notaMax = $nota;
+					$iselect = $j;
+				}
+				$j++;
+			}
+			$notaMax = -1;
+			//Ahora mismo $estudianteSeleccionado contiene al estudiante con mejor nota
+			$z=1;
+			$completa = false;
+			while($z<=5){
+				$idEstudianteSeleccionado = $estudianteSeleccionado["id"];
+				$s = new PracticasHasEstudiante();
+				$solicitud = $s->selectPri($idEstudianteSeleccionado,$z);
+				$idSolicitud = $solicitud[0]["Practicas_idPracticas"];
+				$aux = false;
+				$j=0;
+				$jselect=-1;
+				foreach($practicas as $practica){
+					if($idSolicitud == $practica["idPracticas"]){
+						$aux = true;
+						$jselect=$j;
+					}else{
+						
+					}
+					$j++;
+				}
+				
+				if($aux == true){
+					//practica solicitada disponible
+					$idEmpresa = $solicitud[0]["Practicas_Empresa_idEmpresa"];
+					//Asignamos la practica
+					$e = new PracticasTutorEstudiante();
+					$e->set(-1,$idSolicitud,$idEmpresa,$idEstudianteSeleccionado);
+					$boolean = $e->insert();
+					if($boolean == false){
+						echo "No se hizo la insercion";
+						break;
+					}else{
+						//Se ha insertado el estudiante, lo borramos de la lista de estudiantes pendientes de asignacion
+						unset($estudiantes[$iselect]);
+						$iselect = -1;
+						$estudianteSeleccionado = null;
+						
+						//Se ha seleccionado la practica, la borramos de la lista de practicas que quedan por asignar
+						unset($practicas[$jselect]);
+						$jselect=-1;
+						$completa = true;
+						break;
+					}
+				}else{
+					
+				}
+				$z++;
+			}
+			
+			//Evita problemas
+			if(count($estudiantes) == 1 & $auxiliar == true){
+				unset($estudiantes);
+				$estudiantes = array();
+				break;
+			}
+			
+			if(count($estudiantes) == 1){
+				$auxiliar = true;
+			}
+			
+			if($completa == false){
+				//Ninguna de las practicas elegidas por el estudiante estan disponibles para el
+				//Seguimos con el siguiente
+						unset($estudiantes[$iselect]);
+						$iselect = -1;
+						$estudianteSeleccionado = null;				
+			}
+		}
+	}
+	
+	verSolicitantes();
+}
+
+	
+function verSolicitantes(){
+	$e = new PracticasHasEstudiante();
+	$solicitantes = $e->selectAll();
+	$toret = array();
+	foreach($solicitantes as $solicitante){
+		$idSolicitante = $solicitante["Estudiante_idEstudiante"];
+		if(in_array($idSolicitante,$toret)){
+			
+		}else{
+			array_push($toret,$idSolicitante);
+		}
+	}
+		
+	$i=0;
+	foreach($toret as $id){
+		$pte = new PracticasTutorEstudiante();
+		$boolean = $pte->selectByIdEs($id);
+		if($boolean == false){
+			
+		}else{
+			unset($toret[$i]);
+		}
+		$i=$i+1;
+	}
+	
+	if(count($toret) == 0){
+		$msg = "No hay ninguna solicitud sin tramitar actualmente.";
+		header("Location: ../views/coordinador/asignacionEE.php?msg=$msg");
+	}else{
+		$i=0;
+		$toret2 = array();
+		foreach($toret as $est){
+			$e = new Estudiante();
+			$estudiante = $e->selectById($est);
+			$toret2[$i]["id"] = $est;
+			$toret2[$i]["nombre"] = $estudiante[0]["nombre"];
+			$toret2[$i]["apellidos"] = $estudiante[0]["apellidos"];
+			$toret2[$i]["dni"] = $estudiante[0]["dni"];
+			$toret2[$i]["email"] = $estudiante[0]["email"];
+			$toret2[$i]["mediaExpediente"] = $estudiante[0]["mediaExpediente"];
+			$i++;
+		}
+		$datos = json_encode($toret2);
+		header("Location: ../views/coordinador/asignacionEE.php?datos=$datos");
+	}
+}
+
+function verSolicitantes2($message){
+	$e = new PracticasHasEstudiante();
+	$solicitantes = $e->selectAll();
+	$toret = array();
+	foreach($solicitantes as $solicitante){
+		$idSolicitante = $solicitante["Estudiante_idEstudiante"];
+		if(in_array($idSolicitante,$toret)){
+			
+		}else{
+			array_push($toret,$idSolicitante);
+		}
+	}
+		
+	$i=0;
+	foreach($toret as $id){
+		$pte = new PracticasTutorEstudiante();
+		$boolean = $pte->selectByIdEs($id);
+		if($boolean == false){
+			
+		}else{
+			unset($toret[$i]);
+		}
+		$i=$i+1;
+	}
+	
+	if(count($toret) == 0){
+		$msg = "No hay ninguna solicitud sin tramitar actualmente.";
+		header("Location: ../views/coordinador/asignacionEE.php?msg=$msg");
+	}else{
+		$i=0;
+		$toret2 = array();
+		foreach($toret as $est){
+			$e = new Estudiante();
+			$estudiante = $e->selectById($est);
+			$toret2[$i]["id"] = $est;
+			$toret2[$i]["nombre"] = $estudiante[0]["nombre"];
+			$toret2[$i]["apellidos"] = $estudiante[0]["apellidos"];
+			$toret2[$i]["dni"] = $estudiante[0]["dni"];
+			$toret2[$i]["email"] = $estudiante[0]["email"];
+			$toret2[$i]["mediaExpediente"] = $estudiante[0]["mediaExpediente"];
+			$i++;
+		}
+		$datos = json_encode($toret2);
+		header("Location: ../views/coordinador/asignacionEE.php?datos=$datos&msg=$message");
+	}
+}
 
 function eliminarAsignacionEstudiante(){
 	$id = $_GET["id"];
@@ -109,7 +356,7 @@ function eliminarAsignacionEstudiante(){
 function eliminarAsignacionTutor(){
 	$id = $_GET["id"];
 	$p = new PracticasTutorEstudiante();
-	$boolean = $p->deleteById($id);
+	$boolean = $p->updateTutor(-1,$id);
 	if($boolean == false){
 		$msg = "No se ha podido eliminar la asignacion. Intentelo de nuevo.";
 		header("Location: ../views/coordinador/asignacionesRealizadas.php?msg=$msg");	
@@ -121,7 +368,7 @@ function eliminarAsignacionTutor(){
 	
 function verPracticasCompleto(){
 	$p = new PracticasTutorEstudiante();
-	$practicas = $p->selectAll();
+	$practicas = $p->selectNoAsignadas();
 	if($practicas == false){
 		$msg="Ninguna practica asignada actualmente";
 		header("Location: ../views/coordinador/asignacionesRealizadas.php?msg=$msg");		
@@ -256,23 +503,16 @@ function listado(){
 
 	
 function listarPracticasAsignadas(){
-	$e = new PracticasHasEstudiante();
-	$practicas = $e->selectAll();
-	$i=0;
-	$toret = array();
-	foreach($practicas as $practica){
-		$id = $practica["Practicas_idPracticas"];
-		$p = new PracticasTutorEstudiante();
-		$boolean = $p->selectByIdP($id);
-		if($boolean == false){
-				$toret[$i]=$practica;
-				$i = $i+1;
-		}
-	}
-	
-	if(empty($toret)){
+	$e = new PracticasTutorEstudiante();
+	$toret = $e->selectAsignadas();
+	$t = new Tutor();
+	$tutores = $t->selectAll();
+	if($toret == false){
 		$msg = "No hay practicas pendientes de asignar a tutores";
 		header("Location: ../views/coordinador/asignacionTutores.php?msg=$msg");
+	}else if($tutores == false){
+		$msg = "No hay tutores registrados en la aplicacion.";
+		header("Location: ../views/coordinador/asignacionTutores.php?msg=$msg");			
 	}else{
 		$i=0;
 		foreach($toret as $array){
@@ -289,20 +529,20 @@ function listarPracticasAsignadas(){
 			$i=$i+1;
 		}
 		$datos = json_encode($toret);
-		header("Location: ../views/coordinador/asignacionTutores.php?datos=$datos");
+		$datos2 = json_encode($tutores);
+		header("Location: ../views/coordinador/asignacionTutores.php?datos=$datos&datos2=$datos2");		
 	}
 }
 	
 function asignarEE(){
 		$dni = $_POST["dni"];
 		$nombrePractica = $_POST["nPractica"];
-		$nombreEmpresa = $_POST["nEmpresa"];
 		
 		$e = new Estudiante();
 		$estudiante = $e->selectByDNI($dni);
 		if($estudiante == false){
 			$msg = "El estudiante no existe en el sistema. Revise que el estudiante esta registrado.";
-			listarPracticas3($msg);
+			verSolicitantes2($msg);
 		}else{
 			$idEstudiante = $estudiante[0]["idEstudiante"];
 			
@@ -310,47 +550,31 @@ function asignarEE(){
 			$practica = $p->select($nombrePractica);
 			if($practica == false){
 				$msg = "La practica no existe en el sistema. Revise que el nombre es correcto";
-				listarPracticas3($msg);
+				verSolicitantes2($msg);
 			}else{
 				$idPractica = $practica[0]["idPracticas"];
 				$idEmpresa = $practica[0]["Empresa_idEmpresa"];
 				
-				$e = new Empresa();
-				$empresa = $e->selectByName($nombreEmpresa);
-				if($empresa == false){
-					$msg = "La empresa no existe en el sistema. Revise que el nombre es correcto";
-					listarPracticas3($msg);					
-				}else{
-					$id = $empresa[0]["idEmpresa"];
-					if($id != $idEmpresa){
-						$msg = "La empresa y la practica introducidas deben estar asociadas. Revise los datos introducidos.";
-						listarPracticas3($msg);
+				$a = new PracticasTutorEstudiante();
+				$boolean = $a->selectByIdP($idPractica);
+				if($boolean == false){
+					$a= new PracticasTutorEstudiante();
+					$a->set(-1,$idPractica,$idEmpresa,$idEstudiante);
+					$boolean = $a->insert();
+					if($boolean == false){
+						$msg = "Error de insercion. Intentelo de nuevo";
+						verSolicitantes2($msg);
 					}else{
-						$a = new PracticasHasEstudiante();
-						$boolean = $a->selectByIdP($idPractica);
-						if($boolean == false){
-							$a= new PracticasHasEstudiante();
-							$a->set($idPractica,$idEmpresa,$idEstudiante,0);
-							$boolean = $a->insert();
-							if($boolean == false){
-								$msg = "Error de insercion. Intentelo de nuevo";
-								listarPracticas3($msg);
-							}else{
-								$msg = "Practica asignada correctamente";
-								listarPracticas3($msg);
-							}							
-						}else{
-								$msg = "La practica ya ha sido asignada a otro estudiante anteriormente. Intentelo con otra.";
-								listarPracticas3($msg);							
-						}
-					}
+						verSolicitantes();//Asignada correctamente
+					}							
+				}else{
+						$msg = "La practica ya ha sido asignada a otro estudiante anteriormente. Intentelo con otra.";
+						verSolicitantes2($msg);					
 				}
 			}
-			
 		}
-		
 }
-
+			
 function listarPracticas3($message){
 	$p = new Practicas();
 	$boolean = $p->selectAll();

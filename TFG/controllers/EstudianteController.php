@@ -6,6 +6,7 @@ require_once("../models/empresa.php");
 require_once("../models/coordinador.php");
 require_once("../models/tutor.php");
 require_once("../models/practicasTutorEstudiante.php");
+require_once("../models/practicasHasEstudiante.php");
 require_once('phpmailer/class.phpmailer.php');
 require_once('phpmailer/class.smtp.php');
 if(isset($_GET["action"])){
@@ -56,7 +57,122 @@ if(isset($_GET["action"])){
 		enviarInforme();
 	}
 	
+	if(isset($_POST["formularioSolicitud"])){
+		procesarSolicitud();
+	}
+	
 }
+
+function procesarSolicitud(){
+	$p1 = $_POST["p1"];
+	$p2 = $_POST["p2"];
+	$p3 = $_POST["p3"];
+	$p4 = $_POST["p4"];
+	$p5 = $_POST["p5"];
+
+	$p = new Practicas();
+	$practica = $p->select($p1);
+	$idp1 = $practica[0]["idPracticas"];
+	$ide1 = $practica[0]["Empresa_idEmpresa"];
+	
+	$p = new Practicas();
+	$practica = $p->select($p2);
+	$idp2 = $practica[0]["idPracticas"];
+	$ide2 = $practica[0]["Empresa_idEmpresa"];
+
+	$p = new Practicas();
+	$practica = $p->select($p3);
+	$idp3 = $practica[0]["idPracticas"];
+	$ide3 = $practica[0]["Empresa_idEmpresa"];
+
+	$p = new Practicas();
+	$practica = $p->select($p4);
+	$idp4 = $practica[0]["idPracticas"];
+	$ide4 = $practica[0]["Empresa_idEmpresa"];
+
+	$p = new Practicas();
+	$practica = $p->select($p5);
+	$idp5 = $practica[0]["idPracticas"];
+	$ide5 = $practica[0]["Empresa_idEmpresa"];
+	
+	session_start();
+	$loginEstudiante = $_SESSION["name"];
+	$e = new Estudiante();
+	$estudiante = $e->select($loginEstudiante);
+	$idest = $estudiante[0]["idEstudiante"];
+	
+	$b = new PracticasHasEstudiante();
+	$b->set($idp1,$ide1,$idest,1);
+	$boolean1 = $b->insert();
+	
+	$b = new PracticasHasEstudiante();
+	$b->set($idp2,$ide2,$idest,2);
+	$boolean2 = $b->insert();
+	
+	$b = new PracticasHasEstudiante();
+	$b->set($idp3,$ide3,$idest,3);
+	$boolean3 = $b->insert();
+	
+	$b = new PracticasHasEstudiante();
+	$b->set($idp4,$ide4,$idest,4);
+	$boolean4 = $b->insert();
+	
+	$b = new PracticasHasEstudiante();
+	$b->set($idp5,$ide5,$idest,5);
+	$boolean5 = $b->insert();
+	
+	if($boolean1 == false || $boolean2 == false || $boolean3 == false || $boolean4 == false || $boolean5==false){
+		$b = new PracticasHasEstudiante();
+		$boolean5 = $b->deleteEstudiante($idest);
+		$msg = "No se ha podido procesar la solicitud. Revise los datos de envio.";
+		header("Location: ../views/estudiante/solicitudes.php?msg=$msg");
+	}else{
+		$remitente = $estudiante[0]["email"];
+		
+		$c = new Coordinador();
+		$coordinador = $c->selectAll();
+		$destinatario = $coordinador[0]["email"];	
+		$correo = new PHPMailer();
+		$smtp = new SMTP();
+
+		$correo->IsSMTP();
+		$correo->SMTPAuth=true;
+		$correo->SMTPSecure='tls';
+		$correo->Host="smtp.gmail.com";
+		$correo->Port=587;
+		$correo->Username="tfgpracticasesei@gmail.com";
+		$correo->Password="tfgpracticas";
+		$correo->Timeout=30;
+		$correo->Charset='UTF-8';
+		
+		//Decimos quien envía el correo
+		$correo->SetFrom("tfgpracticasesei@gmail.com","");
+
+		//Para indicar a quien tiene que responder el correo
+		$correo->AddReplyTo($remitente,"");
+
+		//Destinatario del correo
+		$correo->AddAddress($destinatario,"");
+
+		//Asunto del mensaje
+		$correo->Subject = "AVISO DE ENVIO DE FORMULARIO";
+
+		//Contenido del mensaje
+		$correo->IsHTML(false);
+		$correo->Body = "Se le informa de que un estudiante ha realizado una solicitud de practicas.";
+			
+		if(!$correo->Send()){
+			$msg="Error:".$correo->ErrorInfo;
+			header("Location: ../views/estudiante/solicitudes.php?msg=$msg");
+		}else{
+			$msg="Solicitud realizada";
+			header("Location: ../views/estudiante/solicitudes.php?msg=$msg");
+		}
+		
+	}
+	
+}
+
 
 function enviarInforme(){
 	$destinatario = $_POST["cTutor"];
@@ -126,42 +242,53 @@ function consultarAsignaciones(){
 	}else{
 		$i=0;
 		$toret = array();
-		
+		$encuentra = false;
 		foreach($boolean as $asignada){
 			$idPractica = $asignada["Practicas_idPracticas"];
 			$idTutor = $asignada["Tutor_idTutor"];
 			$idEmpresa = $asignada["Practicas_Empresa_idEmpresa"];
-
-			$e = new Practicas();
-			$bool = $e->selectById($idPractica);
-			$toret[$i]["nombrePractica"] = $bool[0]["titulo"];
-			$toret[$i]["inicioPractica"] = $bool[0]["inicio"];
-			$toret[$i]["finPractica"] = $bool[0]["fin"];
-			$toret[$i]["horarioPractica"] = $bool[0]["horario"];
-
-			$e = new Tutor();
-			$bool = $e->selectById($idTutor);
-			$toret[$i]["nombreTutor"] = $bool[0]["nombre"];
-			$toret[$i]["apellidosTutor"] = $bool[0]["apellidos"];
-			$toret[$i]["emailTutor"] = $bool[0]["email"];
-			$toret[$i]["telefonoTutor"] = $bool[0]["telefono"];
-
-			$e = new Empresa();
-			$bool = $e->selectById($idEmpresa);
-			$toret[$i]["nombreEmpresa"] = $bool[0]["nombre"];
-			$toret[$i]["nombreTutorE"] = $bool[0]["nombreTutor"];
-			$toret[$i]["cargoTutorE"] = $bool[0]["cargoTutor"];
-			$toret[$i]["telefonoEmpresa"] = $bool[0]["telefono"];
-			$toret[$i]["emailEmpresa"] = $bool[0]["email"];
-			$toret[$i]["calleEmpresa"] = $bool[0]["calle"];
-			$toret[$i]["localidadEmpresa"] = $bool[0]["localidad"];
-			$toret[$i]["provinciaEmpresa"] = $bool[0]["provincia"];
 			
+			if($idTutor == -1){
+				
+			}else{
+				$encuentra = true;
+				$e = new Practicas();
+				$bool = $e->selectById($idPractica);
+				$toret[$i]["nombrePractica"] = $bool[0]["titulo"];
+				$toret[$i]["inicioPractica"] = $bool[0]["inicio"];
+				$toret[$i]["finPractica"] = $bool[0]["fin"];
+				$toret[$i]["horarioPractica"] = $bool[0]["horario"];
+
+				$e = new Tutor();
+				$bool = $e->selectById($idTutor);
+				$toret[$i]["nombreTutor"] = $bool[0]["nombre"];
+				$toret[$i]["apellidosTutor"] = $bool[0]["apellidos"];
+				$toret[$i]["emailTutor"] = $bool[0]["email"];
+				$toret[$i]["telefonoTutor"] = $bool[0]["telefono"];
+
+				$e = new Empresa();
+				$bool = $e->selectById($idEmpresa);
+				$toret[$i]["nombreEmpresa"] = $bool[0]["nombre"];
+				$toret[$i]["nombreTutorE"] = $bool[0]["nombreTutor"];
+				$toret[$i]["cargoTutorE"] = $bool[0]["cargoTutor"];
+				$toret[$i]["telefonoEmpresa"] = $bool[0]["telefono"];
+				$toret[$i]["emailEmpresa"] = $bool[0]["email"];
+				$toret[$i]["calleEmpresa"] = $bool[0]["calle"];
+				$toret[$i]["localidadEmpresa"] = $bool[0]["localidad"];
+				$toret[$i]["provinciaEmpresa"] = $bool[0]["provincia"];				
+			}
 			$i = $i+1;
 		}
 		
-		$datos = json_encode($toret);
-		header("Location: ../views/estudiante/asignaciones.php?datos=$datos");
+		if($encuentra == true){
+			$datos = json_encode($toret);
+			header("Location: ../views/estudiante/asignaciones.php?datos=$datos");			
+		}else{
+			$msg = "No tiene ninguna practica asignada actualmente";
+			header("Location: ../views/estudiante/asignaciones.php?msg=$msg");			
+		}
+		
+
 	}	
 }
 
@@ -289,109 +416,6 @@ function solicitarAnulacion(){
 	}		
 }
 
-function solicitarPracticas(){
-	$correo = new PHPMailer();
-	$smtp = new SMTP();
-
-	$correo->IsSMTP();
-	$correo->SMTPAuth=true;
-	$correo->SMTPSecure='tls';
-	$correo->Host="smtp.gmail.com";
-	$correo->Port=587;
-	$correo->Username="tfgpracticasesei@gmail.com";
-	$correo->Password="tfgpracticas";
-	$correo->Timeout=30;
-	$correo->Charset='UTF-8';
-	
-	$e = new Estudiante();
-	session_start();
-	$id = $_SESSION["name"];
-	$estudiante = $e->select($id);
-	$remitente = $estudiante[0]["email"];
-	
-	$c = new Coordinador();
-	$coordinador = $c->selectAll();
-	$destinatario = $coordinador[0]["email"];
-	
-	//Decimos quien envía el correo
-	$correo->SetFrom("tfgpracticasesei@gmail.com","");
-
-	//Para indicar a quien tiene que responder el correo
-	$correo->AddReplyTo($remitente,"");
-
-	//Destinatario del correo
-	$correo->AddAddress($destinatario,"");
-
-	//Asunto del mensaje
-	$correo->Subject = "Solicitud de practicas de alumno.";
-
-	//Contenido del mensaje
-	//$correo->IsHTML(false);
-	//$correo->Body = $mensaje;
-	
-	$correo->MsgHTML("
-	<b>SOLICITUD DE PRACTICAS CURRICULARES</b>
-	<br>
-	<br>
-	<b>Alumno:</b>".$_POST["alumno"]."
-	<br>
-	<b>DNI:</b>".$_POST["dni"]."
-	<br>
-	<b>Email:</b>".$_POST["email"]."
-	<br>
-	<b>Curso Academico:</b>".$_POST["curso"]."
-	<br>
-	<b>Titulacion:</b>".$_POST["titulacion"]."
-	<br>
-	<br>
-	<b>LISTADO DE EMPRESAS</b>
-	<br>
-	<br>
-	<b>Empresa1:</b>".$_POST["emp1"]."
-	<br>
-	<b>TutorEmpresa1:</b>".$_POST["tut1"]."
-	<br>
-	<b>Periodo:</b>".$_POST["per1"]."
-	<br>
-	<br>
-	<b>Empresa2:</b>".$_POST["emp2"]."
-	<br>
-	<b>TutorEmpresa2:</b>".$_POST["tut2"]."
-	<br>
-	<b>Periodo:</b>".$_POST["per2"]."
-	<br>
-	<br>
-	<b>Empresa3:</b>".$_POST["emp3"]."
-	<br>
-	<b>TutorEmpresa3:</b>".$_POST["tut3"]."
-	<br>
-	<b>Periodo:</b>".$_POST["per3"]."
-	<br>
-	<br>
-	<b>Empresa4:</b>".$_POST["emp4"]."
-	<br>
-	<b>TutorEmpresa4:</b>".$_POST["tut4"]."
-	<br>
-	<b>Periodo:</b>".$_POST["per4"]."
-	<br>
-	<br>
-	<b>Empresa5:</b>".$_POST["emp5"]."
-	<br>
-	<b>TutorEmpresa5:</b>".$_POST["tut5"]."
-	<br>
-	<b>Periodo:</b>".$_POST["per5"]);
-
-	//ARCHIVOS ADJUNTOS
-	//$correo->AddAttachment("ruta");
-
-	if(!$correo->Send()){
-		$msg="Error:".$correo->ErrorInfo;
-		header("Location: ../views/estudiante/enviarSolicitud.php?msg=$msg");
-	}else{
-		$msg="Mensaje enviado con éxito";
-		header("Location: ../views/estudiante/enviarSolicitud.php?msg=$msg");
-	}		
-}
 
 function listarPracticas(){
 	$p = new Practicas();
@@ -513,6 +537,7 @@ function modificarPerfil(){
 	$cur = $_POST["curso"];
 	$ini = $_POST["aInicio"];
 	$pay = $_POST["pAntesYear"];
+	$expA = $_POST["expA"];
 	if($pay == ""){
 		$pan = 0;
 	}else{
@@ -522,7 +547,7 @@ function modificarPerfil(){
 	$estudiante = $e->select($log);
 	if($estudiante == false){
 		$e = new Estudiante();
-		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay);
+		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay,$expA);
 		$boolean = $e->update($idActual);
 		if($boolean == false){
 			$msg = "Error modificando el perfil. Inténtelo de nuevo";

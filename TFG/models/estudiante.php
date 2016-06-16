@@ -19,13 +19,14 @@ class Estudiante{
 	private $inicioTitulacion;
 	private $pAntes;
 	private $pAntesYear;
+	private $mediaExpediente;
 	
 	//Constructor de la clase
 	public function __construct(){
         $this->db = new Database();		
 	}
 
-	public function set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay){
+	public function set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay,$mExp){
 		$this->nombre = $nom;
 		$this->apellidos = $ape;
 		$this->dni = $dn;
@@ -41,6 +42,7 @@ class Estudiante{
 		$this->inicioTitulacion = $ini;
 		$this->pAntes = $pan;
 		$this->pAntesYear = $pay;
+		$this->mediaExpediente = $mExp;
 	}
 	
 	public function select($login){
@@ -113,7 +115,7 @@ class Estudiante{
 	
 	public function insert(){
         $this->con = $this->db->getConnection();
-		$sql = 'insert into estudiante(nombre,apellidos,dni,fechaNac,email,telefono,login,password,campus,facultad,titulacion,curso,inicioTitulacion,pAntes,pAntesYear) values("' . $this->nombre . '","' .$this->apellidos. '","' .$this->dni. '","' .$this->fechaNac. '","' .$this->email. '","' .$this->telefono. '","' .$this->login. '","' .$this->password. '","' .$this->campus. '","' .$this->facultad. '","' .$this->titulacion. '","' .$this->curso. '","' .$this->inicioTitulacion. '","' .$this->pAntes. '","' .$this->pAntesYear. '")';
+		$sql = 'insert into estudiante(nombre,apellidos,dni,fechaNac,email,telefono,login,password,campus,facultad,titulacion,curso,inicioTitulacion,pAntes,pAntesYear,mediaExpediente) values("' . $this->nombre . '","' .$this->apellidos. '","' .$this->dni. '","' .$this->fechaNac. '","' .$this->email. '","' .$this->telefono. '","' .$this->login. '","' .$this->password. '","' .$this->campus. '","' .$this->facultad. '","' .$this->titulacion. '","' .$this->curso. '","' .$this->inicioTitulacion. '","' .$this->pAntes. '","' .$this->pAntesYear. '","'.$this->mediaExpediente.'")';
         $result = mysql_query($sql, $this->con);
         if ($result == true) {
 			$this->db->endConnection();
@@ -127,7 +129,7 @@ class Estudiante{
 	
 	public function update($id){
 		$this->con = $this->db->getConnection();
-		$sql = 'update estudiante set nombre="' . $this->nombre . '",apellidos="' . $this->apellidos . '",dni="' . $this->dni . '",fechaNac="' . $this->fechaNac . '",email="' . $this->email . '",telefono="' . $this->telefono . '",login="' . $this->login . '",password="' . $this->password . '",campus="' . $this->campus . '",facultad="' . $this->facultad . '",titulacion="' . $this->titulacion . '",curso="' . $this->curso . '",inicioTitulacion="' . $this->inicioTitulacion . '",pAntes="' . $this->pAntes . '",pAntesYear="' . $this->pAntesYear . '" where login="' . $id.'"';
+		$sql = 'update estudiante set nombre="' . $this->nombre . '",apellidos="' . $this->apellidos . '",dni="' . $this->dni . '",fechaNac="' . $this->fechaNac . '",email="' . $this->email . '",telefono="' . $this->telefono . '",login="' . $this->login . '",password="' . $this->password . '",campus="' . $this->campus . '",facultad="' . $this->facultad . '",titulacion="' . $this->titulacion . '",curso="' . $this->curso . '",inicioTitulacion="' . $this->inicioTitulacion . '",pAntes="' . $this->pAntes . '",pAntesYear="' . $this->pAntesYear . '",mediaExpediente="'.$this->mediaExpediente.'" where login="' . $id.'"';
         $result = mysql_query($sql, $this->con);
         if ($result == true) {
 			$this->db->endConnection();

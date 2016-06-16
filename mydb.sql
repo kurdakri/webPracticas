@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS `estudiante` (
   `inicioTitulacion` varchar(10) DEFAULT NULL,
   `pAntes` int(11) DEFAULT NULL,
   `pAntesYear` varchar(10) DEFAULT NULL,
+  `mediaExpediente` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`idEstudiante`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
@@ -107,12 +108,12 @@ CREATE TABLE IF NOT EXISTS `estudiante` (
 -- Volcado de datos para la tabla `estudiante`
 --
 
-INSERT INTO `estudiante` (`idEstudiante`, `nombre`, `apellidos`, `dni`, `fechaNac`, `email`, `telefono`, `login`, `password`, `campus`, `facultad`, `titulacion`, `curso`, `inicioTitulacion`, `pAntes`, `pAntesYear`) VALUES
-(1, 'Pedro', 'Sanchez', '3433344333T', '2016-06-17', 'ps@gmail.com', '666556655', 'est1', 'est1', 'Ourense', 'ESE', 'Grado', '4º', '2000', 0, ''),
-(3, 'Est2', 'Est2', '43534534H', '2016-05-12', 'est2@gmail.com', '53521345235', 'est2', 'est2', 'Ourense', 'ESEI', 'Grado', '3', '2002', 0, ''),
-(7, 'Mario', 'Yáñez Borrajo', '76723676T', '1987-09-28', 'myborrajo@esei.uvigo.es', '685561018', 'kurdakri', '1123581321', 'Ourense', 'ESEI', 'Grado', '4º', '2011', 0, ''),
-(8, 'Federico', 'Jimenez', '33444553Y', '1956-10-08', 'fjimenez@gmail.com', '666666666', 'est3', 'est3', 'Ourense', 'ESEI', 'Master', '3º', '2012', 1, '2013'),
-(9, 'Manolo', 'Kabezobolo', '43366545E', '1993-10-25', 'manolo@gmail.com', '666776677', 'est4', 'est4', 'Ourense', 'ESEI', 'Grado', '3º', '2011', 1, '2014');
+INSERT INTO `estudiante` (`idEstudiante`, `nombre`, `apellidos`, `dni`, `fechaNac`, `email`, `telefono`, `login`, `password`, `campus`, `facultad`, `titulacion`, `curso`, `inicioTitulacion`, `pAntes`, `pAntesYear`,`mediaExpediente`) VALUES
+(1, 'Pedro', 'Sanchez', '3433344333T', '2016-06-17', 'ps@gmail.com', '666556655', 'est1', 'est1', 'Ourense', 'ESE', 'Grado', '4º', '2000', 0, '','6.8000'),
+(3, 'Est2', 'Est2', '43534534H', '2016-05-12', 'est2@gmail.com', '53521345235', 'est2', 'est2', 'Ourense', 'ESEI', 'Grado', '3', '2002', 0, '','7.1234'),
+(7, 'Mario', 'Yáñez Borrajo', '76723676T', '1987-09-28', 'myborrajo@esei.uvigo.es', '685561018', 'kurdakri', '1123581321', 'Ourense', 'ESEI', 'Grado', '4º', '2011', 0, '','5.3212'),
+(8, 'Federico', 'Jimenez', '33444553Y', '1956-10-08', 'fjimenez@gmail.com', '666666666', 'est3', 'est3', 'Ourense', 'ESEI', 'Master', '3º', '2012', 1, '2013','6.5434'),
+(9, 'Manolo', 'Kabezobolo', '43366545E', '1993-10-25', 'manolo@gmail.com', '666776677', 'est4', 'est4', 'Ourense', 'ESEI', 'Grado', '3º', '2011', 1, '2014','8.4342');
 
 -- --------------------------------------------------------
 
@@ -188,8 +189,6 @@ CREATE TABLE IF NOT EXISTS `practicas_has_estudiante` (
 -- Volcado de datos para la tabla `practicas_has_estudiante`
 --
 
-INSERT INTO `practicas_has_estudiante` (`Practicas_idPracticas`, `Practicas_Empresa_idEmpresa`, `Estudiante_idEstudiante`, `Prioridad`) VALUES
-(1, 2, 7, 0);
 
 -- --------------------------------------------------------
 
@@ -213,8 +212,6 @@ CREATE TABLE IF NOT EXISTS `practicas_tutor_estudiante` (
 -- Volcado de datos para la tabla `practicas_tutor_estudiante`
 --
 
-INSERT INTO `practicas_tutor_estudiante` (`idPracticas_Tutor_Estudiante`, `Tutor_idTutor`, `Practicas_idPracticas`, `Practicas_Empresa_idEmpresa`, `Estudiante_idEstudiante`) VALUES
-(5, 2, 1, 2, 7);
 
 -- --------------------------------------------------------
 
@@ -241,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `tutor` (
 --
 
 INSERT INTO `tutor` (`idTutor`, `nombre`, `apellidos`, `dni`, `telefono`, `email`, `login`, `password`, `departamento`, `centro`) VALUES
-(1, 'Jimena', 'López Díaz', '3433344333T', '676665566', 'jimenatutor1@gmail.com', 'tutor1', 'tutor1', 'Electrónica', 'ESEI'),
+(1, 'Default', 'Default', 'Default', 'Default', 'Default', 'default', 'default', 'Default', 'Default'),
 (2, 'tutor2', 'tutor2', '34344333H', '545454534', 'tutor2@gmail.com', 'tutor2', 'tutor2', 'Electrónica', 'ESEI');
 
 --
@@ -266,8 +263,8 @@ ALTER TABLE `practicas_has_estudiante`
 --
 ALTER TABLE `practicas_tutor_estudiante`
   ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Estudiante1` FOREIGN KEY (`Estudiante_idEstudiante`) REFERENCES `estudiante` (`idEstudiante`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Practicas1` FOREIGN KEY (`Practicas_idPracticas`, `Practicas_Empresa_idEmpresa`) REFERENCES `practicas` (`idPracticas`, `Empresa_idEmpresa`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Tutor1` FOREIGN KEY (`Tutor_idTutor`) REFERENCES `tutor` (`idTutor`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Practicas1` FOREIGN KEY (`Practicas_idPracticas`, `Practicas_Empresa_idEmpresa`) REFERENCES `practicas` (`idPracticas`, `Empresa_idEmpresa`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Tutor1` FOREIGN KEY (`Tutor_idTutor`) REFERENCES `tutor` (`idTutor`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
