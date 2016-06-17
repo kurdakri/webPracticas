@@ -25,7 +25,7 @@
 						</br>
 						Fecha de Nacimiento:<input type="date" name="fNac" class="form-control" required>
 						</br>
-						Email:<input type="text" name="email" class="form-control" placeholder="ej: user@gmail.com" required>
+						Correo electr&oacute;nico:<input type="text" name="email" class="form-control" placeholder="ej: user@gmail.com" required>
 						</br>
 						Telefono:<input type="text" name="telefono" class="form-control" placeholder="ej: 000000000" required>
 						</br>
@@ -88,7 +88,14 @@
 					alert("|INFO| Las password deben coincidir");
 					return false;
 				}else{
-					return true;
+					expediente = f.expA.value
+					if(isNaN(expediente)){
+						alert("|INFO| El expediente debe ser un valor numerico(decimales con .)");
+						return false;
+					}else{
+						return true;
+					}
+					
 				}
 			}
 	</script>

@@ -167,7 +167,16 @@ CREATE TABLE IF NOT EXISTS `practicas` (
 --
 
 INSERT INTO `practicas` (`idPracticas`, `titulo`, `descripcion`, `Empresa_idEmpresa`, `periodo`, `titulacion`, `inicio`, `fin`, `horario`, `pformativo`) VALUES
-(1, 'Proyecto de programación en Java', 'La práctica consiste en el desarrollo de un proyecto en Java en un grupo de trabajo formado por 12 personas.\r\nEl trabajo del alumno se tratará fundamentalmente de ayudar en las tareas de programación para los que la empresa lo requiera.', 2, 'segundo', 'indiferente', '2016-06-16', '2016-06-30', '09:00-17:00', 'El alumno desarrollará competencias de:\r\n- Trabajo en equipo\r\n- Liderazgo\r\n- Programación\r\n- Innovación');
+(1,'Practica1','Descripción Practica 1',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
+(2,'Practica2','Descripción Practica 2',2,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
+(3,'Practica3','Descripción Practica 3',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
+(4,'Practica4','Descripción Practica 4',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
+(5,'Practica5','Descripción Practica 5',2,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
+(6,'Practica6','Descripción Practica 6',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
+(7,'Practica7','Descripción Practica 7',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
+(8,'Practica8','Descripción Practica 8',2,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
+(9,'Practica9','Descripción Practica 9',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
+(10,'Practica10','Descripción Practica 10',2,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.');
 
 -- --------------------------------------------------------
 
@@ -238,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `tutor` (
 --
 
 INSERT INTO `tutor` (`idTutor`, `nombre`, `apellidos`, `dni`, `telefono`, `email`, `login`, `password`, `departamento`, `centro`) VALUES
-(1, 'Default', 'Default', 'Default', 'Default', 'Default', 'default', 'default', 'Default', 'Default'),
+(1, 'tutor1', 'tutor1', '66544333T', '666555666', 'tutor1@gmail.com', 'tutor1', 'tutor1', 'Informática', 'ESEI'),
 (2, 'tutor2', 'tutor2', '34344333H', '545454534', 'tutor2@gmail.com', 'tutor2', 'tutor2', 'Electrónica', 'ESEI');
 
 --
@@ -249,21 +258,21 @@ INSERT INTO `tutor` (`idTutor`, `nombre`, `apellidos`, `dni`, `telefono`, `email
 -- Filtros para la tabla `practicas`
 --
 ALTER TABLE `practicas`
-  ADD CONSTRAINT `fk_Practicas_Empresa` FOREIGN KEY (`Empresa_idEmpresa`) REFERENCES `empresa` (`idEmpresa`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Practicas_Empresa` FOREIGN KEY (`Empresa_idEmpresa`) REFERENCES `empresa` (`idEmpresa`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `practicas_has_estudiante`
 --
 ALTER TABLE `practicas_has_estudiante`
-  ADD CONSTRAINT `fk_Practicas_has_Estudiante_Estudiante1` FOREIGN KEY (`Estudiante_idEstudiante`) REFERENCES `estudiante` (`idEstudiante`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Practicas_has_Estudiante_Practicas1` FOREIGN KEY (`Practicas_idPracticas`, `Practicas_Empresa_idEmpresa`) REFERENCES `practicas` (`idPracticas`, `Empresa_idEmpresa`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Practicas_has_Estudiante_Estudiante1` FOREIGN KEY (`Estudiante_idEstudiante`) REFERENCES `estudiante` (`idEstudiante`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Practicas_has_Estudiante_Practicas1` FOREIGN KEY (`Practicas_idPracticas`, `Practicas_Empresa_idEmpresa`) REFERENCES `practicas` (`idPracticas`, `Empresa_idEmpresa`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `practicas_tutor_estudiante`
 --
 ALTER TABLE `practicas_tutor_estudiante`
-  ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Estudiante1` FOREIGN KEY (`Estudiante_idEstudiante`) REFERENCES `estudiante` (`idEstudiante`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Practicas1` FOREIGN KEY (`Practicas_idPracticas`, `Practicas_Empresa_idEmpresa`) REFERENCES `practicas` (`idPracticas`, `Empresa_idEmpresa`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Estudiante1` FOREIGN KEY (`Estudiante_idEstudiante`) REFERENCES `estudiante` (`idEstudiante`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Practicas1` FOREIGN KEY (`Practicas_idPracticas`, `Practicas_Empresa_idEmpresa`) REFERENCES `practicas` (`idPracticas`, `Empresa_idEmpresa`) ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ADD CONSTRAINT `fk_Practicas_Tutor_Estudiante_Tutor1` FOREIGN KEY (`Tutor_idTutor`) REFERENCES `tutor` (`idTutor`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

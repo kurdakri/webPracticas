@@ -194,8 +194,8 @@
 								</br>
 								Año de pr&aacute;cticas anteriores(si se han hecho):<input type="text" name="pAntesYear" class="form-control">
 								</br>
-								<button class="btn btn-sm btn-default btn-block" type="submit">
-									Enviar</button>
+								<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
+									<b>Enviar</b></button>
 							</form>
 						</div>
 					</div>
@@ -230,7 +230,14 @@
 					alert("|INFO| Las password deben coincidir");
 					return false;
 				}else{
-					return true;
+					expediente = f.expA.value
+					if(isNaN(expediente)){
+						alert("|INFO| El expediente debe ser un valor numerico(decimales con .)");
+						return false;
+					}else{
+						return true;
+					}
+					
 				}
 			}
 	</script>
