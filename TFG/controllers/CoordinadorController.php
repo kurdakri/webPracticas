@@ -152,97 +152,85 @@ function realizarAsignaciones($array){
 		}
 	}//$practicas contiene practicas que no han sido asignadas todavia al llamar a la funcion
 	
-	$auxiliar = false;
-	//El bucle siguiente se repite mientras queden estudiantes
-	while(count($estudiantes) > 0){
-		if(count($practicas) == 0){
-			$msg = "Se han asignado todas las practicas disponibles. Quedan estudiantes sin asignar.";
-			header("Location: ../views/coordinador/asignacionEE.php?msg=$msg");
-		}else{
-			$notaMax = -1;
-			$iselect = -1;
-			$j=0;
-			$estudianteSeleccionado = null;
-			foreach($estudiantes as $estudiante){
-				$nota = $estudiante["mediaExpediente"];
-				if($nota > $notaMax){
-					$estudianteSeleccionado = $estudiante;
-					$notaMax = $nota;
-					$iselect = $j;
-				}
-				$j++;
+	while(!empty($estudiantes)){
+		if(empty($practicas)){
+			break;
+		}
+		$notaMax = -1;
+		$i = 0;
+		foreach($estudiantes as $estudiante){
+			$nota = $estudiante["mediaExpediente"];
+			if($nota >= $notaMax){
+				$notaMax = $nota;
+				$estudianteSeleccionado = $estudiante;
+				$estudiantePosicion = $i;
 			}
-			$notaMax = -1;
-			//Ahora mismo $estudianteSeleccionado contiene al estudiante con mejor nota
-			$z=1;
-			$completa = false;
-			while($z<=5){
-				$idEstudianteSeleccionado = $estudianteSeleccionado["id"];
-				$s = new PracticasHasEstudiante();
-				$solicitud = $s->selectPri($idEstudianteSeleccionado,$z);
-				$idSolicitud = $solicitud[0]["Practicas_idPracticas"];
-				$aux = false;
-				$j=0;
-				$jselect=-1;
-				foreach($practicas as $practica){
-					if($idSolicitud == $practica["idPracticas"]){
-						$aux = true;
-						$jselect=$j;
-					}else{
-						
-					}
-					$j++;
-				}
-				
-				if($aux == true){
-					//practica solicitada disponible
-					$idEmpresa = $solicitud[0]["Practicas_Empresa_idEmpresa"];
-					//Asignamos la practica
-					$e = new PracticasTutorEstudiante();
-					$e->set(-1,$idSolicitud,$idEmpresa,$idEstudianteSeleccionado);
-					$boolean = $e->insert();
-					if($boolean == false){
-						echo "No se hizo la insercion";
-						break;
-					}else{
-						//Se ha insertado el estudiante, lo borramos de la lista de estudiantes pendientes de asignacion
-						unset($estudiantes[$iselect]);
-						$iselect = -1;
-						$estudianteSeleccionado = null;
-						
-						//Se ha seleccionado la practica, la borramos de la lista de practicas que quedan por asignar
-						unset($practicas[$jselect]);
-						$jselect=-1;
-						$completa = true;
-						break;
-					}
-				}else{
-					
-				}
-				$z++;
-			}
+			$i=$i+1;
+		}
+		
+		$prioridad = 1;
+		while($prioridad <=5){
+			$idEstudianteSeleccionado = $estudianteSeleccionado["id"];
+			$s = new PracticasHasEstudiante();
+			$solicitud = $s->selectPri($idEstudianteSeleccionado,$prioridad);
+			$idSolicitud = $solicitud[0]["Practicas_idPracticas"];
 			
-			//Evita problemas
-			if(count($estudiantes) == 1 & $auxiliar == true){
-				unset($estudiantes);
-				$estudiantes = array();
+			$j=0;
+			$encuentra = false;
+			foreach($practicas as $practica){
+				$idPractica = $practica["idPracticas"];
+				if($idPractica == $idSolicitud){
+					$practicaPosicion = $j;
+					$encuentra = true;
+					break;
+				}
+				$j=$j+1;
+			}
+			if($encuentra == true){
 				break;
 			}
-			
-			if(count($estudiantes) == 1){
-				$auxiliar = true;
-			}
-			
-			if($completa == false){
-				//Ninguna de las practicas elegidas por el estudiante estan disponibles para el
-				//Seguimos con el siguiente
-						unset($estudiantes[$iselect]);
-						$iselect = -1;
-						$estudianteSeleccionado = null;				
-			}
+			$prioridad=$prioridad+1;;
 		}
+		
+		if($encuentra == true){
+			$idEmpresa = $solicitud[0]["Practicas_Empresa_idEmpresa"];
+			//Asignamos la practica
+			$e = new PracticasTutorEstudiante();
+			$e->set(-1,$idSolicitud,$idEmpresa,$idEstudianteSeleccionado);
+			$boolean = $e->insert();
+				
+			//Borramos estudiante y practica de la lista de disponibles
+			unset($estudiantes[$estudiantePosicion]);
+			unset($practicas[$practicaPosicion]);
+			$k=0;
+			$aux=array();
+			foreach($estudiantes as $estudiante){
+				$aux[$k] = $estudiante;
+				$k++;
+			}
+			$estudiantes = $aux;
+			$k=0;
+			unset($aux);
+			$aux=array();
+			foreach($practicas as $practica){
+				$aux[$k] = $practica;
+				$k++;
+			}
+			$practicas = $aux;
+			unset($aux);
+		}else{
+			unset($estudiantes[$estudiantePosicion]);
+			$k=0;
+			$aux=array();
+			foreach($estudiantes as $estudiante){
+				$aux[$k] = $estudiante;
+				$k++;
+			}
+			$estudiantes = $aux;
+			unset($aux);
+		}
+		
 	}
-	
 	verSolicitantes();
 }
 
