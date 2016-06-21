@@ -10,7 +10,8 @@
     <meta name="author" content="">
 
     <title>Coordinador-Practicas ESEI</title>
-
+	
+	
     <!-- Bootstrap Core CSS -->
     <link href="../../layouts/coordinador/css/bootstrap.min.css" rel="stylesheet">
 
@@ -70,10 +71,10 @@
                         <a href="../../controllers/CoordinadorController.php?action=ofertasPracticas"><i class="fa fa-fw fa-edit"></i>Gestión de las ofertas de empresas</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignación de Tutores</a>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignación Estudiante-Empresa</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignación Estudiante-Empresa</a>
+                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignación de Tutores</a>
                     </li>
                 </ul>
             </div>
@@ -83,7 +84,7 @@
         <div id="page-wrapper">
 
             <div class="container-fluid">
-
+			
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -93,68 +94,47 @@
                     </div>
                 </div>
                 <!-- /.row -->
-			
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Gestion del Calendario</h3>
-                            </div>
-							<a href="../../controllers/CoordinadorController.php?action=eventos"> <center><img src ="../../layouts/coordinador/images/calendario.jpg"></center></a> 
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
-				
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Administración de Usuarios</h3>
-                            </div>
-							<a href="usuarios.php"> <center><img src ="../../layouts/coordinador/images/publicaciones.jpg"></center></a>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
-				
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Gestión de ofertas de Empresas</h3>
-                            </div>
-							<a href="../../controllers/CoordinadorController.php?action=ofertasPracticas"> <center><img src ="../../layouts/coordinador/images/empresas.png"></center></a>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
-				
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Asignaciones de Tutores</h3>
-                            </div>
-							<a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"> <center><img src ="../../layouts/coordinador/images/asignacionesAT.jpg"></center></a>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
-				
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i>Asignaciones Estudiante-Empresa</h3>
-                            </div>
-							<a href="../../controllers/CoordinadorController.php?action=verSolicitantes"> <center><img src ="../../layouts/coordinador/images/asignacionesAE.png"></center></a>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
 				
 				
+				<div class="row">
+					<div class = "col-sm-6 col-md-3">
+						<b>Gestion del calendario</b>
+						<a href="../../controllers/CoordinadorController.php?action=eventos" class="thumbnail">
+							<img onmouseover="muestraTitulo()" src ="../../layouts/coordinador/images/calendario.jpg" width="200" height="200" >	
+						</a>
+					</div>
+					<div class = "col-sm-6 col-md-3">
+						<b>Administracion de usuarios</b>
+						<a href="usuarios.php" class="thumbnail">
+							<img src ="../../layouts/coordinador/images/publicaciones.jpg" width="210" height="200" >			
+						</a>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class = "col-sm-6 col-md-3">
+						<b>Gestion de las ofertas de empresas</b>
+						<a href="../../controllers/CoordinadorController.php?action=ofertasPracticas" class="thumbnail">
+							<img src ="../../layouts/coordinador/images/empresas.png" width="245" height="200" border="2">	
+						</a>
+					</div>
+					<div class = "col-sm-6 col-md-3">
+						<b>Asignacion estudiante-empresa</b>
+						<a href="../../controllers/CoordinadorController.php?action=verSolicitantes" class="thumbnail">
+							<img src ="../../layouts/coordinador/images/asignacionesAE.png" width="200" height="200" border="2">			
+						</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class = "col-sm-6 col-md-3">
+						<b>Asignacion de tutores</b>
+						<a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas" class="thumbnail">
+							<img src ="../../layouts/coordinador/images/asignacionesAT.jpg" width="210" height="200" border="2">		
+						</a>
+					</div>
+				</div>
+							
+									
             </div>
             <!-- /.container-fluid -->
 
@@ -169,6 +149,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+
 
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>

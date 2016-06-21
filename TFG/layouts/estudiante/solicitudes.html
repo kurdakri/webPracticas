@@ -93,7 +93,7 @@
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
-						echo $msg;
+						echo "<b style='color:red'>".$msg."</b>";
 					}
 					
 					if(isset($_GET["datos"])){
@@ -102,39 +102,139 @@
 							echo "<div class='col-lg-12'>";
 							echo "<div class='panel panel-default'>";
 							echo "<div class='panel-heading'>";
-								echo "<h3 class='panel-title'><i class='fa fa-fw'></i><b>Selecciona las 5 pr&aacute;cticas elegidas por orden de prioridad</b></h3>";
+								echo "<h3 class='panel-title'><i class='fa fa-fw'></i><b>Selecciona las pr&aacute;cticas elegidas por orden de prioridad</b></h3>";
 							echo "</div>";
-							echo "<form id='solicitud' method='POST' action='../../controllers/EstudianteController.php'>";
-							echo "<b>Prioridad 1:</b><select class='form-control' name='p1' form='solicitud'>";
-							foreach($datos as $emp){
-								echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
-							}
-							echo "</select>";
-							echo "<b>Prioridad 2:</b><select class='form-control' name='p2' form='solicitud'>";
-							foreach($datos as $emp){
-								echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
-							}
-							echo "</select>";
-							echo "<b>Prioridad 3:</b><select class='form-control' name='p3' form='solicitud'>";
-							foreach($datos as $emp){
-								echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
-							}
-							echo "</select>";
-							echo "<b>Prioridad 4:</b><select class='form-control' name='p4' form='solicitud'>";
-							foreach($datos as $emp){
-								echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
-							}
-							echo "</select>";
-							echo "<b>Prioridad 5:</b><select class='form-control' name='p5' form='solicitud'>";
-							foreach($datos as $emp){
-								echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
-							}
-							echo "</select>";
-							echo "<input type='hidden' name='formularioSolicitud'>";
-							echo "<br>";
-							echo "<button style='background:#E8E8E8' class='btn btn-sm btn-default btn-block' type='submit'><b>Enviar Solicitud</b></button>";
 							
-							echo "</form>";
+							echo "<b>N&uacute;mero de practicas que desea solicitar</b><select id='selector' class='form-control' name='seleccion' onchange='funcion(this)'>
+								<option value='cero'>0</option>
+								<option value='uno'>1</option>
+								<option value='dos'>2</option>
+								<option value='tres'>3</option>
+								<option value='cuatro'>4</option>
+								<option value='cinco'>5</option>
+							</select>";
+							
+							echo "<br>";
+							echo "<br>";
+							
+							echo "<div id='uno' style='display:none;'>";
+								echo "<form id='solicitud1' onsubmit='return validar1(this)' method='POST' action='../../controllers/EstudianteController.php'>";
+								echo "<b>Prioridad 1:</b><select class='form-control' name='p1' form='solicitud1'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<input type='hidden' name='formularioSolicitud1'>";
+								echo "<br>";
+								echo "<button style='background:#E8E8E8' class='btn btn-sm btn-default btn-block' type='submit'><b>Enviar Solicitud</b></button>";	
+								echo "</form>";					
+							echo "</div>";
+							
+							
+							
+							echo "<div id='dos' style='display:none;'>";
+								echo "<form id='solicitud2' onsubmit='return validar2(this)' method='POST' action='../../controllers/EstudianteController.php'>";
+								echo "<b>Prioridad 1:</b><select class='form-control' name='p1' form='solicitud2'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 2:</b><select class='form-control' name='p2' form='solicitud2'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<input type='hidden' name='formularioSolicitud2'>";
+								echo "<br>";
+								echo "<button style='background:#E8E8E8' class='btn btn-sm btn-default btn-block' type='submit'><b>Enviar Solicitud</b></button>";	
+								echo "</form>";								
+							echo "</div>";
+							
+							echo "<div id='tres' style='display:none;'>";
+								echo "<form id='solicitud3' onsubmit='return validar3(this)' method='POST' action='../../controllers/EstudianteController.php'>";
+								echo "<b>Prioridad 1:</b><select class='form-control' name='p1' form='solicitud3'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 2:</b><select class='form-control' name='p2' form='solicitud3'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 3:</b><select class='form-control' name='p3' form='solicitud3'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<input type='hidden' name='formularioSolicitud3'>";
+								echo "<br>";
+								echo "<button style='background:#E8E8E8' class='btn btn-sm btn-default btn-block' type='submit'><b>Enviar Solicitud</b></button>";	
+								echo "</form>";							
+							echo "</div>";
+							
+							echo "<div id='cuatro' style='display:none;'>";
+								echo "<form id='solicitud4' onsubmit='return validar4(this)' method='POST' action='../../controllers/EstudianteController.php'>";
+								echo "<b>Prioridad 1:</b><select class='form-control' name='p1' form='solicitud4'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 2:</b><select class='form-control' name='p2' form='solicitud4'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 3:</b><select class='form-control' name='p3' form='solicitud4'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 4:</b><select class='form-control' name='p4' form='solicitud4'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<input type='hidden' name='formularioSolicitud4'>";
+								echo "<br>";
+								echo "<button style='background:#E8E8E8' class='btn btn-sm btn-default btn-block' type='submit'><b>Enviar Solicitud</b></button>";	
+								echo "</form>";								
+							echo "</div>";
+							
+							echo "<div id='cinco' style='display:none;'>";
+								echo "<form id='solicitud5' onsubmit='return validar5(this)' method='POST' action='../../controllers/EstudianteController.php'>";
+								echo "<b>Prioridad 1:</b><select class='form-control' name='p1' form='solicitud5'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 2:</b><select class='form-control' name='p2' form='solicitud5'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 3:</b><select class='form-control' name='p3' form='solicitud5'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 4:</b><select class='form-control' name='p4' form='solicitud5'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<b>Prioridad 5:</b><select class='form-control' name='p5' form='solicitud5'>";
+								foreach($datos as $emp){
+									echo "<option value='".$emp["titulo"]."'>".$emp["titulo"]."</option>";
+								}
+								echo "</select>";
+								echo "<input type='hidden' name='formularioSolicitud5'>";
+								echo "<br>";
+								echo "<button style='background:#E8E8E8' class='btn btn-sm btn-default btn-block' type='submit'><b>Enviar Solicitud</b></button>";	
+								echo "</form>";							
+							echo "</div>";
+							
+							
 							echo "</div>";
 							echo "</div>";
 							echo "</div>";	
@@ -190,6 +290,34 @@
 							
 							
 					}
+					
+					if(isset($_GET["array"])){
+						$array = json_decode($_GET["array"],true);
+						if(isset($_GET["sivarita"])){
+							echo $_GET["sivarita"];
+						}else{
+							echo "<b>Ha enviado la solicitud de pr&aacute;cticas. A continuaci&oacute;n se muestra esa solicitud.</b>";
+						}
+						echo "<br>";
+						echo "<br>";
+						echo "<table class='table'>";
+						echo "<thead>";
+						echo "<tr>";
+						echo "<th>Pr&aacute;ctica elegida</th><th>Nivel de prioridad</th>";
+						echo "</tr>";
+						echo "</thead>";
+						echo "<tbody>";
+						foreach($array as $practica){
+							echo "<tr>";
+							echo "<td>".$practica["titulo"]."</td>";
+							echo "<td>".$practica["prioridad"]."</td>";
+							echo "<tr>";
+						}
+						echo "</tbody>";
+						echo "</table>";
+						echo "<a href='../../controllers/EstudianteController.php?action=eliminarSolicitud' class='btn btn-block btn-default' style='background:#E8E8E8'>Eliminar la solicitud y realizar otra</a>";
+						
+					}
 				?>					
 
 				
@@ -217,6 +345,110 @@
 			else
 				vista='none';
 			document.getElementById(esto).style.display=vista;
+		}
+	</script>
+	
+	<script>
+	
+		function validar1(f){
+			return true;
+		}
+		
+		function validar2(f){
+			p1 = f.p1.value;
+			p2 = f.p2.value;
+			if(p1 == p2){
+				alert("|INFO| Las 2 practicas seleccionadas deben ser diferentes.");
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		function validar3(f){
+			p1 = f.p1.value;
+			p2 = f.p2.value;
+			p3 = f.p3.value;
+			
+			if(p1 == p2 || p1 == p3 || p2 == p3){
+				alert("|INFO| Las 3 practicas seleccionadas deben ser diferentes.");
+				return false;				
+			}else{
+				return true;
+			}
+		}	
+		
+	
+		function validar4(f){
+			p1 = f.p1.value;
+			p2 = f.p2.value;
+			p3 = f.p3.value;
+			p4 = f.p4.value;
+			
+			if(p1 == p2 || p1 == p3 || p1 == p4 || p2 == p3 || p2 == p4 || p3 == p4){
+				alert("|INFO| Las 4 practicas seleccionadas deben ser diferentes");
+				return false;
+			}else{
+				return true;
+			}
+		}
+	
+		function validar5(f){
+			p1 = f.p1.value;
+			p2 = f.p2.value;
+			p3 = f.p3.value;
+			p4 = f.p4.value;
+			p5 = f.p5.value;
+			
+			if(p1 == p2 || p1 == p3 || p1 == p4 || p1 == p5 || p2 == p3 || p2 == p4 || p2 == p5 || p3 == p4 || p3 == p5 || p4 == p5){
+				alert("|INFO| Las  5 practicas seleccionadas deben ser diferentes");
+				return false;
+			}else{
+				return true;
+			}
+		}
+	</script>
+	
+	<script>
+		function funcion(f){
+			valor = f.value;
+			if(valor == "uno"){
+				document.getElementById("uno").style.display = 'block';
+				document.getElementById("dos").style.display = 'none';
+				document.getElementById("tres").style.display = 'none';
+				document.getElementById("cuatro").style.display = 'none';
+				document.getElementById("cinco").style.display = 'none';				
+			}else if(valor == "dos"){
+				document.getElementById("uno").style.display = 'none';
+				document.getElementById("dos").style.display = 'block';
+				document.getElementById("tres").style.display = 'none';
+				document.getElementById("cuatro").style.display = 'none';
+				document.getElementById("cinco").style.display = 'none';			
+			}else if(valor == "tres"){
+				document.getElementById("uno").style.display = 'none';
+				document.getElementById("dos").style.display = 'none';
+				document.getElementById("tres").style.display = 'block';
+				document.getElementById("cuatro").style.display = 'none';
+				document.getElementById("cinco").style.display = 'none';			
+			}else if(valor == "cuatro"){
+				document.getElementById("uno").style.display = 'none';
+				document.getElementById("dos").style.display = 'none';
+				document.getElementById("tres").style.display = 'none';
+				document.getElementById("cuatro").style.display = 'block';
+				document.getElementById("cinco").style.display = 'none';			
+			}else if(valor == "cinco"){
+				document.getElementById("uno").style.display = 'none';
+				document.getElementById("dos").style.display = 'none';
+				document.getElementById("tres").style.display = 'none';
+				document.getElementById("cuatro").style.display = 'none';
+				document.getElementById("cinco").style.display = 'block';			
+			}else{
+				document.getElementById("uno").style.display = 'none';
+				document.getElementById("dos").style.display = 'none';
+				document.getElementById("tres").style.display = 'none';
+				document.getElementById("cuatro").style.display = 'none';
+				document.getElementById("cinco").style.display = 'none';
+			}
 		}
 	</script>
 

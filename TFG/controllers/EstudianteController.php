@@ -30,6 +30,10 @@ if(isset($_GET["action"])){
 	if($action == "asignaciones"){
 		consultarAsignaciones();
 	}
+	
+	if($action == "eliminarSolicitud"){
+		eliminarSolicitud();
+	}
 }else{
 	if(isset($_POST["login"])&isset($_POST["clave1"])&isset($_POST["nombre"])&isset($_POST["apellidos"])&isset($_POST["email"])&isset($_POST["telefono"])
 		&isset($_POST["dni"])&isset($_POST["fNac"])&isset($_POST["campus"])&isset($_POST["facultad"])&isset($_POST["titulacion"])&isset($_POST["curso"])
@@ -45,11 +49,11 @@ if(isset($_GET["action"])){
 		solicitarPracticas();
 	}
 	
-	if(isset($_POST["alumno"])&isset($_POST["dni"])&isset($_POST["motivo"])){
+	if(isset($_POST["motivo"])){
 		solicitarAnulacion();
 	}
 	
-	if(isset($_POST["alumno"])&isset($_POST["dni"])&isset($_POST["mot"])){
+	if(isset($_POST["mot"])){
 		solicitarCambio();
 	}
 	
@@ -57,19 +61,322 @@ if(isset($_GET["action"])){
 		enviarInforme();
 	}
 	
-	if(isset($_POST["formularioSolicitud"])){
-		procesarSolicitud();
+	if(isset($_POST["formularioSolicitud1"])){
+		procesarSolicitud1();
+	}
+	
+	
+	if(isset($_POST["formularioSolicitud2"])){
+		procesarSolicitud2();
+	}
+	
+	
+	if(isset($_POST["formularioSolicitud3"])){
+		procesarSolicitud3();
+	}
+	
+	
+	if(isset($_POST["formularioSolicitud4"])){
+		procesarSolicitud4();
+	}
+	
+	
+	if(isset($_POST["formularioSolicitud5"])){
+		procesarSolicitud5();
 	}
 	
 }
 
-function procesarSolicitud(){
+function procesarSolicitud1(){
+	$p1 = $_POST["p1"];
+	
+	$p = new Practicas();
+	$practica = $p->select($p1);
+	$idp1 = $practica[0]["idPracticas"];
+	$ide1 = $practica[0]["Empresa_idEmpresa"];
+	
+	session_start();
+	$loginEstudiante = $_SESSION["name"];
+	$e = new Estudiante();
+	$estudiante = $e->select($loginEstudiante);
+	$idest = $estudiante[0]["idEstudiante"];
+	
+	$p = new PracticasHasEstudiante();
+	$boolean = $p->select($idest); //Recoge las practicas del estudiante
+	
+	if($boolean == false){//Tiene en cuenta un intento de insercion sin recargar la pagina
+		$b = new PracticasHasEstudiante();
+		$b->set($idp1,$ide1,$idest,1);
+		$boolean1 = $b->insert();//Realiza la insercion
+		
+		$p = new PracticasHasEstudiante();
+		$boolean = $p->select($idest); //Recoge las practicas del estudiante
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend");					
+	}else{
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		$sivarita = "Ya envio una solicitud anteriormente. Elimine la solicitud si quiere enviar otra en su lugar.";
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend&sivarita=$sivarita");		
+	}		
+}
+
+function procesarSolicitud2(){
+	$p1 = $_POST["p1"];
+	$p2 = $_POST["p2"];
+	
+	$p = new Practicas();
+	$practica = $p->select($p1);
+	$idp1 = $practica[0]["idPracticas"];
+	$ide1 = $practica[0]["Empresa_idEmpresa"];
+	
+	$p = new Practicas();
+	$practica = $p->select($p2);
+	$idp2 = $practica[0]["idPracticas"];
+	$ide2 = $practica[0]["Empresa_idEmpresa"];
+	
+	session_start();
+	$loginEstudiante = $_SESSION["name"];
+	$e = new Estudiante();
+	$estudiante = $e->select($loginEstudiante);
+	$idest = $estudiante[0]["idEstudiante"];
+	
+	$p = new PracticasHasEstudiante();
+	$boolean = $p->select($idest); //Recoge las practicas del estudiante
+	
+	if($boolean == false){
+		$b = new PracticasHasEstudiante();
+		$b->set($idp1,$ide1,$idest,1);
+		$boolean1 = $b->insert();//Realiza la insercion 1
+
+		$b = new PracticasHasEstudiante();
+		$b->set($idp2,$ide2,$idest,2);
+		$boolean2 = $b->insert();//Realiza la insercion 2
+
+		$p = new PracticasHasEstudiante();
+		$boolean = $p->select($idest); //Recoge las practicas del estudiante
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend");	
+		
+		
+	}else{
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		$sivarita = "Ya envio una solicitud anteriormente. Elimine la solicitud si quiere enviar otra en su lugar.";
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend&sivarita=$sivarita");			
+	}	
+}
+
+function procesarSolicitud3(){
+	$p1 = $_POST["p1"];
+	$p2 = $_POST["p2"];
+	$p3 = $_POST["p3"];
+	
+	$p = new Practicas();
+	$practica = $p->select($p1);
+	$idp1 = $practica[0]["idPracticas"];
+	$ide1 = $practica[0]["Empresa_idEmpresa"];
+	
+	$p = new Practicas();
+	$practica = $p->select($p2);
+	$idp2 = $practica[0]["idPracticas"];
+	$ide2 = $practica[0]["Empresa_idEmpresa"];
+	
+	$p = new Practicas();
+	$practica = $p->select($p3);
+	$idp3 = $practica[0]["idPracticas"];
+	$ide3 = $practica[0]["Empresa_idEmpresa"];
+	
+	session_start();
+	$loginEstudiante = $_SESSION["name"];
+	$e = new Estudiante();
+	$estudiante = $e->select($loginEstudiante);
+	$idest = $estudiante[0]["idEstudiante"];
+	
+	$p = new PracticasHasEstudiante();
+	$boolean = $p->select($idest); //Recoge las practicas del estudiante
+	
+	if($boolean == false){
+		$b = new PracticasHasEstudiante();
+		$b->set($idp1,$ide1,$idest,1);
+		$boolean1 = $b->insert();//Realiza la insercion 1
+
+		$b = new PracticasHasEstudiante();
+		$b->set($idp2,$ide2,$idest,2);
+		$boolean2 = $b->insert();//Realiza la insercion 2
+		
+		$b = new PracticasHasEstudiante();
+		$b->set($idp3,$ide3,$idest,3);
+		$boolean3 = $b->insert(); //Realiza la insercion 3
+		
+		$p = new PracticasHasEstudiante();
+		$boolean = $p->select($idest); //Recoge las practicas del estudiante
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend");		
+	}else{
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		$sivarita = "Ya envio una solicitud anteriormente. Elimine la solicitud si quiere enviar otra en su lugar.";
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend&sivarita=$sivarita");				
+	}
+}
+
+function procesarSolicitud4(){
+	$p1 = $_POST["p1"];
+	$p2 = $_POST["p2"];
+	$p3 = $_POST["p3"];
+	$p4 = $_POST["p4"];
+
+	$p = new Practicas();
+	$practica = $p->select($p1);
+	$idp1 = $practica[0]["idPracticas"];
+	$ide1 = $practica[0]["Empresa_idEmpresa"];
+	
+	$p = new Practicas();
+	$practica = $p->select($p2);
+	$idp2 = $practica[0]["idPracticas"];
+	$ide2 = $practica[0]["Empresa_idEmpresa"];
+	
+	$p = new Practicas();
+	$practica = $p->select($p3);
+	$idp3 = $practica[0]["idPracticas"];
+	$ide3 = $practica[0]["Empresa_idEmpresa"];	
+	
+	$p = new Practicas();
+	$practica = $p->select($p4);
+	$idp4 = $practica[0]["idPracticas"];
+	$ide4 = $practica[0]["Empresa_idEmpresa"];
+	
+	session_start();
+	$loginEstudiante = $_SESSION["name"];
+	$e = new Estudiante();
+	$estudiante = $e->select($loginEstudiante);
+	$idest = $estudiante[0]["idEstudiante"];
+	
+	$p = new PracticasHasEstudiante();
+	$boolean = $p->select($idest); //Recoge las practicas del estudiante
+	
+	if($boolean == false){
+		$b = new PracticasHasEstudiante();
+		$b->set($idp1,$ide1,$idest,1);
+		$boolean1 = $b->insert();//Realiza la insercion 1
+
+		$b = new PracticasHasEstudiante();
+		$b->set($idp2,$ide2,$idest,2);
+		$boolean2 = $b->insert();//Realiza la insercion 2
+		
+		$b = new PracticasHasEstudiante();
+		$b->set($idp3,$ide3,$idest,3);
+		$boolean3 = $b->insert(); //Realiza la insercion 3
+		
+		$b = new PracticasHasEstudiante();
+		$b->set($idp4,$ide4,$idest,4);
+		$boolean4 = $b->insert(); //Realiza la insercion 4
+
+		$p = new PracticasHasEstudiante();
+		$boolean = $p->select($idest); //Recoge las practicas del estudiante
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend");
+		
+	}else{
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		$sivarita = "Ya envio una solicitud anteriormente. Elimine la solicitud si quiere enviar otra en su lugar.";
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend&sivarita=$sivarita");
+	}
+}
+
+function procesarSolicitud5(){
 	$p1 = $_POST["p1"];
 	$p2 = $_POST["p2"];
 	$p3 = $_POST["p3"];
 	$p4 = $_POST["p4"];
 	$p5 = $_POST["p5"];
-
+	
 	$p = new Practicas();
 	$practica = $p->select($p1);
 	$idp1 = $practica[0]["idPracticas"];
@@ -101,76 +408,93 @@ function procesarSolicitud(){
 	$estudiante = $e->select($loginEstudiante);
 	$idest = $estudiante[0]["idEstudiante"];
 	
-	$b = new PracticasHasEstudiante();
-	$b->set($idp1,$ide1,$idest,1);
-	$boolean1 = $b->insert();
+	$p = new PracticasHasEstudiante();
+	$boolean = $p->select($idest); //Recoge las practicas del estudiante
 	
-	$b = new PracticasHasEstudiante();
-	$b->set($idp2,$ide2,$idest,2);
-	$boolean2 = $b->insert();
-	
-	$b = new PracticasHasEstudiante();
-	$b->set($idp3,$ide3,$idest,3);
-	$boolean3 = $b->insert();
-	
-	$b = new PracticasHasEstudiante();
-	$b->set($idp4,$ide4,$idest,4);
-	$boolean4 = $b->insert();
-	
-	$b = new PracticasHasEstudiante();
-	$b->set($idp5,$ide5,$idest,5);
-	$boolean5 = $b->insert();
-	
-	if($boolean1 == false || $boolean2 == false || $boolean3 == false || $boolean4 == false || $boolean5==false){
+	if($boolean == false){
 		$b = new PracticasHasEstudiante();
-		$boolean5 = $b->deleteEstudiante($idest);
-		$msg = "No se ha podido procesar la solicitud. Revise los datos de envio.";
+		$b->set($idp1,$ide1,$idest,1);
+		$boolean1 = $b->insert();//Realiza la insercion 1
+
+		$b = new PracticasHasEstudiante();
+		$b->set($idp2,$ide2,$idest,2);
+		$boolean2 = $b->insert();//Realiza la insercion 2
+		
+		$b = new PracticasHasEstudiante();
+		$b->set($idp3,$ide3,$idest,3);
+		$boolean3 = $b->insert(); //Realiza la insercion 3
+		
+		$b = new PracticasHasEstudiante();
+		$b->set($idp4,$ide4,$idest,4);
+		$boolean4 = $b->insert(); //Realiza la insercion 4
+		
+		$b = new PracticasHasEstudiante();
+		$b->set($idp5,$ide5,$idest,5);
+		$boolean5 = $b->insert(); //Realiza la insercion 5
+		
+		$p = new PracticasHasEstudiante();
+		$boolean = $p->select($idest); //Recoge las practicas del estudiante
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend");				
+	}else{
+		$array = array();
+		$i = 0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		$sivarita = "Ya envio una solicitud anteriormente. Elimine la solicitud si quiere enviar otra en su lugar.";
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend&sivarita=$sivarita");
+	}
+}
+
+
+function eliminarSolicitud(){
+	$e = new Estudiante();
+	session_start();
+	$id = $_SESSION["name"];
+	$estudiante = $e->select($id);
+	$idEstudiante = $estudiante[0]["idEstudiante"];
+	$p = new PracticasHasEstudiante();
+	$boolean = $p->deleteEstudiante($idEstudiante);
+	$p = new Practicas();
+	$practicas = $p->selectAll();
+	if($practicas == false){
+		$msg = "Solicitud eliminada. No hay propuestas de practicas en este momento";
 		header("Location: ../views/estudiante/solicitudes.php?msg=$msg");
 	}else{
-		$remitente = $estudiante[0]["email"];
-		
-		$c = new Coordinador();
-		$coordinador = $c->selectAll();
-		$destinatario = $coordinador[0]["email"];	
-		$correo = new PHPMailer();
-		$smtp = new SMTP();
-
-		$correo->IsSMTP();
-		$correo->SMTPAuth=true;
-		$correo->SMTPSecure='tls';
-		$correo->Host="smtp.gmail.com";
-		$correo->Port=587;
-		$correo->Username="tfgpracticasesei@gmail.com";
-		$correo->Password="tfgpracticas";
-		$correo->Timeout=30;
-		$correo->Charset='UTF-8';
-		
-		//Decimos quien envía el correo
-		$correo->SetFrom("tfgpracticasesei@gmail.com","");
-
-		//Para indicar a quien tiene que responder el correo
-		$correo->AddReplyTo($remitente,"");
-
-		//Destinatario del correo
-		$correo->AddAddress($destinatario,"");
-
-		//Asunto del mensaje
-		$correo->Subject = "AVISO DE ENVIO DE FORMULARIO";
-
-		//Contenido del mensaje
-		$correo->IsHTML(false);
-		$correo->Body = "Se le informa de que un estudiante ha realizado una solicitud de practicas.";
-			
-		if(!$correo->Send()){
-			$msg="Error:".$correo->ErrorInfo;
-			header("Location: ../views/estudiante/solicitudes.php?msg=$msg");
-		}else{
-			$msg="Solicitud realizada";
-			header("Location: ../views/estudiante/solicitudes.php?msg=$msg");
+		$i=0;
+		foreach($practicas as $practica){
+			$e = new Empresa();
+			$id = $practica["Empresa_idEmpresa"];
+			$empresa = $e->selectById($id);
+			$nombreEmpresa = $empresa[0]["nombre"];
+			$tutorEmpresa = $empresa[0]["nombreTutor"];
+			$practicas[$i]["nombreEmpresa"] = $nombreEmpresa;
+			$practicas[$i]["tutorEmpresa"] = $tutorEmpresa;
+			$i=$i+1;
 		}
-		
+		$datos = json_encode($practicas);
+		$msg = "Solicitud eliminada.Puede solicitar practicas nuevamente.";
+		header("Location: ../views/estudiante/solicitudes.php?datos=$datos&msg=$msg");
 	}
-	
 }
 
 
@@ -222,7 +546,7 @@ function enviarInforme(){
 		$msg="Error:".$correo->ErrorInfo;
 		header("Location: ../views/estudiante/enviarFormulario.php?msg=$msg");
 	}else{
-		$msg="Mensaje enviado con éxito";
+		$msg="Mensaje enviado exitosamente";
 		header("Location: ../views/estudiante/enviarFormulario.php?msg=$msg");
 	}
 }
@@ -311,6 +635,8 @@ function solicitarCambio(){
 	$id = $_SESSION["name"];
 	$estudiante = $e->select($id);
 	$remitente = $estudiante[0]["email"];
+	$nombre = $estudiante[0]["nombre"];
+	$dni = $estudiante[0]["dni"];
 	
 	$c = new Coordinador();
 	$coordinador = $c->selectAll();
@@ -336,9 +662,9 @@ function solicitarCambio(){
 	<b>SOLICITUD DE CAMBIO DE PRACTICAS</b>
 	<br>
 	<br>
-	<b>Alumno:</b>".$_POST["alumno"]."
+	<b>Alumno:</b>".$nombre."
 	<br>
-	<b>DNI:</b>".$_POST["dni"]."
+	<b>DNI:</b>".$dni."
 	<br>
 	<b>Motivo:</b>".$_POST["mot"]);
 
@@ -349,7 +675,7 @@ function solicitarCambio(){
 		$msg="Error:".$correo->ErrorInfo;
 		header("Location: ../views/estudiante/anulaciones.php?msg=$msg");
 	}else{
-		$msg="Mensaje enviado con éxito";
+		$msg="Mensaje enviado exitosamente";
 		header("Location: ../views/estudiante/anulaciones.php?msg=$msg");
 	}		
 }
@@ -373,6 +699,8 @@ function solicitarAnulacion(){
 	$id = $_SESSION["name"];
 	$estudiante = $e->select($id);
 	$remitente = $estudiante[0]["email"];
+	$nombre = $estudiante[0]["nombre"];
+	$dni = $estudiante[0]["dni"];
 	
 	$c = new Coordinador();
 	$coordinador = $c->selectAll();
@@ -398,9 +726,9 @@ function solicitarAnulacion(){
 	<b>SOLICITUD DE ANULACION DE PRACTICAS</b>
 	<br>
 	<br>
-	<b>Alumno:</b>".$_POST["alumno"]."
+	<b>Alumno:</b>".$nombre."
 	<br>
-	<b>DNI:</b>".$_POST["dni"]."
+	<b>DNI:</b>".$dni."
 	<br>
 	<b>Motivo:</b>".$_POST["motivo"]);
 
@@ -411,32 +739,58 @@ function solicitarAnulacion(){
 		$msg="Error:".$correo->ErrorInfo;
 		header("Location: ../views/estudiante/anulaciones.php?msg=$msg");
 	}else{
-		$msg="Mensaje enviado con éxito";
+		$msg="Mensaje enviado exitosamente";
 		header("Location: ../views/estudiante/anulaciones.php?msg=$msg");
 	}		
 }
 
 
 function listarPracticas(){
-	$p = new Practicas();
-	$practicas = $p->selectAll();
-	if($practicas == false){
-		$msg = "No hay ninguna oferta de practicas en este momento.";
-		header("Location: ../views/estudiante/solicitudes.php?msg=$msg");
-	}else{
-		$i=0;
-		foreach($practicas as $practica){
-			$e = new Empresa();
-			$id = $practica["Empresa_idEmpresa"];
-			$empresa = $e->selectById($id);
-			$nombreEmpresa = $empresa[0]["nombre"];
-			$tutorEmpresa = $empresa[0]["nombreTutor"];
-			$practicas[$i]["nombreEmpresa"] = $nombreEmpresa;
-			$practicas[$i]["tutorEmpresa"] = $tutorEmpresa;
-			$i=$i+1;
+	$e = new Estudiante();
+	session_start();
+	$id = $_SESSION["name"];
+	$estudiante = $e->select($id);
+	$idEstudiante = $estudiante[0]["idEstudiante"];
+	$p = new PracticasHasEstudiante();
+	$boolean = $p->select($idEstudiante);
+	if($boolean == false){
+		//El estudiante no ha solicitado practicas con anterioridad
+		$p = new Practicas();
+		$practicas = $p->selectAll();
+		if($practicas == false){
+			$msg = "No hay ninguna oferta de practicas en este momento.";
+			header("Location: ../views/estudiante/solicitudes.php?msg=$msg");
+		}else{
+			$i=0;
+			foreach($practicas as $practica){
+				$e = new Empresa();
+				$id = $practica["Empresa_idEmpresa"];
+				$empresa = $e->selectById($id);
+				$nombreEmpresa = $empresa[0]["nombre"];
+				$tutorEmpresa = $empresa[0]["nombreTutor"];
+				$practicas[$i]["nombreEmpresa"] = $nombreEmpresa;
+				$practicas[$i]["tutorEmpresa"] = $tutorEmpresa;
+				$i=$i+1;
+			}
+			$datos = json_encode($practicas);
+			header("Location: ../views/estudiante/solicitudes.php?datos=$datos");
 		}
-		$datos = json_encode($practicas);
-		header("Location: ../views/estudiante/solicitudes.php?datos=$datos");
+		
+	}else{
+		//El estudiante ya ha solicitado practicas anteriormente
+		$array = array();
+		$i=0;
+		foreach($boolean as $practica){
+			$idPractica = $practica["Practicas_idPracticas"];
+			$prioridad = $practica["Prioridad"];
+			$p = new Practicas();
+			$prac = $p->selectById($idPractica);
+			$array[$i]["titulo"] = $prac[0]["titulo"];
+			$array[$i]["prioridad"] = $prioridad;
+			$i++;
+		}
+		$arraySend = json_encode($array);
+		header("Location: ../views/estudiante/solicitudes.php?array=$arraySend");
 	}
 }
 
@@ -515,7 +869,7 @@ function enviarMensaje(){
 		$msg="Error:".$correo->ErrorInfo;
 		header("Location: ../views/estudiante/mensajes.php?msg=$msg");
 	}else{
-		$msg="Mensaje enviado con éxito";
+		$msg="Mensaje enviado exitosamente";
 		header("Location: ../views/estudiante/mensajes.php?msg=$msg");
 	}		
 }
@@ -538,6 +892,7 @@ function modificarPerfil(){
 	$ini = $_POST["aInicio"];
 	$pay = $_POST["pAntesYear"];
 	$expA = $_POST["expA"];
+	$loginActual = $_POST["loginActual"];
 	if($pay == ""){
 		$pan = 0;
 	}else{
@@ -560,9 +915,51 @@ function modificarPerfil(){
 			header("Location: ../views/mainRAC/acceso.php?msg=$msg");
 		}		
 	}else{
-			$msg = "Debe introducir un login de usuario que no exista en el sistema para modificar los datos";
-			header("Location: ../views/estudiante/perfil.php?msg=$msg");			
+			if($loginActual == $log){
+				
+				$e = new Estudiante();
+				$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay,$expA);
+				$boolean = $e->update($idActual);
+				if($boolean == false){
+					$msg = "Error modificando el perfil. Inténtelo de nuevo";
+					header("Location: ../views/estudiante/perfil.php?msg=$msg");
+				}else{
+					echo $idActual;
+					$_SESSION["validated"] = "";
+					session_destroy();
+					$msg = "Datos del perfil modificados. Loguee de nuevo";
+					header("Location: ../views/mainRAC/acceso.php?msg=$msg");
+				}	
+						
+			}else{
+				$msg = "El login de usuario $log ya existe en el sistema.";
+				$array = array();
+				$array["nombre"] = $nom;
+				$array["apellidos"] = $ape;
+				$array["email"] = $ema;
+				$array["telefono"] = $tel;
+				$array["dni"] = $dn;
+				$array["fNac"] = $feN;
+				$array["campus"] = $cam;
+				$array["facultad"] = $fac;
+				$array["titulacion"] = $tit;
+				$array["curso"] = $cur;
+				$array["expA"] = $expA;
+				$array["aInicio"] = $ini;
+				$array["pAntesYear"] = $pay;
+				$arraySend = json_encode($array);
+				verPerfil2($msg,$arraySend);				
+			}			
 	}	
+}
+
+function verPerfil2($message,$array){
+	session_start();
+	$login = $_SESSION["name"];
+	$e = new Estudiante();
+	$boolean = $e->select($login);
+	$datos = json_encode($boolean);
+	header("Location: ../views/estudiante/perfil.php?datos=$datos&msg=$message&array=$array");	
 }
 
 function verPerfil(){

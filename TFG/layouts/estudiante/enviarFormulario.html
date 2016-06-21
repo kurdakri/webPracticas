@@ -93,7 +93,7 @@
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
-						echo "<b>$msg</b>";
+						echo "<b style='color:red'>$msg</b>";
 						echo "</br>";
 						echo "</br>";
 					}
@@ -105,7 +105,7 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-fw"></i><b>Datos de envio</b></h3>
                             </div> 
-							<form enctype="multipart/form-data" class="form-signin" name="f1" action="../../controllers/EstudianteController.php" method="POST">
+							<form enctype="multipart/form-data" onsubmit="return validar(this)" class="form-signin" name="f1" action="../../controllers/EstudianteController.php" method="POST">
 							Correo del tutor(destinatario):<input type="text" name="cTutor" class="form-control" required>
 							</br>
 							Archivo adjunto(informe):<input type="file" name="archivo" class="form-control" required>
@@ -133,6 +133,25 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+	
+	<script>
+		function validar(f){
+			destinatario = f.cTutor.value;
+			
+			comprobarDestinatario = isValidEmail(destinatario);
+			
+			if(comprobarDestinatario == false){
+				alert("|INFO| El formato del correo del destinatario no es correcto. Debe ser una dirección de correo válida");
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		function isValidEmail(mail){
+			return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(mail);
+		}		
+	</script>
 
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>

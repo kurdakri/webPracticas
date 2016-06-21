@@ -91,7 +91,7 @@
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
-						echo "<b>$msg</b>";
+						echo "<b style='color:red'>$msg</b>";
 						echo "</br>";
 						echo "</br>";
 					}
@@ -103,14 +103,14 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-fw"></i><b>Mensaje a un usuario</b></h3>
                             </div> 
-							<form class="form-signin" name="f1" action="../../controllers/EmpresaController.php" method="POST">
-							Asunto:<input type="text" name="asunto" class="form-control" required>
+							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/EmpresaController.php" method="POST">
+							<b>Asunto</b><input type="text" name="asunto" class="form-control" required>
 							</br>
-							Remitente:<input type="text" name="remitente" class="form-control" required>
+							<b>Remitente</b><input type="text" name="remitente" class="form-control" required>
 							</br>
-							Destinatario:<input type="text" name="destinatario" class="form-control" required>
+							<b>Destinatario</b><input type="text" name="destinatario" class="form-control" required>
 							</br>
-							Mensaje:<textarea name="mensaje" rows="10" cols="40" class="form-control" required></textarea>
+							<b>Mensaje</b><textarea name="mensaje" rows="10" cols="40" class="form-control" required></textarea>
 							</br>						
 							<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
 								<b>Enviar</b></button>
@@ -135,6 +135,30 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+	
+	<script>
+		function validar(f){
+			remitente = f.remitente.value;
+			destinatario = f.destinatario.value;
+			
+			comprobarRemitente = isValidEmail(remitente);
+			comprobarDestinatario = isValidEmail(destinatario);
+			
+			if(comprobarRemitente == false){
+				alert("|INFO| El formato del correo del remitente no es correcto. Debe ser una dirección de correo válida");
+				return false;
+			}else if(comprobarDestinatario == false){
+				alert("|INFO| El formato del correo del destinatario no es correcto. Debe ser una dirección de correo válida");
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		function isValidEmail(mail){
+			return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(mail);
+		}		
+	</script>
 
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>

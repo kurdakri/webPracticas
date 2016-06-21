@@ -82,7 +82,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Informaci&oacute;n de pr&aacute;cticas asignadas
+                            Informaci&oacute;n de las pr&aacute;cticas asignadas
                         </h1>
                     </div>
                 </div>
@@ -98,6 +98,7 @@
 
 					if(isset($_GET["datos"])){
 						$datos = json_decode($_GET["datos"],true);
+						$i=0;
 						foreach($datos as $emp){
 							echo "<div class='row'>";
 							echo "<div class='col-lg-12'>";
@@ -106,6 +107,10 @@
 							echo "<div class='panel-heading'>";
 								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>".$emp["nombrePractica"]."</h3>";
 							echo "</div>";
+							
+							echo '<a href="#" onclick="cambiar('.$i.');return false">Ver/Ocultar Info</a>';
+							
+							echo "<div id='".$i."' style='display:none';>";
 							
 							echo "<li>";
 								echo "Fecha de Inicio:".$emp["inicioPractica"];
@@ -138,6 +143,8 @@
 								echo "Tel&eacute;fono del estudiante:".$emp["telefonoEstudiante"];
 							echo "</li>";
 							
+							echo "</div>";
+							$i=$i+1;
 							
 							echo "</div>";
 							echo "</div>";
@@ -163,6 +170,18 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+	
+	<script type="text/javascript">
+		function cambiar(esto){
+			vista = document.getElementById(esto).style.display;
+			
+			if(vista == 'none')
+				vista='block';
+			else
+				vista='none';
+			document.getElementById(esto).style.display=vista;
+		}
+	</script>
 
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>

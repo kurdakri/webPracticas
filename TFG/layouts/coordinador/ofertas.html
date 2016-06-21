@@ -11,6 +11,8 @@
 
     <title>Coordinador-Practicas ESEI</title>
 
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
     <!-- Bootstrap Core CSS -->
     <link href="../../layouts/coordinador/css/bootstrap.min.css" rel="stylesheet">
 
@@ -70,10 +72,10 @@
                         <a href="../../controllers/CoordinadorController.php?action=ofertasPracticas"><i class="fa fa-fw fa-edit"></i>Gesti&oacute;n de las ofertas de empresas</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
+                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
                     </li>
                 </ul>
             </div>
@@ -97,11 +99,30 @@
 				<?php
 					if(isset($_GET["msg2"])){
 						$msg2 = $_GET["msg2"];
-						echo "<b>$msg2</b>";
+						echo "<b style='color:red'>$msg2</b>";
 						echo "</br>";
 						echo "</br>";
 					}
 				?>	
+				
+				<?php
+					if(isset($_GET["msg"])){
+						$msg = $_GET["msg"];
+						echo "<b style='color:red'>$msg</b>";
+						echo "</br>";
+						echo "</br>";
+					}
+				?>	
+				
+				<?php
+					if(isset($_GET["infoEmpresas"])){
+						$array = json_decode($_GET["infoEmpresas"],true);
+					}
+					
+					if(isset($_GET["infoFormulario"])){
+						$info = json_decode($_GET["infoFormulario"],true);
+					}
+				?>
 				
                 <div class="row">
                     <div class="col-lg-12">
@@ -114,81 +135,33 @@
 							<?php
 								if(isset($_GET["datos"])){
 									$practicas = json_decode($_GET["datos"],true);
+									echo "<table class='table'>";
+									echo "<thead>";
+									echo "<tr>";
+									echo "<th width='200'>Nombre</th><th></th><th></th>";
+									echo "</tr>";
+									echo "</thead>";
+									echo "<tbody>";
 									foreach($practicas as $practica){
-										echo "</br><div class='panel panel-default'>";
-										echo "<div class='panel-heading'>";
-										echo "<b>".$practica["titulo"]."</b>";
-										echo "</div>";
-										
-										echo "<li>";
-										echo "<b>Descripcion</b>:".$practica["descripcion"];
-										echo "</li>";
-										
-										echo "<li>";
-										echo "<b>Empresa</b>:".$practica["nombreEmpresa"];
-										echo "</li>";
-
-										echo "<li>";
-										echo "<b>Per&iacute;odo</b>:".$practica["periodo"];
-										echo "</li>";
-
-										echo "<li>";
-										echo "<b>Titulaci&oacute;n</b>:".$practica["titulacion"];
-										echo "</li>";										
-
-										echo "<li>";
-										echo "<b>Fecha Inicio:</b>:".$practica["inicio"];
-										echo "</li>";
-
-										echo "<li>";
-										echo "<b>Fecha Finalizaci&oacute;n</b>:".$practica["fin"];
-										echo "</li>";
-
-										echo "<li>";
-										echo "<b>Proyecto Formativo</b>:".$practica["pformativo"];
-										echo "</li>";
-										echo "<a href='../../controllers/CoordinadorController.php?action=eliminarPractica&idP=".$practica["idPracticas"]."' class='btn btn-sm btn-default btn-block'>Eliminar Practica</a>";		
-
-										$aux = "'".$practica["titulo"]."'";
-										echo '<a href="#" onclick="cambiar('.$aux.');return false;" class="btn btn-sm btn-default btn-block">Modificar Practica</a>';
-										echo '<div id="'.$practica["titulo"].'" style="display:none;">';
-										
-										echo '<form class="form-signin" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="'.$practica["idPracticas"].'">';
-										echo '<input type="hidden" name="tit" value="'.$practica["titulo"].'">';
-										echo '</br>';
-										echo 'Descripci&oacute;n:<textarea name="des" rows="10" cols="40" class="form-control" required></textarea>';
-										echo '</br>';
-										echo 'Nombre de la empresa:<input type="text" name="nEm" class="form-control" placeholder="Nombre de la empresa" required>';
-										echo '</br>';
-										echo 'Per&iacute;odo:';
-										echo '<select class="form-control" name="per" form="'.$practica["idPracticas"].'">';
-										echo '<option value="primero">Primer cuatrimestre</option>';
-										echo '<option value="segundo">Segundo cuatrimestre</option>';
-										echo '</select>';
-										echo '</br>';
-										echo 'Titulaci&oacute;n:';
-										echo '<select class="form-control" name="tcn" form="'.$practica["idPracticas"].'">';
-										echo '<option value="grado">Grado</option>';
-										echo '<option value="master">M&aacute;ster</option>';
-										echo '<option value="indiferente">Indiferente</option>';
-										echo '</select>';
-										echo '</br>';
-										echo 'Fecha de inicio:<input type="date" name="ini" class="form-control" required>';
-										echo '</br>';
-										echo 'Fecha de finalizaci&oacute;n:<input type="date" name="fn" class="form-control" required>';
-										echo '</br>';
-										echo 'Horario de trabajo durante la pr&aacute;ctica:<input type="text" name="hor" class="form-control" placeholder="ej: 10:00-17:00" required>';
-										echo '</br>';
-										echo 'Proyecto formativo:<textarea name="pfor" rows="10" cols="40" class="form-control" required></textarea>';
-										echo '</br>';							
-										echo '<button class="btn btn-sm btn-default btn-block" type="submit">';
-										echo 'Enviar</button>';
-										echo '</form>';
-										
-										echo '</div>';
-										
-										echo "</div>";
+										echo "<tr>";
+										echo "<td>".$practica["titulo"]."</td>";					
+										echo "<td><a href='../../controllers/CoordinadorController.php?action=eliminarPractica&idP=".$practica["idPracticas"]."'>Eliminar</a></td>";
+										$titulo = $practica["titulo"];
+										$nombreEmpresa = $practica["nombreEmpresa"];
+										$periodo = $practica["periodo"];
+										$titulacion = $practica["titulacion"];
+										$inicio = $practica["inicio"];
+										$fin = $practica["fin"];
+										$descripcion = $practica["descripcion"];
+										$pformativo = $practica["pformativo"];
+										$id = $practica["idPracticas"];
+										echo "<td><a href='modificarPractica.php?titulo=$titulo&nombreEmpresa=$nombreEmpresa&
+										periodo=$periodo&titulacion=$titulacion&inicio=$inicio&fin=$fin&descripcion=$descripcion
+										&pformativo=$pformativo&id=$id'>Modificar/Consultar Detalles</a></td>";								
 									}
+									
+									echo "</tbody>";
+									echo "</table>";
 								}
 							?>
 							</div>
@@ -197,14 +170,6 @@
                 </div>
                 <!-- /.row -->
 				
-				<?php
-					if(isset($_GET["msg"])){
-						$msg = $_GET["msg"];
-						echo "<b>$msg</b>";
-						echo "</br>";
-						echo "</br>";
-					}
-				?>		
 				
 				<br>
 				<br>
@@ -214,33 +179,42 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-fw"></i><b>Publicar Pr&aacute;ctica</b></h3>
                             </div> 
-							<form class="form-signin" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login">
-							Titulo:<input type="text" name="titulo" class="form-control" placeholder="Titulo identificador de la practica" required>
+							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login">
+							<b>Titulo</b><input type="text" name="titulo" class="form-control" required>
 							</br>
-							Descripci&oacute;n:<textarea name="descripcion" rows="10" cols="40" class="form-control" required></textarea>
+							<b>Descripci&oacute;n</b><textarea name="descripcion" rows="10" cols="40" class="form-control" required><?php if(isset($_GET["infoFormulario"])){echo $info["descripcion"];} ?></textarea>
 							</br>
-							Nombre de la empresa:<input type="text" name="nombreEmpresa" class="form-control" placeholder="Nombre de la empresa" required>
+							<b>Nombre de la empresa</b>
+							<select class="form-control" name="nombreEmpresa" form="login">
+								<?php
+									if(isset($_GET["infoEmpresas"])){
+										foreach($array as $empresa){
+											echo "<option value='".$empresa["nombre"]."'>".$empresa["nombre"]."</option>";
+										}
+									}
+								?>
+							</select>
 							</br>
-							Per&iacute;odo:
+							<b>Per&iacute;odo</b>
 							<select class="form-control" name="periodo" form="login">
 								<option value="primero">Primer cuatrimestre</option>
 								<option value="segundo">Segundo cuatrimestre</option>
 							</select>
 							</br>
-							Titulaci&oacute;n:
+							<b>Titulaci&oacute;n</b>
 							<select class="form-control" name="titulacion" form="login">
 								<option value="grado">Grado</option>
 								<option value="master">M&aacute;ster</option>
 								<option value="indiferente">Indiferente</option>
 							</select>
 							</br>
-							Fecha de inicio:<input type="date" name="inicio" class="form-control" required>
+							<b>Fecha de inicio</b><input type="text" id="datepicker" name="inicio" value="<?php if(isset($_GET["infoFormulario"])){echo $info["inicio"];} ?>" class="form-control" required>
 							</br>
-							Fecha de finalizaci&oacute;n:<input type="date" name="fin" class="form-control" required>
+							<b>Fecha de finalizaci&oacute;n</b><input type="text" id="datepicker2" name="fin" value="<?php if(isset($_GET["infoFormulario"])){echo $info["fin"];} ?>" class="form-control" required>
 							</br>
-							Horario de trabajo durante la pr&aacute;ctica:<input type="text" name="horario" class="form-control" placeholder="ej: 10:00-17:00" required>
-							</br>
-							Proyecto formativo:<textarea name="pformativo" rows="10" cols="40" class="form-control" required></textarea>
+							<b>Horario de trabajo durante la pr&aacute;ctica</b><br><input type="text" name="horario" value="<?php if(isset($_GET["infoFormulario"])){echo $info["horario"];} ?>" class="form-control" placeholder="HH:MM-HH:MM" required>
+							<br>
+							<b>Proyecto formativo</b><textarea name="pformativo" rows="10" cols="40" class="form-control" required><?php if(isset($_GET["infoFormulario"])){echo $info["pformativo"];} ?></textarea>
 							</br>							
 							<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
 								<b>Enviar</b></button>
@@ -276,6 +250,100 @@
 				vista='none';
 			document.getElementById(esto).style.display=vista;
 		}
+	</script>
+	
+	<script>
+		function validar(f){
+			horario = f.horario.value;
+			inicio = f.inicio.value;
+			fin = f.fin.value;
+			
+			validarHorario = isValidHorario(horario);
+			validarFechas = isValidFechas(inicio,fin);
+			validarInicio = isPosterior(inicio);
+			validarFin = isPosterior(fin);
+			validInicio = isValidFecha(inicio);
+			validFin = isValidFecha(fin);
+			
+			if(validarHorario == false){
+				alert("|INFO| El formato del horario no es valido.Un ejemplo de formato valido es: 10:00-15:00");
+				return false;
+			}else if(validarFechas == false){
+				alert("|INFO| La fecha de inicio no puede ser mas tarde que la fecha de finalización.");
+				return false;
+			}else if(validarInicio == false || validarFin == false){
+				alert("|INFO| Las fechas deben ser posteriores a la fecha actual");
+				return false;
+			}else if(validInicio ==false){
+				alert("|INFO| El formato de la fecha de inicio no es correcto: DD/MM/YYYY");
+				return false;
+			}else if(validFin == false){
+				alert("|INFO| El formato de la fecha de finalizacion no es correcto: DD/MM/YYYY");
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		function isValidFecha(fNac){
+			expresion_regular = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+			if(expresion_regular.test(fNac)){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function isPosterior(fecha){
+			var dt = new Date();
+			
+			var month = dt.getMonth()+1;
+			var day = dt.getDate();
+			var year = dt.getFullYear();
+			date = fecha.split('-');
+			if(date[0]>year){
+				return true;
+			}else if(date[0] == year & date[1]>month){
+				return true;
+			}else if(date[0] == year & date[1] == month & date[2]>day){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function isValidFechas(inicio,fin){
+			date1 = inicio.split('-');
+			date2 = fin.split('-');
+			if(date2[0]>date1[0]){
+				return true;
+			}else if(date2[0] == date1[0] & date2[1]>date1[1]){
+				return true;
+			}else if(date2[0] == date1[0] & date2[1] == date1[1] & date2[2]>date1[2]){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function isValidHorario(horario){
+			expresion_regular_horario = /^([0-1][0-9]|2[0-3]):[0-5][0-9]-([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+			if(expresion_regular_horario.test(horario) == true){
+				return true;
+			}else{
+				return false;
+			}		
+		}
+	</script>
+	
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script>
+		$('#datepicker').datepicker({
+		dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '-0:+30'});
+		$('#datepicker2').datepicker({
+		dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '-0:+30'});
 	</script>
 
     <!-- Morris Charts JavaScript -->

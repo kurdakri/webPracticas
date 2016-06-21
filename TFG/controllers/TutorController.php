@@ -37,8 +37,65 @@ if(isset($_GET["action"])){
 		enviarMensaje();
 	}
 	
-	if(isset($_POST["solicitante"])&isset($_POST["comentario"])){
+	if(isset($_POST["comentario"])){
 		solicitarTutorizacion();
+	}
+	
+	if(isset($_POST["destinatario"])){
+		enviarInforme();
+	}
+}
+
+function enviarInforme(){
+	$destinatario = $_POST["destinatario"];
+	$file = $_FILES["archivo"];
+	session_start();
+	$loginTutor = $_SESSION["name"];
+	$e = new Tutor();
+	$tutor = $e->select($loginEmpresa);
+	$nombreTutor = $tutor[0]["nombre"];
+	$remitente = $tutor[0]["email"];
+	
+	$correo = new PHPMailer();
+	$smtp = new SMTP();
+
+	$correo->IsSMTP();
+	$correo->SMTPAuth=true;
+	$correo->SMTPSecure='tls';
+	$correo->Host="smtp.gmail.com";
+	$correo->Port=587;
+	$correo->Username="tfgpracticasesei@gmail.com";
+	$correo->Password="tfgpracticas";
+	$correo->Timeout=30;
+	$correo->Charset='UTF-8';
+	
+	
+	//Decimos quien envía el correo
+	$correo->SetFrom("tfgpracticasesei@gmail.com","");
+
+	//Para indicar a quien tiene que responder el correo
+	$correo->AddReplyTo($remitente,"");
+
+	//Destinatario del correo
+	$correo->AddAddress($destinatario,"");
+
+	//Asunto del mensaje
+	$correo->Subject = "Informe de practicas del tutor academico: ";
+
+	//Contenido del mensaje
+	$correo->IsHTML(false);
+	$correo->Body = " ";
+	
+
+	//ARCHIVOS ADJUNTOS
+	$correo->AddAttachment($file["tmp_name"],$file["name"]);
+
+	if(!$correo->Send()){
+		$msg="Error:".$correo->ErrorInfo;
+		header("Location: ../views/tutor/enviarFormulario.php?msg=$msg");
+	}else{
+		$msg="Informe enviado exitosamente.";
+		header("Location: ../views/tutor/enviarFormulario.php?msg=$msg");
 	}
 }
 
@@ -127,11 +184,19 @@ function solicitarTutorizacion(){
 	$coord = $c->selectAll();
 	$destinatario = $coord[0]["email"];
 	
+	session_start();
+	$idTutor = $_SESSION["name"];
+	$t = new Tutor();
+	$tutor = $t->select($idTutor);
+	$remitente = $tutor[0]["email"];
+	$nombreTutor = $tutor[0]["nombre"];
+	
+	
 	//Decimos quien envía el correo
 	$correo->SetFrom("tfgpracticasesei@gmail.com","");
 
 	//Para indicar a quien tiene que responder el correo
-	$correo->AddReplyTo("tfgpracticasesei@gmail.com","");
+	$correo->AddReplyTo($remitente,"");
 
 	//Destinatario del correo
 	$correo->AddAddress($destinatario,"");
@@ -142,7 +207,7 @@ function solicitarTutorizacion(){
 	//Contenido del mensaje
 	//$correo->IsHTML(false);
 	//$correo->Body = $mensaje;
-	$correo->MsgHTML("<b>INFORMACIÓN DEL SOLICITANTE</b><br><b>Nombre:</b>".$_POST["solicitante"]."<br><b>Descripcion:</b>".$_POST["comentario"]);
+	$correo->MsgHTML("<b>INFORMACIÓN DEL SOLICITANTE</b><br><b>Nombre del tutor:</b>".$nombreTutor."<br><b>Email:</b>".$remitente."<b>DESCRIPCION DE LA SOLICITUD:</b>".$_POST["comentario"]);
 
 	//ARCHIVOS ADJUNTOS
 	//$correo->AddAttachment("ruta");
@@ -151,7 +216,7 @@ function solicitarTutorizacion(){
 		$msg="Error:".$correo->ErrorInfo;
 		header("Location: ../views/tutor/solicitudes.php?msg=$msg");
 	}else{
-		$msg="Peticion enviada. Espere la respuesta del coordinador de la pagina.";
+		$msg="Peticion enviada al coordinador.";
 		header("Location: ../views/tutor/solicitudes.php?msg=$msg");
 	}		
 }
@@ -199,7 +264,7 @@ function enviarMensaje(){
 		$msg="Error:".$correo->ErrorInfo;
 		header("Location: ../views/tutor/mensajes.php?msg=$msg");
 	}else{
-		$msg="Mensaje enviado con éxito";
+		$msg="Mensaje enviado exitosamente.";
 		header("Location: ../views/tutor/mensajes.php?msg=$msg");
 	}		
 }
@@ -216,6 +281,7 @@ function modificarPerfil(){
 	$pas = $_POST["clave1"];
 	$dep = $_POST["departamento"];
 	$cen = $_POST["centro"];
+	$loginActual = $_POST["loginActual"];
 	$t = new Tutor();
 	$tutor = $t->select($log);
 	if($tutor == false){
@@ -233,11 +299,45 @@ function modificarPerfil(){
 			header("Location: ../views/mainRAC/acceso.php?msg=$msg");
 		}
 	}else{
-			$msg = "El usuario introducido ya existe. Inténtelo con otro login.";
-			header("Location: ../views/tutor/perfil.php?msg=$msg");		
+			if($log == $loginActual){	
+				$t = new Tutor();
+				$t->set($nom,$ape,$dn,$tel,$ema,$log,$pas,$dep,$cen);
+				$boolean = $t->update($idActual);
+				if($boolean == false){
+					$msg = "Error modificando el perfil. Inténtelo de nuevo";
+					header("Location: ../views/tutor/perfil.php?msg=$msg");
+				}else{
+					echo $idActual;
+					$_SESSION["validated"] = "";
+					session_destroy();
+					$msg = "Datos del perfil modificados. Loguee de nuevo";
+					header("Location: ../views/mainRAC/acceso.php?msg=$msg");
+				}
+			}else{
+				$msg = "El login de usuario $log ya existe en el sistema. Introduzca otro login de usuario";
+				$array = array();
+				$array["nombre"] = $nom;
+				$array["apellidos"] = $ape;
+				$array["email"] = $ema;
+				$array["telefono"] = $tel;
+				$array["dni"] = $dn;
+				$array["centro"] = $cen;
+				$array["departamento"] = $dep;
+				$arraySend = json_encode($array);
+				verPerfil2($msg,$arraySend);					
+			}	
 	}
 	
 	
+}
+
+function verPerfil2($message,$array){
+	session_start();
+	$login = $_SESSION["name"];
+	$t = new Tutor();
+	$boolean = $t->select($login);
+	$datos = json_encode($boolean);
+	header("Location: ../views/tutor/perfil.php?datos=$datos&msg=$message&array=$array");		
 }
 
 function verPerfil(){

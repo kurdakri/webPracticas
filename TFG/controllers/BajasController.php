@@ -27,11 +27,19 @@ function bajaEstudiante(){
 	$est = new Estudiante();
 	$boolean = $est->delete($login);
 	if($boolean == false){
-		$msg = "El estudiante no se ha borrado";
-		header("Location: ../views/coordinador/bajaEstudiantes.php?msg=$msg");
+		$msg2 = "El estudiante no se ha borrado";
+		header("Location: ../views/coordinador/bajaEstudiantes.php?msg2=$msg2");
 	}else{
-		$msg = "El estudiante se ha borrado correctamente";
-		header("Location: ../views/coordinador/bajaEstudiantes.php?msg=$msg");
+		$msg2 = "El estudiante se ha borrado correctamente";
+		$e = new Estudiante();
+		$boolean = $e->selectAll();
+		if($boolean == false){
+			$msg = "Sin estudiantes registrados.";
+			header("Location: ../views/coordinador/bajaEstudiantes.php?msg=$msg&msg2=$msg2");
+		}else{
+			$datos = serialize($boolean);
+			header("Location: ../views/coordinador/bajaEstudiantes.php?datos=$datos&msg2=$msg2");
+		}
 	}
 }
 
@@ -40,11 +48,19 @@ function bajaEmpresa(){
 	$emp = new Empresa();
 	$boolean = $emp->delete($login);
 	if($boolean == false){
-		$msg = "La empresa no se ha borrado";
-		header("Location: ../views/coordinador/bajaEmpresas.php?msg=$msg");
+		$msg2 = "La empresa no se ha borrado";
+		header("Location: ../views/coordinador/bajaEmpresas.php?msg2=$msg2");
 	}else{
-		$msg = "La empresa se ha borrado correctamente";
-		header("Location: ../views/coordinador/bajaEmpresas.php?msg=$msg");
+		$msg2 = "La empresa se ha borrado correctamente";	
+		$e = new Empresa();
+		$boolean = $e->selectAll();
+		if($boolean == false){
+			$msg = "Ninguna empresa registrada.";
+			header("Location: ../views/coordinador/bajaEmpresas.php?msg=$msg&msg2=$msg2");
+		}else{
+			$datos = serialize($boolean);
+			header("Location: ../views/coordinador/bajaEmpresas.php?datos=$datos&msg2=$msg2");
+		}
 	}	
 }
 
@@ -53,11 +69,19 @@ function bajaTutor(){
 	$tut = new Tutor();
 	$boolean = $tut->delete($login);
 	if($boolean == false){
-		$msg = "El tutor no se ha borrado";
-		header("Location: ../views/coordinador/bajaTutores.php?msg=$msg");
+		$msg2 = "El tutor no se ha borrado";
+		header("Location: ../views/coordinador/bajaTutores.php?msg2=$msg2");
 	}else{
-		$msg = "El tutor se ha borrado correctamente";
-		header("Location: ../views/coordinador/bajaTutores.php?msg=$msg");
+		$msg2 = "El tutor se ha borrado correctamente";
+		$t = new Tutor();
+		$boolean = $t->selectAll();
+		if($boolean == false){
+			$msg = "Sin tutores registrados.";
+			header("Location: ../views/coordinador/bajaTutores.php?msg=$msg&msg2=$msg2");
+		}else{
+			$datos = serialize($boolean);
+			header("Location: ../views/coordinador/bajaTutores.php?datos=$datos&msg2=$msg2");
+		}
 	}		
 }
 

@@ -70,10 +70,10 @@
                         <a href="../../controllers/CoordinadorController.php?action=ofertasPracticas"><i class="fa fa-fw fa-edit"></i>Gesti&oacute;n de las ofertas de empresas</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
+                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
                     </li>
                 </ul>
             </div>
@@ -93,6 +93,12 @@
                     </div>
                 </div>
                 <!-- /.row -->
+				<?php
+					if(isset($_GET["msgx"])){
+						$msgx = $_GET["msgx"];
+						echo "<b style='color:red'>$msgx</b>";
+					}
+				?>
 							
                 <div class="row">
                     <div class="col-lg-12">
@@ -106,24 +112,23 @@
 							<?php
 								if(isset($_GET["datos"])){
 									$practicas = json_decode($_GET["datos"],true);
+									echo "<table class='table'>";
+									echo "<thead>";
+									echo "<tr>";
+									echo "<th>DNI</th><th>Nombre</th><th>Email</th>";
+									echo "<tr>";
+									echo "</thead>";
+									echo "<tbody>";
+									
 									foreach($practicas as $practica){
-										echo "</br><div class='panel panel-default'>";
-										echo "<div class='panel-heading'>";
-										echo "<b>DNI:".$practica["dni"]."</b>";
-										echo "</div>";
-										
-										echo "<li>";
-										echo "<b>Estudiante:</b>".$practica["nombre"]." ".$practica["apellidos"];
-										echo "</li>";
-										
-										echo "<li>";
-										echo "<b>Email</b>:".$practica["email"];
-										echo "</li>";
-										
-										echo "</div>";
+										echo "<tr>";
+										echo "<td>".$practica["dni"]."</td>";									
+										echo "<td>".$practica["nombre"]." ".$practica["apellidos"]."</td>";
+										echo "<td>".$practica["email"]."</td>";						
+										echo "</tr>";
 									}
-									
-									
+									echo "</tbody>";
+									echo "</table>";
 								}
 								
 								if(isset($_GET["msg"])){
@@ -155,11 +160,11 @@
 							
 							if(isset($_GET["msg"])){
 								$msg = $_GET["msg"];
-								echo "<b style='color:red'>$msg</b>";							
+								echo "<b>$msg</b>";							
 							}
 							
 								echo "<br>";
-								echo "<a href='../../controllers/CoordinadorController.php?action=eliminarAsignaciones'>Eliminar Asignaciones</a>";
+								echo "<a href='../../controllers/CoordinadorController.php?action=eliminarAsignaciones'>Eliminar todas las asignaciones realizadas</a>";
 
 						?>
 					
@@ -177,7 +182,7 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-fw"></i><b>Asignación Manual de prácticas</b></h3>
                             </div> 
-							<form class="form-signin" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login">
+							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login">
 							Nombre de la pr&aacute;ctica:<input type="text" name="nPractica" class="form-control" required>
 							</br>
 							DNI del alumno:<input type="text" name="dni" class="form-control" required>
@@ -214,6 +219,43 @@
 			else
 				vista='none';
 			document.getElementById(esto).style.display=vista;
+		}
+	</script>
+	
+	<script>
+		function validar(f){
+			dni = f.dni.value;
+			validDNI = nif(dni);
+			if(validDNI == false){
+				alert("|INFO| El formato del DNI introducido no es correcto");
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		function nif(dni){
+		  var numero;
+		  var letr;
+		  var letra;
+		  var expresion_regular_dni;
+		 
+		  expresion_regular_dni = /^\d{8}[a-zA-Z]$/;
+		 
+		  if(expresion_regular_dni.test (dni) == true){
+			 numero = dni.substr(0,dni.length-1);
+			 letr = dni.substr(dni.length-1,1);
+			 numero = numero % 23;
+			 letra='TRWAGMYFPDXBNJZSQVHLCKET';
+			 letra=letra.substring(numero,numero+1);
+			if (letra!=letr.toUpperCase()) {
+			   return false;
+			 }else{
+			   return true;
+			 }
+		  }else{
+			 return false;
+		  }
 		}
 	</script>
 

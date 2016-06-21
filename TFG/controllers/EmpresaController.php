@@ -27,6 +27,10 @@ if(isset($_GET["action"])){
 		listarAsignaciones();
 	}
 	
+	if($action == "getEmpresa"){
+		getEmpresa();
+	}
+	
 }else{
 	if(isset($_POST["login"])&isset($_POST["clave1"])&isset($_POST["nombre"])&isset($_POST["email"])&isset($_POST["telefono"])&isset($_POST["centro"])&isset($_POST["localidad"])&isset($_POST["provincia"])&isset($_POST["calle"])&isset($_POST["nTutor"])&isset($_POST["cTutor"])&isset($_POST["tareas"])){
 		modificarPerfil();
@@ -43,6 +47,15 @@ if(isset($_GET["action"])){
 	if(isset($_POST["enviarInforme"])){
 		enviarInforme();
 	}
+}
+
+function getEmpresa(){
+	session_start();
+	$loginEmpresa = $_SESSION["name"];
+	$e = new Empresa();
+	$empresa = $e->select($loginEmpresa);
+	$nombreEmpresa = $empresa[0]["nombre"];
+	header("Location: ../views/empresa/gestionOfertas.php?empresa=$nombreEmpresa");
 }
 
 function enviarInforme(){
@@ -93,7 +106,7 @@ function enviarInforme(){
 		$msg="Error:".$correo->ErrorInfo;
 		header("Location: ../views/empresa/enviarFormulario.php?msg=$msg");
 	}else{
-		$msg="Mensaje enviado con éxito";
+		$msg="Mensaje enviado exitosamente.";
 		header("Location: ../views/empresa/enviarFormulario.php?msg=$msg");
 	}
 }
@@ -157,7 +170,7 @@ function listarAsignaciones(){
 			header("Location: ../views/empresa/asignaciones.php?datos=$datos");			
 		}else{
 			$msg = "No tiene ninguna practica asignada actualmente";
-			header("Location: ../views/empresa/asignaciones.php?datos=$datos");
+			header("Location: ../views/empresa/asignaciones.php?msg=$msg");
 		}
 		
 	}
@@ -187,7 +200,7 @@ function enviarOferta(){
 	$correo->Username="tfgpracticasesei@gmail.com";
 	$correo->Password="tfgpracticas";
 	$correo->Timeout=30;
-	$correo->Charset='UTF-8';
+	$correo->Charset='ISO-8859-1';
 
 	$c = new Coordinador();
 	$coord = $c->selectAll();
@@ -208,6 +221,7 @@ function enviarOferta(){
 	//Contenido del mensaje
 	//$correo->IsHTML(false);
 	//$correo->Body = $mensaje;
+	
 	$correo->MsgHTML("<b>DATOS DE LA PRÁCTICA SOLICITADA</b><br><b>Titulo:</b>".$_POST["titulo"]."<br><b>Descripcion:</b>".$_POST["descripcion"]."<br><b>Nombre de la Empresa:</b>".$_POST["nombreEmpresa"]."<br><b>Período:</b>".$_POST["periodo"]."
 	<br><b>Titulacion:</b>".$_POST["titulacion"]."<br><b>Fecha de Inicio:</b>".$_POST["inicio"]."<br><b>Fecha de fin:</b>".$_POST["fin"]."<br><b>Horario:</b>".$_POST["horario"]."<br><b>Proyecto Formativo:</b>".$_POST["pformativo"]);
 
@@ -218,8 +232,9 @@ function enviarOferta(){
 		$msg="Error:".$correo->ErrorInfo;
 		header("Location: ../views/empresa/gestionOfertas.php?msg=$msg");
 	}else{
-		$msg="Peticion enviada. Espere la respuesta del coordinador de la pagina.";
-		header("Location: ../views/empresa/gestionOfertas.php?msg=$msg");
+		$msg="Peticion enviada al coordinador de las practicas.";
+		$empresa = $_POST["nombreEmpresa"];
+		header("Location: ../views/empresa/gestionOfertas.php?msg=$msg&empresa=$empresa");
 	}		
 }
 
@@ -266,7 +281,7 @@ function enviarMensaje(){
 		$msg="Error:".$correo->ErrorInfo;
 		header("Location: ../views/empresa/mensajes.php?msg=$msg");
 	}else{
-		$msg="Mensaje enviado con éxito";
+		$msg="Mensaje enviado exitosamente.";
 		header("Location: ../views/empresa/mensajes.php?msg=$msg");
 	}	
 }
@@ -286,6 +301,7 @@ function modificarPerfil(){
 	$noT = $_POST["nTutor"];
 	$caT = $_POST["cTutor"];
 	$tar = $_POST["tareas"];
+	$loginActual = $_GET["login"];
 	$e = new Empresa();
 	$empresa = $e->select($log);
 	if($empresa == false){
@@ -303,8 +319,37 @@ function modificarPerfil(){
 			header("Location: ../views/mainRAC/acceso.php?msg=$msg");
 		}	
 	}else{
+		if($log == $loginActual){
+			$e = new Empresa();
+			$e->set($cen,$tel,$loc,$pro,$ema,$cal,$nom,$pas,$log,$noT,$caT,$tar);
+			$boolean = $e->update($idActual);
+			if($boolean == false){
+				$msg = "Error modificando el perfil. Inténtelo de nuevo";
+				header("Location: ../views/empresa/perfil.php?msg=$msg");
+			}else{
+				echo $idActual;
+				$_SESSION["validated"] = "";
+				session_destroy();
+				$msg = "Datos del perfil modificados. Loguee de nuevo";
+				header("Location: ../views/mainRAC/acceso.php?msg=$msg");
+			}			
+		}else{
+			echo $loginActual;
 			$msg = "Debe modificar el login de usuario por otro que no exista en el sistema.";
-			header("Location: ../views/empresa/perfil.php?msg=$msg");		
+			$array = array();
+			$array["nombre"] = $nom;
+			$array["email"] = $ema;
+			$array["telefono"] = $tel;
+			$array["centro"] = $cen;
+			$array["localidad"] = $loc;
+			$array["provincia"] = $pro;
+			$array["calle"] = $cal;
+			$array["nombreTutor"] = $noT;
+			$array["cargoTutor"] = $caT;
+			$array["tareas"] = $tar;
+			$info = json_encode($array);
+			verPerfil2($msg,$info);			
+		}		
 	}
 }
 
@@ -315,6 +360,15 @@ function verPerfil(){
 	$boolean = $e->select($login);
 	$datos = json_encode($boolean);
 	header("Location: ../views/empresa/perfil.php?datos=$datos");	
+}
+
+function verPerfil2($message,$info){
+	session_start();
+	$login = $_SESSION["name"];
+	$e = new Empresa();
+	$boolean = $e->select($login);
+	$datos = json_encode($boolean);
+	header("Location: ../views/empresa/perfil.php?datos=$datos&msg=$message&info=$info");	
 }
 
 function logout(){

@@ -10,6 +10,7 @@
     <meta name="author" content="">
 
     <title>Estudiante-Practicas ESEI</title>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
     <!-- Bootstrap Core CSS -->
     <link href="../../layouts/estudiante/css/bootstrap.min.css" rel="stylesheet">
@@ -83,18 +84,25 @@
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
-						echo $msg;
+						echo "<b style='color:red'>".$msg."</b>";
+						echo "<br>";
+						echo "<br>";
+					}
+					
+					if(isset($_GET["array"])){
+						$array = json_decode($_GET["array"],true);
 					}
 					
 					if(isset($_GET["datos"])){
 						$datos = json_decode($_GET["datos"],true);
+						$loginActual = $datos[0]["login"];
 						foreach($datos as $emp){
 							echo "<div class='row'>";
 							echo "<div class='col-lg-12'>";
 							echo "<div class='panel panel-default'>";
 							
 							echo "<div class='panel-heading'>";
-								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>Perfil Actual</h3>";
+								echo "<h3 class='panel-title'><i class='fa fa-fw'></i><b>Perfil Actual</b></h3>";
 							echo "</div>";
 							
 							echo "<li>";
@@ -110,7 +118,7 @@
 								echo "Apellidos:".$emp["apellidos"];
 							echo "</li>";
 							echo "<li>";
-								echo "Gmail:".$emp["email"];
+								echo "Correo electronico:".$emp["email"];
 							echo "</li>";
 							echo "<li>";
 								echo "Telefono:".$emp["telefono"];
@@ -155,44 +163,43 @@
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><i class="fa fa-fw"></i>Formulario de Modificaci&oacute;n</h3>
+								<h3 class="panel-title"><i class="fa fa-fw"></i><b>Formulario de Modificaci&oacute;n</b></h3>
 							</div>
 							<form class="form-signin" name="f1" onsubmit="return checkPass(this)" action="../../controllers/EstudianteController.php" method="POST" id="login">
-								Login:<input type="text" name="login" class="form-control" required autofocus>
+								<b>Login</b><input type="text" name="login" class="form-control" required autofocus>
 								</br>
-								Password:<input type="password" name="clave1" class="form-control" required>
+								<b>Password</b><input type="password" name="clave1" class="form-control" required>
 								</br>
-								Repite Password:<input type="password" name="clave2" class="form-control" required>
+								<b>Repite Password</b><input type="password" name="clave2" class="form-control" required>
 								</br>
-								Nombre:<input type="text" name="nombre" class="form-control" required>
+								<b>Nombre</b><input type="text" name="nombre" value="<?php if(isset($_GET["array"])){echo $array["nombre"];} ?>" class="form-control" required>
 								</br>
-								Apellidos:<input type="text" name="apellidos" class="form-control" required>
+								<b>Apellidos</b><input type="text" name="apellidos" value="<?php if(isset($_GET["array"])){echo $array["apellidos"];} ?>" class="form-control" required>
 								</br>
-								Gmail:<input type="text" name="email" class="form-control" required>
+								<b>Correo electr&oacute;nico</b><input type="text" name="email" value="<?php if(isset($_GET["array"])){echo $array["email"];} ?>" class="form-control" required>
 								</br>
-								Telefono:<input type="text" name="telefono" class="form-control" required>
+								<b>Telefono</b><input type="text" name="telefono" value="<?php if(isset($_GET["array"])){echo $array["telefono"];} ?>" class="form-control" required>
 								</br>
-								DNI:<input type="text" name="dni" class="form-control" required>
+								<b>DNI</b><input type="text" name="dni" value="<?php if(isset($_GET["array"])){echo $array["dni"];} ?>" class="form-control" required>
 								</br>
-								Fecha de Nacimiento:<input type="date" name="fNac" class="form-control" required>
+								<b>Fecha de Nacimiento</b><input type="text" id="datepicker" name="fNac" value="<?php if(isset($_GET["array"])){echo $array["fNac"];} ?>" class="form-control" required>
 								</br>
-								Campus:<input type="text" name="campus" class="form-control" required>
-								</br>
-								Facultad:<input type="text" name="facultad" class="form-control" required>
-								</br>
-								Titulaci&oacute;n:
+								<input type="hidden" name="campus" value="Ourense" class="form-control" required>
+								<input type="hidden" name="facultad" value="ESEI" class="form-control" required>
+								<input type="hidden" name="loginActual" value="<?php if(isset($_GET["datos"])){echo $loginActual;} ?>"/>
+								<b>Titulaci&oacute;n</b>
 								<select class="form-control" name="titulacion" form="login">
 								<option value="Grado">Grado</option>
 								<option value="Master">Master</option>
 								</select>
 								</br>
-								Curso:<input type="text" name="curso" class="form-control" required>
+								<b>Curso</b><input type="text" name="curso" placeholder="YYYY/YYYY" value="<?php if(isset($_GET["array"])){echo $array["curso"];} ?>" class="form-control" required>
 								</br>
-								Año de inicio de la titulaci&oacute;n:<input type="text" name="aInicio" class="form-control" required>
+								<b>Año de inicio de la titulaci&oacute;n</b><input type="text" name="aInicio" value="<?php if(isset($_GET["array"])){echo $array["aInicio"];} ?>" class="form-control" required>
 								</br>
-								Nota media del expediente acad&eacute;mico:<input type="text" name="expA" class="form-control">
+								<b>Nota media del expediente acad&eacute;mico</b><input type="text" name="expA" value="<?php if(isset($_GET["array"])){echo $array["expA"];} ?>" class="form-control">
 								</br>
-								Año de pr&aacute;cticas anteriores(si se han hecho):<input type="text" name="pAntesYear" class="form-control">
+								<b>Año de pr&aacute;cticas anteriores(si se han hecho)</b><input type="text" name="pAntesYear" value="<?php if(isset($_GET["array"])){echo $array["pAntesYear"];} ?>" class="form-control">
 								</br>
 								<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
 									<b>Enviar</b></button>
@@ -223,23 +230,163 @@
 	
 	<!-- script Custom -->
 	<script language="JavaScript">
-			function checkPass(f){
-				clave1 = f.clave1.value
-				clave2 = f.clave2.value
-				if(clave1 != clave2){
-					alert("|INFO| Las password deben coincidir");
-					return false;
-				}else{
-					expediente = f.expA.value
-					if(isNaN(expediente)){
-						alert("|INFO| El expediente debe ser un valor numerico(decimales con .)");
-						return false;
-					}else{
-						return true;
-					}
+		function checkPass(f){
+			clave1 = f.clave1.value;
+			clave2 = f.clave2.value;
+			expediente = f.expA.value;
+			dni = f.dni.value;
+			correo = f.email.value;
+			telefono = f.telefono.value;
+			curso = f.curso.value;
+			aInicio = f.aInicio.value;
+			pAntesYear = f.pAntesYear.value;
+			fNac = f.fNac.value;
+
+			validEmail = isValidEmail(correo);
+			validDNI = nif(dni);
+			validPhone = isValidPhone(telefono);
+			validCurso = isValidCurso(curso);
+			validInicio = isValidInicio(aInicio);
+			validAnteriores = isValidAnteriores(pAntesYear);
+			validExpediente = isValidExpediente(expediente);
+			validFecha = isValidFecha(fNac);
+			
+			if(validEmail == false){
+				alert("|INFO| El formato del email no es correcto.");
+				return false;
+			}else if(validExpediente == false){
+				alert("|INFO| El expediente académico no es correcto.Debe ser un decimal de orden 4 entre 0 y 10. Por ejemplo: 7.6565");
+				return false;
+			}else if(validAnteriores == false){
+				alert("|INFO| El año de prácticas realizadas con anterioridad debe ser un año válido, o vacío.");
+				return false;
+			}else if(validPhone == false){
+				alert("|INFO| El telefono debe tener 9 numeros");
+				return false;
+			}else if(validInicio == false){
+				alert("|INFO| El año de inicio debe ser un año válido, por ejemplo 2014");
+				return false;
+			}else if(validCurso == false){
+				alert("|INFO| El curso debe indicar el curso actual, por ejemplo: 2015/2016");
+				return false;
+			}else if(validDNI == false){
+				alert("|INFO| Introduzca un DNI valido");
+				return false;
+			}else if(clave1 != clave2){
+				alert("|INFO| Las password deben coincidir.");
+				return false;
+			}else if(isNaN(expediente)){
+				alert("|INFO| El expediente debe ser un valor numerico(decimales con.)");
+				return false;
+			}else if(validFecha == false){
+				alert("|INFO| El formato de la fecha introducida no es valido"+fNac);
+				return false;
+			}else{
+				return true;
+			}
 					
+		}
+		
+		function isValidFecha(fNac){
+			expresion_regular = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+			if(expresion_regular.test(fNac)){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function isValidExpediente(expediente){
+			expresion_regular_expediente = /^[0-9]\.[0-9]{4}$/;
+			if(expresion_regular_expediente.test(expediente) == true){
+				return true;
+			}else{
+				expresion_regular_expediente = /^10\.0{4}$/
+				if(expresion_regular_expediente.test(expediente) == true){
+					return true;
+				}else{
+					return false;
 				}
 			}
+			
+		}
+		
+		
+		function isValidAnteriores(pAntesYear){
+			expresion_regular_anteriores = /^\d{4}$/;
+			if(expresion_regular_anteriores.test(pAntesYear) == true){
+				return true;
+			}else{
+				if(pAntesYear.length == 0){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
+		
+		function isValidInicio(aInicio){
+			expresion_regular_inicio = /^\d{4}$/;
+			if(expresion_regular_inicio.test(aInicio) == true){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function isValidCurso(curso){
+			expresion_regular_curso = /^\d{4}\/\d{4}$/;
+			if(expresion_regular_curso.test(curso) == true){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function isValidPhone(phone){
+			expresion_regular_telefono = /^\d{9}$/;
+			if(expresion_regular_telefono.test(phone) == true){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function isValidEmail(mail){
+			return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(mail);
+		}
+		
+		function nif(dni){
+		  var numero;
+		  var letr;
+		  var letra;
+		  var expresion_regular_dni;
+		 
+		  expresion_regular_dni = /^\d{8}[a-zA-Z]$/;
+		 
+		  if(expresion_regular_dni.test (dni) == true){
+			 numero = dni.substr(0,dni.length-1);
+			 letr = dni.substr(dni.length-1,1);
+			 numero = numero % 23;
+			 letra='TRWAGMYFPDXBNJZSQVHLCKET';
+			 letra=letra.substring(numero,numero+1);
+			if (letra!=letr.toUpperCase()) {
+			   return false;
+			 }else{
+			   return true;
+			 }
+		  }else{
+			 return false;
+		  }
+		}
+	</script>
+	
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script>
+		$('#datepicker').datepicker({
+		dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '-50:+0'});
 	</script>
 
 </body>

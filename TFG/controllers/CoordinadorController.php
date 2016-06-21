@@ -29,7 +29,7 @@ require_once('phpmailer/class.smtp.php');
 		}
 		
 		if($action == "ofertasPracticas"){
-			listarPracticas();
+			ofertas();
 		}
 		
 		if($action == "eliminarPractica"){
@@ -66,6 +66,10 @@ require_once('phpmailer/class.smtp.php');
 		
 		if($action == "eliminarAsignaciones"){
 			eliminarAsignaciones();
+		}
+		
+		if($action == "eliminaUna"){
+			eliminaUna();
 		}
 		
 		
@@ -111,6 +115,46 @@ require_once('phpmailer/class.smtp.php');
 		}
 		
 	}
+
+
+function eliminaUna(){
+	$id = $_GET["id"];
+	$p = new PracticasTutorEstudiante();
+	$boolean = $p->deleteById($id);
+	$msg = "Asignacion de estudiante eliminada.";
+	listarPracticasAsignadas2($msg);
+}	
+	
+function ofertas(){
+	$p = new Practicas();
+	$boolean = $p->selectAll();
+	$e = new Empresa();
+	$empresas = $e->selectAll();
+	if($empresas == false){
+		$msg = "No se pueden crear practicas si no hay empresas dadas de alta en el sistema. Por favor, registre las empresas primero.";
+		header("Location: ../views/coordinador/ofertasErr.php?msg=$msg");
+	}else{
+		if($boolean == false){
+			$msg = "No hay practicas dadas de alta actualmente en el sistema.";
+			$infoEmpresas = json_encode($empresas);
+			header("Location: ../views/coordinador/ofertas.php?msg=$msg&infoEmpresas=$infoEmpresas");
+		}else{
+			$i=0;
+			foreach($boolean as $d){
+				$e = new Empresa();
+				$id = $d["Empresa_idEmpresa"];
+				$empresa = $e->selectById($id);
+				$nombreEmpresa = $empresa[0]["nombre"];
+				$boolean[$i]["nombreEmpresa"] = $nombreEmpresa;
+				$i=$i+1;
+			}
+			$infoEmpresas = json_encode($empresas);
+			$datos = json_encode($boolean);
+			header("Location: ../views/coordinador/ofertas.php?datos=$datos&infoEmpresas=$infoEmpresas");
+		}	
+	}
+}
+
 	
 function asignarTutor(){
 	$idTutor = $_POST["seleccionar"];
@@ -121,14 +165,48 @@ function asignarTutor(){
 		$msg = "No se ha asignado";
 		header("Location: ../views/coordinador/asignacionTutores.php?msg=$msg");
 	}else{
-		listarPracticasAsignadas();
+		$msg = "Asignacion realizada.";
+		listarPracticasAsignadas2($msg);
+	}
+}
+
+function listarPracticasAsignadas2($msgx){
+	$e = new PracticasTutorEstudiante();
+	$toret = $e->selectAsignadas();
+	$t = new Tutor();
+	$tutores = $t->selectAll();
+	if($toret == false){
+		$msg = "No hay practicas pendientes de asignar a tutores";
+		header("Location: ../views/coordinador/asignacionTutores.php?msg=$msg&msgx=$msgx");
+	}else if($tutores == false){
+		$msg = "No hay tutores registrados en la aplicacion.";
+		header("Location: ../views/coordinador/asignacionTutores.php?msg=$msg&msgx=$msgx");			
+	}else{
+		$i=0;
+		foreach($toret as $array){
+			$idPractica = $array["Practicas_idPracticas"];
+			$idEstudiante = $array["Estudiante_idEstudiante"];
+			$p = new Practicas();
+			$practica = $p->selectById($idPractica);
+			$nombrePractica = $practica[0]["titulo"];
+			$toret[$i]["nombrePractica"] = $nombrePractica;
+			$e = new Estudiante();
+			$estudiante = $e->selectById($idEstudiante);
+			$nombreEstudiante = $estudiante[0]["nombre"];
+			$toret[$i]["nombreEstudiante"] = $nombreEstudiante;
+			$i=$i+1;
+		}
+		$datos = json_encode($toret);
+		$datos2 = json_encode($tutores);
+		header("Location: ../views/coordinador/asignacionTutores.php?datos=$datos&datos2=$datos2&msgx=$msgx");		
 	}
 }
 	
 function eliminarAsignaciones(){
 	$e = new PracticasTutorEstudiante();
 	$e->truncate();
-	verSolicitantes();
+	$msg="Se han eliminado todas las asignaciones de practicas.";
+	verSolicitantes2($msg);
 }
 	
 function realizarAsignaciones($array){
@@ -231,9 +309,57 @@ function realizarAsignaciones($array){
 		}
 		
 	}
-	verSolicitantes();
+	verSolicitantes3();
 }
 
+function verSolicitantes3(){
+	$e = new PracticasHasEstudiante();
+	$solicitantes = $e->selectAll();
+	$toret = array();
+	foreach($solicitantes as $solicitante){
+		$idSolicitante = $solicitante["Estudiante_idEstudiante"];
+		if(in_array($idSolicitante,$toret)){
+			
+		}else{
+			array_push($toret,$idSolicitante);
+		}
+	}
+		
+	$i=0;
+	foreach($toret as $id){
+		$pte = new PracticasTutorEstudiante();
+		$boolean = $pte->selectByIdEs($id);
+		if($boolean == false){
+			
+		}else{
+			unset($toret[$i]);
+		}
+		$i=$i+1;
+	}
+	
+	if(count($toret) == 0){
+		$msg = "No hay ninguna solicitud sin tramitar actualmente.";
+		$msgx = "Se han realizado las asignaciones de practicas a estudiantes. Si desea asignar los tutores, acceda al panel de Asignacion de tutores.";
+		header("Location: ../views/coordinador/asignacionEE.php?msg=$msg&msgx=$msgx");
+	}else{
+		$i=0;
+		$toret2 = array();
+		foreach($toret as $est){
+			$e = new Estudiante();
+			$estudiante = $e->selectById($est);
+			$toret2[$i]["id"] = $est;
+			$toret2[$i]["nombre"] = $estudiante[0]["nombre"];
+			$toret2[$i]["apellidos"] = $estudiante[0]["apellidos"];
+			$toret2[$i]["dni"] = $estudiante[0]["dni"];
+			$toret2[$i]["email"] = $estudiante[0]["email"];
+			$toret2[$i]["mediaExpediente"] = $estudiante[0]["mediaExpediente"];
+			$i++;
+		}
+		$datos = json_encode($toret2);
+		$msgx = "Se han asignado las practicas. Los alumnos que quedan por asignar han escogido practicas ya asignadas a otros mas prioritarios. Contacte con ellos para realizar la asignacion manual.";
+		header("Location: ../views/coordinador/asignacionEE.php?datos=$datos&msgx=$msgx");
+	}
+}
 	
 function verSolicitantes(){
 	$e = new PracticasHasEstudiante();
@@ -325,7 +451,7 @@ function verSolicitantes2($message){
 			$i++;
 		}
 		$datos = json_encode($toret2);
-		header("Location: ../views/coordinador/asignacionEE.php?datos=$datos&msg=$message");
+		header("Location: ../views/coordinador/asignacionEE.php?datos=$datos&msgx=$message");
 	}
 }
 
@@ -546,14 +672,22 @@ function asignarEE(){
 				$a = new PracticasTutorEstudiante();
 				$boolean = $a->selectByIdP($idPractica);
 				if($boolean == false){
-					$a= new PracticasTutorEstudiante();
-					$a->set(-1,$idPractica,$idEmpresa,$idEstudiante);
-					$boolean = $a->insert();
-					if($boolean == false){
-						$msg = "Error de insercion. Intentelo de nuevo";
-						verSolicitantes2($msg);
+					$x = new PracticasTutorEstudiante();
+					$bool = $x->selectByIdEs($idEstudiante);
+					if($bool == false){
+						$a= new PracticasTutorEstudiante();
+						$a->set(-1,$idPractica,$idEmpresa,$idEstudiante);
+						$boolean = $a->insert();
+						if($boolean == false){
+							$msg = "Error de insercion. Intentelo de nuevo";
+							verSolicitantes2($msg);
+						}else{
+							$msg = "La practica ha sido asignada correctamente. Acceda al panel de Asignacion de tutores para asignarle un tutor.";
+							verSolicitantes2($msg);//Asignada correctamente
+						}						
 					}else{
-						verSolicitantes();//Asignada correctamente
+						$msg = "El estudiante introducido ya tiene practica asignada. Puede consultar las practicas asignadas en el menu de asignacion de tutores";
+						verSolicitantes2($msg);
 					}							
 				}else{
 						$msg = "La practica ya ha sido asignada a otro estudiante anteriormente. Intentelo con otra.";
@@ -735,7 +869,8 @@ function eliminarPractica(){
 			$msg = "No se ha podido eliminar la práctica porque ya ha sido asignada.";
 			header("Location: ../views/coordinador/ofertas.php?msg2=$msg");
 		}else{
-			listarPracticas();
+			$msg = "La practica se ha eliminado correctamente.";
+			ofertas2($msg);
 		}
 }	
 
@@ -769,7 +904,8 @@ function modificarPractica(){
 				$msg = "Error al actualizar la practica. Intentelo de nuevo";
 				header("Location: ../views/coordinador/ofertas.php?msg2=$msg");			
 			}else{
-				listarPracticas();
+				$msg = "La informacion de la practica $titulo ha sido actualizada.";
+				ofertas2($msg);
 			}			
 		}
 	}	
@@ -792,15 +928,94 @@ function publicarPractica(){
 		$fin = $_POST["fin"];
 		$horario = $_POST["horario"];
 		$pformativo = $_POST["pformativo"];
+		//Comprobamos que la practica no existe ya
 		$p = new Practicas();
-		$p->set($titulo,$descripcion,$idEmpresa,$periodo,$titulacion,$inicio,$fin,$horario,$pformativo);
-		$boolean = $p->insert();
+		$boolean = $p->select($titulo);
 		if($boolean == false){
-			$msg = "Error al crear la practica. Intentelo de nuevo";
-			header("Location: ../views/coordinador/ofertas.php?msg2=$msg");			
+			$p = new Practicas();
+			$p->set($titulo,$descripcion,$idEmpresa,$periodo,$titulacion,$inicio,$fin,$horario,$pformativo);
+			$boolean = $p->insert();
+			if($boolean == false){
+				$msg = "Error al crear la practica. Intentelo de nuevo";
+				header("Location: ../views/coordinador/ofertas.php?msg2=$msg");			
+			}else{
+				$msg = "La practica se ha publicado correctamente.";
+				ofertas2($msg);
+			}			
 		}else{
-			listarPracticas();
-		}
+			$msg = "Ya existe una practica con el titulo $titulo. Elija otro nombre para la practica";
+			$array = array();
+			$array["descripcion"] = $descripcion;
+			$array["inicio"] = $inicio;
+			$array["fin"] = $fin;
+			$array["horario"] = $horario;
+			$array["pformativo"] = $pformativo;
+			$array["nombreEmpresa"] = $nEmpresa;
+			$array["periodo"] = $periodo;
+			$array["titulacion"] = $titulacion;
+			ofertas3($msg,$array);
+		}		
+	}
+}
+
+function ofertas3($msgx,$array){
+	$p = new Practicas();
+	$boolean = $p->selectAll();
+	$e = new Empresa();
+	$empresas = $e->selectAll();
+	if($empresas == false){
+		$msg = "No se pueden crear practicas si no hay empresas dadas de alta en el sistema. Por favor, registre las empresas primero.";
+		header("Location: ../views/coordinador/ofertasErr.php?msg=$msg");
+	}else{
+		if($boolean == false){
+			$msg = "No hay practicas dadas de alta actualmente en el sistema.";
+			$infoEmpresas = json_encode($empresas);
+			header("Location: ../views/coordinador/ofertas.php?msg=$msg&infoEmpresas=$infoEmpresas");
+		}else{
+			$i=0;
+			foreach($boolean as $d){
+				$e = new Empresa();
+				$id = $d["Empresa_idEmpresa"];
+				$empresa = $e->selectById($id);
+				$nombreEmpresa = $empresa[0]["nombre"];
+				$boolean[$i]["nombreEmpresa"] = $nombreEmpresa;
+				$i=$i+1;
+			}
+			$infoEmpresas = json_encode($empresas);
+			$datos = json_encode($boolean);
+			$infoFormulario = json_encode($array);
+			header("Location: ../views/coordinador/ofertas.php?datos=$datos&infoEmpresas=$infoEmpresas&msg2=$msgx&infoFormulario=$infoFormulario");
+		}	
+	}
+}
+
+function ofertas2($msgx){
+	$p = new Practicas();
+	$boolean = $p->selectAll();
+	$e = new Empresa();
+	$empresas = $e->selectAll();
+	if($empresas == false){
+		$msg = "No se pueden crear practicas si no hay empresas dadas de alta en el sistema. Por favor, registre las empresas primero.";
+		header("Location: ../views/coordinador/ofertasErr.php?msg=$msg");
+	}else{
+		if($boolean == false){
+			$msg = "No hay practicas dadas de alta actualmente en el sistema.";
+			$infoEmpresas = json_encode($empresas);
+			header("Location: ../views/coordinador/ofertas.php?msg=$msg&infoEmpresas=$infoEmpresas&msg2=$msgx");
+		}else{
+			$i=0;
+			foreach($boolean as $d){
+				$e = new Empresa();
+				$id = $d["Empresa_idEmpresa"];
+				$empresa = $e->selectById($id);
+				$nombreEmpresa = $empresa[0]["nombre"];
+				$boolean[$i]["nombreEmpresa"] = $nombreEmpresa;
+				$i=$i+1;
+			}
+			$infoEmpresas = json_encode($empresas);
+			$datos = json_encode($boolean);
+			header("Location: ../views/coordinador/ofertas.php?datos=$datos&infoEmpresas=$infoEmpresas&msg2=$msgx");
+		}	
 	}
 }
 	
@@ -829,7 +1044,8 @@ function borrarEvento(){
 	$id = $_GET["id"];
 	$e = new Eventos();
 	$e->delete($id);
-	listarEventos();
+	$msg="Evento borrado.";
+	listarEventos2($msg);
 }
 
 function modificarEvento(){
@@ -858,7 +1074,8 @@ function crearEvento(){
 		$msg = "No se ha podido crear el evento";
 		header("Location: ../views/coordinador/calendario.php?msg=$msg");
 	}else{
-		listarEventos();
+		$msg = "Se ha creado el evento.";
+		listarEventos2($msg);
 	}
 }
 	
@@ -871,6 +1088,18 @@ function listarEventos(){
 	}else{
 		$datos = serialize($boolean);
 		header("Location: ../views/coordinador/calendario.php?datos=$datos");
+	}
+}
+
+function listarEventos2($msgx){
+	$e = new Eventos();
+	$boolean = $e->selectAll();
+	if($boolean == false){
+		$msg = "No hay ningún evento actualmente.";
+		header("Location: ../views/coordinador/calendario.php?msg=$msgx");
+	}else{
+		$datos = serialize($boolean);
+		header("Location: ../views/coordinador/calendario.php?datos=$datos&msg=$msgx");
 	}
 }
 	

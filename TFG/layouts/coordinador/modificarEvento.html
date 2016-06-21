@@ -10,6 +10,8 @@
     <meta name="author" content="">
 
     <title>Coordinador-Practicas ESEI</title>
+	
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
     <!-- Bootstrap Core CSS -->
     <link href="../../layouts/coordinador/css/bootstrap.min.css" rel="stylesheet">
@@ -61,7 +63,7 @@
                         <a href="../../views/coordinador/principal.php"><i class="fa fa-fw fa-dashboard"></i>Home</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=eventos"><i class="fa fa-fw fa-table"></i>Gesti&oacute;n del Calendario</a>
+                        <a href="../../controllers/CoordinadorController.php?action=eventos"><i class="fa fa-fw fa-table"></i>Gestion del Calendario</a>
                     </li>
                     <li>
                         <a href="usuarios.php"><i class="fa fa-fw fa-edit"></i>Administraci&oacute;n de Usuarios</a>
@@ -88,7 +90,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Envío de mensajes
+                            Formulario de modificacion
                         </h1>
                     </div>
                 </div>
@@ -97,56 +99,33 @@
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
-						echo "<b style='color:red'>$msg</b>";
+						echo "<b>$msg</b>";
 						echo "</br>";
 						echo "</br>";
 					}
-				?>	
-				
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Mensaje a todos</b></h3>
-                            </div> 
-							<form class="form-signin" name="f1" action="../../controllers/CoordinadorController.php" method="POST">
-							<b>Asunto</b><input type="text" name="asunto" class="form-control" required>
-							</br>
-							<b>Mensaje</b><textarea name="mensajeMultiple" rows="10" cols="40" class="form-control" required></textarea>
-							</br>						
-							<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
-								<b>Enviar</b></button>
-							</form>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
-				
-				<br>
-				<br>
+				?>
 							
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Mensaje a un usuario</b></h3>
-                            </div> 
-							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/CoordinadorController.php" method="POST">
-							<b>Asunto</b><input type="text" name="asunto" class="form-control" required>
-							</br>
-							<b>Remitente</b><input type="text" name="remitente" class="form-control" required>
-							</br>
-							<b>Destinatario</b><input type="text" name="destinatario" class="form-control" required>
-							</br>
-							<b>Mensaje</b><textarea name="mensaje" rows="10" cols="40" class="form-control" required></textarea>
-							</br>						
-							<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
-								<b>Enviar</b></button>
-							</form>
+							<?php
+								if(isset($_GET["nombre"])&isset($_GET["tipo"])){
+									$nombre = $_GET["nombre"];
+									$tipo = $_GET["tipo"];
+									echo '<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login2">';
+									echo '<b>Introduce nueva fecha:</b><input type="date" id="datepicker" name="fca" class="form-control" placeholder="Fecha limite de entrega" required>';
+									echo '<br>';
+									echo '<input type="hidden" name="nEv" value="'.$nombre.'">';
+									echo '<input type="hidden" name="tEv" value="'.$tipo.'">';
+									echo '<button class="btn btn-sm btn-default btn-block" type="submit">
+											Enviar</button>';
+									echo '</form>';									
+								}
+							?>
                         </div>
                     </div>
                 </div>
-                <!-- /.row -->
+                <!-- /.row -->				
 											
             </div>
             <!-- /.container-fluid -->
@@ -163,29 +142,58 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 	
-	<script>
+		<script>
 		function validar(f){
-			remitente = f.remitente.value;
-			destinatario = f.destinatario.value;
-			
-			comprobarRemitente = isValidEmail(remitente);
-			comprobarDestinatario = isValidEmail(destinatario);
-			
-			if(comprobarRemitente == false){
-				alert("|INFO| El formato del correo del remitente no es correcto. Debe ser una dirección de correo válida");
+			fecha = f.fca.value;
+			validaFecha = isPosterior(fecha);
+			validaFecha2 = isValidFecha(fecha);
+			if(validaFecha == false){
+				alert("|INFO| La fecha del evento debe ser posterior a la fecha actual.");
 				return false;
-			}else if(comprobarDestinatario == false){
-				alert("|INFO| El formato del correo del destinatario no es correcto. Debe ser una dirección de correo válida");
+			}else if(validaFecha2 == false){
+				alert("|INFO| El formato de la fecha no es correcto: DD/MM/YYYY");
 				return false;
 			}else{
 				return true;
 			}
 		}
 		
-		function isValidEmail(mail){
-			return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(mail);
-		}		
+		function isValidFecha(fNac){
+			expresion_regular = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+			if(expresion_regular.test(fNac)){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function isPosterior(fecha){
+			var dt = new Date();
+			
+			var month = dt.getMonth()+1;
+			var day = dt.getDate();
+			var year = dt.getFullYear();
+			date = fecha.split('-');
+			if(date[0]>year){
+				return true;
+			}else if(date[0] == year & date[1]>month){
+				return true;
+			}else if(date[0] == year & date[1] == month & date[2]>day){
+				return true;
+			}else{
+				return false;
+			}
+		}
 	</script>
+	
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script>
+		$('#datepicker').datepicker({
+		dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '-0:+30'});
+	</script>
+	
 
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>

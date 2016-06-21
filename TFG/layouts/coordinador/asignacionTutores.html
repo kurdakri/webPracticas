@@ -70,10 +70,10 @@
                         <a href="../../controllers/CoordinadorController.php?action=ofertasPracticas"><i class="fa fa-fw fa-edit"></i>Gesti&oacute;n de las ofertas de empresas</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
                     </li>
                     <li>
-                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
+                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
                     </li>
                 </ul>
             </div>
@@ -94,13 +94,20 @@
                 </div>
                 <!-- /.row -->
 			
-				
+				<?php
+					if(isset($_GET["msgx"])){
+						$msg = $_GET["msgx"];
+						echo "<b style='color:red'>$msg</b>";
+					}
+				?>
+				<br>
 				<?php
 				if(isset($_GET["msg"])){
 					$msg = $_GET["msg"];
-					echo "<b style='color:red'>$msg</b>";
+					echo "<b>$msg</b>";
 				}
 				?>
+				<br>
 				
 				
 				<a href="../../controllers/CoordinadorController.php?action=verPracticasCompleto" class="btn btn-sm btn-default btn-block"><b>Mostrar asignaciones realizadas</b></a>
@@ -122,6 +129,7 @@
 									<th>Nombre Practica</th>
 									<th>Estudiante Asignado</th>
 									<th>Tutor</th>
+									<th></th>
 									<th></th>
 								<tr>
 							</thead>
@@ -145,7 +153,10 @@
 										</td>";
 										echo "<td>";
 										echo '<input type="hidden" name="idPractica" value="'.$practica["Practicas_idPracticas"].'"/>';
-										echo '<input type="submit" value="Asignar"/>';
+										echo '<input type="submit" class="btn btn-sm btn-default" value="Asignar"/>';
+										echo "</td>";
+										echo "<td>";
+										echo "<a href='../../controllers/CoordinadorController.php?action=eliminaUna&id=".$practica["Practicas_idPracticas"]."' class='btn btn-sm btn-default'>Eliminar</a>";
 										echo "</td>";
 										echo '</form>';
 										echo "</tr>";

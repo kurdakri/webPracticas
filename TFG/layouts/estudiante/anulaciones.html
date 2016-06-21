@@ -94,7 +94,7 @@
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
-						echo $msg;
+						echo "<b style='color:red'>".$msg."</b>";
 					}
 				?>
 			
@@ -102,13 +102,10 @@
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><i class="fa fa-fw"></i>Formulario de anulacion</h3>
+								<h3 class="panel-title"><i class="fa fa-fw"></i><b>Formulario de solicitud de anulaci&oacute;n</b></h3>
 							</div>
+							<br>
 							<form class="form-signin" name="f1" action="../../controllers/EstudianteController.php" method="POST" id="login">
-								Alumno/a:<input type="text" name="alumno" class="form-control" required autofocus>
-								</br>
-								DNI:<input type="text" name="dni" class="form-control" required>
-								</br>
 								Motivo:<textarea name="motivo" rows="10" cols="40" class="form-control" required></textarea>
 								</br>
 								<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
@@ -124,13 +121,10 @@
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><i class="fa fa-fw"></i>Formulario de cambio</h3>
+								<h3 class="panel-title"><i class="fa fa-fw"></i><b>Formulario de solicitud de cambio</b></h3>
 							</div>
+							<br>
 							<form class="form-signin" name="f1" action="../../controllers/EstudianteController.php" method="POST" id="login">
-								Alumno/a:<input type="text" name="alumno" class="form-control" required autofocus>
-								</br>
-								DNI:<input type="text" name="dni" class="form-control" required>
-								</br>
 								Motivo:<textarea name="mot" rows="10" cols="40" class="form-control" required></textarea>
 								</br>
 								<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">

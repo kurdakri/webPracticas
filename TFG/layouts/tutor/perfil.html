@@ -91,18 +91,26 @@
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
-						echo $msg;
+						echo "<b style='color:red'>".$msg."</b>";
+						echo "<br>";
+						echo "<br>";
 					}
+					
+					if(isset($_GET["array"])){
+						$array = json_decode($_GET["array"],true);
+					}
+					
 					
 					if(isset($_GET["datos"])){
 						$datos = json_decode($_GET["datos"],true);
+						$loginActual = $datos[0]["login"];
 						foreach($datos as $emp){
 							echo "<div class='row'>";
 							echo "<div class='col-lg-12'>";
 							echo "<div class='panel panel-default'>";
 							
 							echo "<div class='panel-heading'>";
-								echo "<h3 class='panel-title'><i class='fa fa-fw'></i>Perfil Actual</h3>";
+								echo "<h3 class='panel-title'><i class='fa fa-fw'></i><b>Perfil Actual</b></h3>";
 							echo "</div>";
 							
 							echo "<li>";
@@ -144,28 +152,29 @@
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><i class="fa fa-fw"></i>Formulario de Modificaci&oacute;n</h3>
+								<h3 class="panel-title"><i class="fa fa-fw"></i><b>Formulario de Modificaci&oacute;n</b></h3>
 							</div>
 							<form class="form-signin" name="f1" onsubmit="return checkPass(this)" action="../../controllers/TutorController.php" method="POST">
-								Login:<input type="text" name="login" class="form-control" required autofocus>
+								<b>Login</b><input type="text" name="login" class="form-control" required autofocus>
 								</br>
-								Password:<input type="password" name="clave1" class="form-control" required>
+								<b>Password</b><input type="password" name="clave1" class="form-control" required>
 								</br>
-								Repite Password:<input type="password" name="clave2" class="form-control" required>
+								<b>Repite Password</b><input type="password" name="clave2" class="form-control" required>
 								</br>
-								Nombre:<input type="text" name="nombre" class="form-control" required>
+								<b>Nombre</b><input type="text" name="nombre" value="<?php if(isset($_GET["array"])){echo $array["nombre"];} ?>" class="form-control" required>
 								</br>
-								Apellidos:<input type="text" name="apellidos" class="form-control" required>
+								<b>Apellidos</b><input type="text" name="apellidos" value="<?php if(isset($_GET["array"])){echo $array["apellidos"];} ?>" class="form-control" required>
 								</br>
-								Correo Electr&oacute;nico:<input type="text" name="email" class="form-control" required>
+								<b>Correo Electr&oacute;nico</b><input type="text" name="email" value="<?php if(isset($_GET["array"])){echo $array["email"];} ?>" class="form-control" required>
 								</br>
-								Telefono:<input type="text" name="telefono" class="form-control" required>
+								<b>Telefono</b><input type="text" name="telefono" value="<?php if(isset($_GET["array"])){echo $array["telefono"];} ?>" class="form-control" required>
 								</br>
-								DNI:<input type="text" name="dni" class="form-control" required>
+								<b>DNI</b><input type="text" name="dni" value="<?php if(isset($_GET["array"])){echo $array["dni"];} ?>" class="form-control" required>
 								</br>
-								Centro:<input type="text" name="centro" class="form-control" required>
+								<input type="hidden" name="loginActual" value="<?php if(isset($_GET["datos"])){echo $loginActual;} ?>"/>
+								<b>Centro</b><input type="text" name="centro" value="<?php if(isset($_GET["array"])){echo $array["centro"];} ?>" class="form-control" required>
 								</br>
-								Departamento:<input type="text" name="departamento" class="form-control" required>
+								<b>Departamento</b><input type="text" name="departamento" value="<?php if(isset($_GET["array"])){echo $array["departamento"];} ?>" class="form-control" required>
 								</br>
 								<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
 									<b>Enviar</b></button>
@@ -197,15 +206,70 @@
 		<!-- script Custom -->
 	<script language="JavaScript">
 			function checkPass(f){
-				clave1 = f.clave1.value
-				clave2 = f.clave2.value
+				clave1 = f.clave1.value;
+				clave2 = f.clave2.value;
+				correo = f.email.value;
+				telefono = f.telefono.value;
+				dni = f.dni.value;
+				
+				validCorreo = isValidEmail(correo);
+				validTelefono = isValidPhone(telefono);
+				validDNI = nif(dni);
+				
 				if(clave1 != clave2){
 					alert("|INFO| Las password deben coincidir");
+					return false;
+				}else if(validCorreo == false){
+					alert("|INFO| El formato del correo electrónico introducido no es valido.");
+					return false;
+				}else if(validTelefono == false){
+					alert("|INFO| El telefono debe constar de 9 números.");
+					return false;
+				}else if(validDNI == false){
+					alert("|INFO| El DNI introducido no es válido.");
 					return false;
 				}else{
 					return true;
 				}
 			}
+			
+				
+			function isValidPhone(phone){
+				expresion_regular_telefono = /^\d{9}$/;
+				if(expresion_regular_telefono.test(phone) == true){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			
+			function isValidEmail(mail){
+				return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(mail);
+			}
+			
+			function nif(dni){
+			  var numero;
+			  var letr;
+			  var letra;
+			  var expresion_regular_dni;
+			 
+			  expresion_regular_dni = /^\d{8}[a-zA-Z]$/;
+			 
+			  if(expresion_regular_dni.test (dni) == true){
+				 numero = dni.substr(0,dni.length-1);
+				 letr = dni.substr(dni.length-1,1);
+				 numero = numero % 23;
+				 letra='TRWAGMYFPDXBNJZSQVHLCKET';
+				 letra=letra.substring(numero,numero+1);
+				if (letra!=letr.toUpperCase()) {
+				   return false;
+				 }else{
+				   return true;
+				 }
+			  }else{
+				 return false;
+			  }
+			}	
 	</script>
 
 </body>

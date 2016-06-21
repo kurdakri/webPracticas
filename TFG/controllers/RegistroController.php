@@ -54,8 +54,20 @@ function registroEstudiantes(){
 			header("Location: ../views/mainRAC/acceso.php");
 		}		
 	}else{
-			$msg="El login de usuario ya existe. Elija otro login.";
-			header("Location: ../views/mainRAC/registroEstudiante.php?msg=$msg");		
+			$msg="El login de usuario $log ya existe. Elija otro login.";
+			$array = array();
+			$array["nombre"] = $nom;
+			$array["apellidos"] = $ape;
+			$array["dni"] = $dn;
+			$array["fNac"] = $feN;
+			$array["email"] = $ema;
+			$array["telefono"] = $tel;
+			$array["curso"] = $cur;
+			$array["inicio"] = $ini;
+			$array["expA"] = $expA;
+			$array["pAntesYear"] = $pay;
+			$datos = json_encode($array);
+			header("Location: ../views/mainRAC/registroEstudiante.php?msg=$msg&datos=$datos");		
 	}
 }
 
@@ -87,15 +99,27 @@ function registroEstudiantesC(){
 		$e->set($nom,$ape,$dn,$feN,$ema,$tel,$log,$pas,$cam,$fac,$tit,$cur,$ini,$pan,$pay,$expA);
 		$boolean = $e->insert();
 		if($boolean == false){
-			$msg="Error de registro. Inténtelo más tarde";
+			$msg="Error de registro. Intentelo mas tarde";
 			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
 		}else{
-			$msg="Registrado con éxito.";
+			$msg="Estudiante registrado exitosamente.";
 			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
 		}			
 	}else{
-		$msg="El login de usuario ya existe en el sistema. Elija otro login.";
-		header("Location: ../views/coordinador/usuarios.php?msg=$msg");
+		$msg="El login de usuario $log ya existe en el sistema. Elija otro login.";
+		$array = array();
+		$array["nombre"] = $nom;
+		$array["apellidos"] = $ape;
+		$array["dni"] = $dn;
+		$array["fNac"] = $feN;
+		$array["email"] = $ema;
+		$array["telefono"] = $tel;
+		$array["curso"] = $cur;
+		$array["inicio"] = $ini;
+		$array["expA"] = $expA;
+		$array["pAntesYear"] = $pay;
+		$datos = json_encode($array);
+		header("Location: ../views/coordinador/altaEstudiantes.php?msg=$msg&datos=$datos");
 	}
 }
 
@@ -119,12 +143,21 @@ function registroTutores(){
 			$msg="Error de registro. Inténtelo más tarde";
 			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
 		}else{
-			$msg="Registrado con éxito.";
+			$msg="Tutor registrado exitosamente.";
 			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
 		}			
 	}else{
-		$msg="El login de usuario ya existe en el sistema. Elija otro login.";
-		header("Location: ../views/coordinador/usuarios.php?msg=$msg");		
+		$msg="El login de usuario $log ya existe en el sistema. Elija otro login.";
+		$array = array();
+		$array["nombre"] = $nom;
+		$array["apellidos"] = $ape;
+		$array["dni"] = $dn;
+		$array["telefono"] = $tel;
+		$array["email"] = $ema;
+		$array["departamento"] = $dep;
+		$array["centro"] = $cen;
+		$datos = json_encode($array);
+		header("Location: ../views/coordinador/altaTutores.php?msg=$msg&datos=$datos");		
 	}
 	
 }
@@ -152,12 +185,23 @@ function registroEmpresas(){
 			$msg="Error de registro. Inténtelo más tarde";
 			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
 		}else{
-			$msg="Registrado con éxito.";
+			$msg="Empresa registrada exitosamente.";
 			header("Location: ../views/coordinador/usuarios.php?msg=$msg");
 		}	
 	}else{
-		$msg="El login de usuario ya existe en el sistema. Elija otro login.";
-		header("Location: ../views/coordinador/usuarios.php?msg=$msg");			
+		$msg="El login de usuario $log ya existe en el sistema. Elija otro login.";
+		$array = array();
+		$array["nombreEmpresa"] = $nom;
+		$array["centro"] = $cen;
+		$array["localidad"] = $loc;
+		$array["calle"] = $cal;
+		$array["email"] = $ema;
+		$array["telefono"] = $tel;
+		$array["nombreTutor"] = $noT;
+		$array["cargoTutor"] = $caT;
+		$array["tareas"] = $tar;
+		$datos = json_encode($array);
+		header("Location: ../views/coordinador/altaEmpresas.php?msg=$msg&datos=$datos");			
 	}
 	
 }

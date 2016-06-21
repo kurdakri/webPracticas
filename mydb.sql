@@ -109,10 +109,10 @@ CREATE TABLE IF NOT EXISTS `estudiante` (
 --
 
 INSERT INTO `estudiante` (`idEstudiante`, `nombre`, `apellidos`, `dni`, `fechaNac`, `email`, `telefono`, `login`, `password`, `campus`, `facultad`, `titulacion`, `curso`, `inicioTitulacion`, `pAntes`, `pAntesYear`,`mediaExpediente`) VALUES
-(1, 'Pedro', 'Sanchez', '3433344333T', '2016-06-17', 'ps@gmail.com', '666556655', 'est1', 'est1', 'Ourense', 'ESE', 'Grado', '4º', '2000', 0, '','6.8000'),
-(3, 'Est2', 'Est2', '43534534H', '2016-05-12', 'est2@gmail.com', '53521345235', 'est2', 'est2', 'Ourense', 'ESEI', 'Grado', '3', '2002', 0, '','7.1234'),
+(1, 'Pedro', 'Sanchez', '34367665F', '2016-06-17', 'ps@gmail.com', '666556655', 'est1', 'est1', 'Ourense', 'ESE', 'Grado', '4º', '2000', 0, '','6.8000'),
+(3, 'Est2', 'Est2', '43534534L', '2016-05-12', 'est2@gmail.com', '53521345235', 'est2', 'est2', 'Ourense', 'ESEI', 'Grado', '3', '2002', 0, '','7.1234'),
 (7, 'Mario', 'Yáñez Borrajo', '76723676T', '1987-09-28', 'myborrajo@esei.uvigo.es', '685561018', 'kurdakri', '1123581321', 'Ourense', 'ESEI', 'Grado', '4º', '2011', 0, '','5.3212'),
-(8, 'Federico', 'Jimenez', '33444553Y', '1956-10-08', 'fjimenez@gmail.com', '666666666', 'est3', 'est3', 'Ourense', 'ESEI', 'Master', '3º', '2012', 1, '2013','6.5434'),
+(8, 'Federico', 'Jimenez', '33444553T', '1956-10-08', 'fjimenez@gmail.com', '666666666', 'est3', 'est3', 'Ourense', 'ESEI', 'Master', '3º', '2012', 1, '2013','6.5434'),
 (9, 'Manolo', 'Kabezobolo', '43366545E', '1993-10-25', 'manolo@gmail.com', '666776677', 'est4', 'est4', 'Ourense', 'ESEI', 'Grado', '3º', '2011', 1, '2014','8.4342');
 
 -- --------------------------------------------------------
@@ -167,16 +167,16 @@ CREATE TABLE IF NOT EXISTS `practicas` (
 --
 
 INSERT INTO `practicas` (`idPracticas`, `titulo`, `descripcion`, `Empresa_idEmpresa`, `periodo`, `titulacion`, `inicio`, `fin`, `horario`, `pformativo`) VALUES
-(1,'Practica1','Descripción Practica 1',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
-(2,'Practica2','Descripción Practica 2',2,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
-(3,'Practica3','Descripción Practica 3',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
-(4,'Practica4','Descripción Practica 4',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
-(5,'Practica5','Descripción Practica 5',2,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
-(6,'Practica6','Descripción Practica 6',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
-(7,'Practica7','Descripción Practica 7',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
-(8,'Practica8','Descripción Practica 8',2,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
-(9,'Practica9','Descripción Practica 9',1,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.'),
-(10,'Practica10','Descripción Practica 10',2,'segundo','indiferente','2016-01-12','2016-05-15','10:00-17:00','Ninguno.');
+(1,'Practica1','Descripción Practica 1',1,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.'),
+(2,'Practica2','Descripción Practica 2',2,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.'),
+(3,'Practica3','Descripción Practica 3',1,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.'),
+(4,'Practica4','Descripción Practica 4',1,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.'),
+(5,'Practica5','Descripción Practica 5',2,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.'),
+(6,'Practica6','Descripción Practica 6',1,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.'),
+(7,'Practica7','Descripción Practica 7',1,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.'),
+(8,'Practica8','Descripción Practica 8',2,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.'),
+(9,'Practica9','Descripción Practica 9',1,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.'),
+(10,'Practica10','Descripción Practica 10',2,'segundo','indiferente','2017-01-12','2017-05-15','10:00-17:00','Ninguno.');
 
 -- --------------------------------------------------------
 
@@ -247,8 +247,8 @@ CREATE TABLE IF NOT EXISTS `tutor` (
 --
 
 INSERT INTO `tutor` (`idTutor`, `nombre`, `apellidos`, `dni`, `telefono`, `email`, `login`, `password`, `departamento`, `centro`) VALUES
-(1, 'tutor1', 'tutor1', '66544333T', '666555666', 'tutor1@gmail.com', 'tutor1', 'tutor1', 'Informática', 'ESEI'),
-(2, 'tutor2', 'tutor2', '34344333H', '545454534', 'tutor2@gmail.com', 'tutor2', 'tutor2', 'Electrónica', 'ESEI');
+(1, 'tutor1', 'tutor1', '34987456V', '666555666', 'tutor1@gmail.com', 'tutor1', 'tutor1', 'Informática', 'ESEI'),
+(2, 'tutor2', 'tutor2', '34564123E', '545454534', 'tutor2@gmail.com', 'tutor2', 'tutor2', 'Electrónica', 'ESEI');
 
 --
 -- Restricciones para tablas volcadas
