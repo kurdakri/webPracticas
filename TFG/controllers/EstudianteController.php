@@ -662,11 +662,11 @@ function solicitarCambio(){
 	<b>SOLICITUD DE CAMBIO DE PRACTICAS</b>
 	<br>
 	<br>
-	<b>Alumno:</b>".$nombre."
+	<b>Alumno:</b>".utf8_decode($nombre)."
 	<br>
-	<b>DNI:</b>".$dni."
+	<b>DNI:</b>".utf8_decode($dni)."
 	<br>
-	<b>Motivo:</b>".$_POST["mot"]);
+	<b>Motivo:</b>".utf8_decode($_POST["mot"]));
 
 	//ARCHIVOS ADJUNTOS
 	//$correo->AddAttachment("ruta");
@@ -726,11 +726,11 @@ function solicitarAnulacion(){
 	<b>SOLICITUD DE ANULACION DE PRACTICAS</b>
 	<br>
 	<br>
-	<b>Alumno:</b>".$nombre."
+	<b>Alumno:</b>".utf8_decode($nombre)."
 	<br>
-	<b>DNI:</b>".$dni."
+	<b>DNI:</b>".utf8_decode($dni)."
 	<br>
-	<b>Motivo:</b>".$_POST["motivo"]);
+	<b>Motivo:</b>".utf8_decode($_POST["motivo"]));
 
 	//ARCHIVOS ADJUNTOS
 	//$correo->AddAttachment("ruta");
@@ -855,11 +855,11 @@ function enviarMensaje(){
 	$correo->AddAddress($destinatario,"");
 
 	//Asunto del mensaje
-	$correo->Subject = $asunto;
+	$correo->Subject = utf8_decode($asunto);
 
 	//Contenido del mensaje
 	$correo->IsHTML(false);
-	$correo->Body = $mensaje;
+	$correo->Body = utf8_decode($mensaje);
 	//$correo->MsgHTML("<strong>Mensaje html</strong>");
 
 	//ARCHIVOS ADJUNTOS

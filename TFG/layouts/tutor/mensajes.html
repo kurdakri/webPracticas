@@ -108,7 +108,7 @@
 							<br>
 							Remitente:<input type="text" name="remitente" class="form-control" required>
 							<br>
-							Destinatario:<input type="text" name="destinatario" class="form-control" required>
+							Destinatario:<input type="text" name="destinatariox" class="form-control" required>
 							<br>
 							Mensaje:<textarea name="mensaje" rows="10" cols="40" class="form-control" required></textarea>
 							<br>						
@@ -138,7 +138,7 @@
 	<script>
 		function validar(f){
 			remitente = f.remitente.value;
-			destinatario = f.destinatario.value;
+			destinatario = f.destinatariox.value;
 			
 			comprobarRemitente = isValidEmail(remitente);
 			comprobarDestinatario = isValidEmail(destinatario);

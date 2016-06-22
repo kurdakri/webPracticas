@@ -793,11 +793,11 @@ function enviarMensajeMultiple(){
 	}
 	
 	//Asunto del mensaje
-	$correo->Subject = $asunto;
+	$correo->Subject = utf8_decode($asunto);
 
 	//Contenido del mensaje
 	$correo->IsHTML(false);
-	$correo->Body = $mensaje;
+	$correo->Body = utf8_decode($mensaje);
 	//$correo->MsgHTML("<strong>Mensaje html</strong>");
 
 	//ARCHIVOS ADJUNTOS
@@ -842,11 +842,11 @@ function enviarMensaje(){
 	$correo->AddAddress($destinatario,"");
 
 	//Asunto del mensaje
-	$correo->Subject = $asunto;
+	$correo->Subject = utf8_decode($asunto);
 
 	//Contenido del mensaje
 	$correo->IsHTML(false);
-	$correo->Body = $mensaje;
+	$correo->Body = utf8_decode($mensaje);
 	//$correo->MsgHTML("<strong>Mensaje html</strong>");
 
 	//ARCHIVOS ADJUNTOS

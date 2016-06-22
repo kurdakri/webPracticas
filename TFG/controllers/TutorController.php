@@ -33,7 +33,7 @@ if(isset($_GET["action"])){
 			modificarPerfil();
 		}
 	
-	if(isset($_POST["asunto"])&isset($_POST["remitente"])&isset($_POST["destinatario"])&isset($_POST["mensaje"])){
+	if(isset($_POST["asunto"])&isset($_POST["remitente"])&isset($_POST["destinatariox"])&isset($_POST["mensaje"])){
 		enviarMensaje();
 	}
 	
@@ -207,7 +207,7 @@ function solicitarTutorizacion(){
 	//Contenido del mensaje
 	//$correo->IsHTML(false);
 	//$correo->Body = $mensaje;
-	$correo->MsgHTML("<b>INFORMACIÓN DEL SOLICITANTE</b><br><b>Nombre del tutor:</b>".$nombreTutor."<br><b>Email:</b>".$remitente."<b>DESCRIPCION DE LA SOLICITUD:</b>".$_POST["comentario"]);
+	$correo->MsgHTML("<b>INFORMACIÓN DEL SOLICITANTE</b><br><b>Nombre del tutor:</b>".utf8_decode($nombreTutor)."<br><b>Email:</b>".utf8_decode($remitente)."<b>DESCRIPCION DE LA SOLICITUD:</b>".utf8_decode($_POST["comentario"]));
 
 	//ARCHIVOS ADJUNTOS
 	//$correo->AddAttachment("ruta");
@@ -237,7 +237,7 @@ function enviarMensaje(){
 
 	$asunto = $_POST["asunto"];
 	$remitente = $_POST["remitente"];
-	$destinatario = $_POST["destinatario"];
+	$destinatario = $_POST["destinatariox"];
 	$mensaje = $_POST["mensaje"];
 	
 	//Decimos quien envía el correo
@@ -250,11 +250,11 @@ function enviarMensaje(){
 	$correo->AddAddress($destinatario,"");
 
 	//Asunto del mensaje
-	$correo->Subject = $asunto;
+	$correo->Subject = utf8_decode($asunto);
 
 	//Contenido del mensaje
 	$correo->IsHTML(false);
-	$correo->Body = $mensaje;
+	$correo->Body = utf8_decode($mensaje);
 	//$correo->MsgHTML("<strong>Mensaje html</strong>");
 
 	//ARCHIVOS ADJUNTOS

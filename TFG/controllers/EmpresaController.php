@@ -216,14 +216,14 @@ function enviarOferta(){
 	$correo->AddAddress($destinatario,"");
 
 	//Asunto del mensaje
-	$correo->Subject = "Solicitud de oferta de prácticas en empresa";
+	$correo->Subject ="Solicitud de oferta de prácticas en empresa";
 
 	//Contenido del mensaje
 	//$correo->IsHTML(false);
 	//$correo->Body = $mensaje;
 	
-	$correo->MsgHTML("<b>DATOS DE LA PRÁCTICA SOLICITADA</b><br><b>Titulo:</b>".$_POST["titulo"]."<br><b>Descripcion:</b>".$_POST["descripcion"]."<br><b>Nombre de la Empresa:</b>".$_POST["nombreEmpresa"]."<br><b>Período:</b>".$_POST["periodo"]."
-	<br><b>Titulacion:</b>".$_POST["titulacion"]."<br><b>Fecha de Inicio:</b>".$_POST["inicio"]."<br><b>Fecha de fin:</b>".$_POST["fin"]."<br><b>Horario:</b>".$_POST["horario"]."<br><b>Proyecto Formativo:</b>".$_POST["pformativo"]);
+	$correo->MsgHTML("<b>DATOS DE LA PRÁCTICA SOLICITADA</b><br><b>Titulo:</b>".utf8_decode($_POST["titulo"])."<br><b>Descripcion:</b>".utf8_decode($_POST["descripcion"])."<br><b>Nombre de la Empresa:</b>".utf8_decode($_POST["nombreEmpresa"])."<br><b>Período:</b>".utf8_decode($_POST["periodo"])."
+	<br><b>Titulacion:</b>".utf8_decode($_POST["titulacion"])."<br><b>Fecha de Inicio:</b>".utf8_decode($_POST["inicio"])."<br><b>Fecha de fin:</b>".utf8_decode($_POST["fin"])."<br><b>Horario:</b>".$_POST["horario"]."<br><b>Proyecto Formativo:</b>".utf8_decode($_POST["pformativo"]));
 
 	//ARCHIVOS ADJUNTOS
 	//$correo->AddAttachment("ruta");
@@ -267,11 +267,11 @@ function enviarMensaje(){
 	$correo->AddAddress($destinatario,"");
 
 	//Asunto del mensaje
-	$correo->Subject = $asunto;
+	$correo->Subject = utf8_decode($asunto);
 
 	//Contenido del mensaje
 	$correo->IsHTML(false);
-	$correo->Body = $mensaje;
+	$correo->Body = utf8_decode($mensaje);
 	//$correo->MsgHTML("<strong>Mensaje html</strong>");
 
 	//ARCHIVOS ADJUNTOS
