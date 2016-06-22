@@ -106,6 +106,8 @@
 			validAnteriores = isValidAnteriores(pAntesYear);
 			validExpediente = isValidExpediente(expediente);
 			validFecha = isValidFecha(fNac);
+			posteriorFecha = isPosterior(fNac);
+			posteriorInicio = isPosteriorYear(aInicio);
 			
 			if(validEmail == false){
 				alert("|INFO| El formato del email no es correcto.");
@@ -122,6 +124,9 @@
 			}else if(validInicio == false){
 				alert("|INFO| El año de inicio debe ser un año válido, por ejemplo 2014");
 				return false;
+			}else if(posteriorInicio == true){
+				alert("|INFO| El año de inicio no puede ser superior al actual.");
+				return false;
 			}else if(validCurso == false){
 				alert("|INFO| El curso debe indicar el curso actual, por ejemplo: 2015/2016");
 				return false;
@@ -137,10 +142,43 @@
 			}else if(validFecha == false){
 				alert("|INFO| El formato de la fecha introducida no es valido"+fNac);
 				return false;
+			}else if(posteriorFecha == true){
+				alert("|INFO| La fecha no puede ser posterior a la actual.");
+				return false;				
 			}else{
 				return true;
 			}
 					
+		}
+		
+		function isPosteriorYear(curso){
+			var dt = new Date();
+			
+			var year = dt.getFullYear();
+			
+			if(curso > year){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function isPosterior(fecha){
+			var dt = new Date();
+			
+			var month = dt.getMonth()+1;
+			var day = dt.getDate();
+			var year = dt.getFullYear();
+			date = fecha.split('-');
+			if(date[0]>year){
+				return true;
+			}else if(date[0] == year & date[1]>month){
+				return true;
+			}else if(date[0] == year & date[1] == month & date[2]>day){
+				return true;
+			}else{
+				return false;
+			}
 		}
 		
 		function isValidFecha(fNac){
@@ -244,5 +282,5 @@
 <link rel="stylesheet" href="/resources/demos/style.css">
 <script>
 $('#datepicker').datepicker({
-dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '-100:+0'});
+dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '-70:-1'});
 </script>

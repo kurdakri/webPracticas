@@ -72,6 +72,15 @@ require_once('phpmailer/class.smtp.php');
 			eliminaUna();
 		}
 		
+		if($action == "listaDeAsignadas"){
+			listaDeAsignadas();
+		}
+		
+		if($action == "eliminarPanelEE"){
+			eliminarPanelEE();
+		}
+		
+		
 		
 	}else{
 		if(isset($_POST["login"])&isset($_POST["clave1"])&isset($_POST["nombre"])&isset($_POST["email"])&isset($_POST["telefono"])){
@@ -94,7 +103,7 @@ require_once('phpmailer/class.smtp.php');
 			modificarPractica();
 		}
 		
-		if(isset($_POST["asunto"])&isset($_POST["remitente"])&isset($_POST["destinatario"])&isset($_POST["mensaje"])){
+		if(isset($_POST["asunto"])&isset($_POST["destinatario"])&isset($_POST["mensaje"])){
 			enviarMensaje();
 		}
 		
@@ -116,7 +125,40 @@ require_once('phpmailer/class.smtp.php');
 		
 	}
 
+function eliminarPanelEE(){
+	$idPractica = $_GET["id"];
+	$p = new PracticasTutorEstudiante();
+	$boolean = $p->deleteById($idPractica);
+	$msg = "Asignacion de estudiante eliminada.";
+	listaDeAsignadas2($msg);
+}
 
+function listaDeAsignadas2($msgx){
+	$e = new PracticasTutorEstudiante();
+	$toret = $e->selectAsignadas();
+	if($toret == false){
+		$msg = "Asignacion eliminada.No hay practicas asignadas a estudiantes en este momento.";
+		header("Location: ../views/coordinador/listaDeAsignadas.php?msg=$msg");
+	}else{
+		$i=0;
+		foreach($toret as $array){
+			$idPractica = $array["Practicas_idPracticas"];
+			$idEstudiante = $array["Estudiante_idEstudiante"];
+			$p = new Practicas();
+			$practica = $p->selectById($idPractica);
+			$nombrePractica = $practica[0]["titulo"];
+			$toret[$i]["nombrePractica"] = $nombrePractica;
+			$e = new Estudiante();
+			$estudiante = $e->selectById($idEstudiante);
+			$nombreEstudiante = $estudiante[0]["nombre"];
+			$toret[$i]["nombreEstudiante"] = $nombreEstudiante;
+			$i=$i+1;
+		}
+		$datos = json_encode($toret);
+		header("Location: ../views/coordinador/listaDeAsignadas.php?datos=$datos&msg=$msgx");
+	}
+}
+	
 function eliminaUna(){
 	$id = $_GET["id"];
 	$p = new PracticasTutorEstudiante();
@@ -309,7 +351,70 @@ function realizarAsignaciones($array){
 		}
 		
 	}
-	verSolicitantes3();
+	mensajeAsignacion();
+}
+
+function mensajeAsignacion(){
+	$e = new PracticasHasEstudiante();
+	$solicitantes = $e->selectAll();
+	$toret = array();
+	foreach($solicitantes as $solicitante){
+		$idSolicitante = $solicitante["Estudiante_idEstudiante"];
+		if(in_array($idSolicitante,$toret)){
+			
+		}else{
+			array_push($toret,$idSolicitante);
+		}
+	}
+		
+	$i=0;
+	foreach($toret as $id){
+		$pte = new PracticasTutorEstudiante();
+		$boolean = $pte->selectByIdEs($id);
+		if($boolean == false){
+			
+		}else{
+			unset($toret[$i]);
+		}
+		$i=$i+1;
+	}
+	
+	if(count($toret) == 0){
+		$msg = "Se han realizado las asignaciones automaticas a los solicitantes.";
+		header("Location: ../views/coordinador/mensajeAsignacion.php?msg=$msg");
+	}else{
+		$msg = "Se han realizado las asignaciones automaticas a los solicitantes. Hay estudiantes cuya solicitud no ha sido aceptada porque las practicas elegidas
+		fueron asignadas a otros con mayor prioridad.\n Revise el listado de solicitantes y contacte con ellos para la asignacion manual.";
+		header("Location: ../views/coordinador/mensajeAsignacion.php?msg=$msg");
+	}	
+}
+
+
+
+function listaDeAsignadas(){
+	$e = new PracticasTutorEstudiante();
+	$toret = $e->selectAsignadas();
+	if($toret == false){
+		$msg = "No hay practicas asignadas a estudiantes en este momento.";
+		header("Location: ../views/coordinador/listaDeAsignadas.php?msg=$msg");
+	}else{
+		$i=0;
+		foreach($toret as $array){
+			$idPractica = $array["Practicas_idPracticas"];
+			$idEstudiante = $array["Estudiante_idEstudiante"];
+			$p = new Practicas();
+			$practica = $p->selectById($idPractica);
+			$nombrePractica = $practica[0]["titulo"];
+			$toret[$i]["nombrePractica"] = $nombrePractica;
+			$e = new Estudiante();
+			$estudiante = $e->selectById($idEstudiante);
+			$nombreEstudiante = $estudiante[0]["nombre"];
+			$toret[$i]["nombreEstudiante"] = $nombreEstudiante;
+			$i=$i+1;
+		}
+		$datos = json_encode($toret);
+		header("Location: ../views/coordinador/listaDeAsignadas.php?datos=$datos");
+	}
 }
 
 function verSolicitantes3(){
@@ -682,16 +787,19 @@ function asignarEE(){
 							$msg = "Error de insercion. Intentelo de nuevo";
 							verSolicitantes2($msg);
 						}else{
-							$msg = "La practica ha sido asignada correctamente. Acceda al panel de Asignacion de tutores para asignarle un tutor.";
-							verSolicitantes2($msg);//Asignada correctamente
+							$msg = "La practica ha sido asignada correctamente al estudiante especificado.";
+							//verSolicitantes2($msg);//Asignada correctamente
+							header("Location: ../views/coordinador/mensajeAsignacion.php?msg=$msg");
 						}						
 					}else{
-						$msg = "El estudiante introducido ya tiene practica asignada. Puede consultar las practicas asignadas en el menu de asignacion de tutores";
-						verSolicitantes2($msg);
+						$msg = "El estudiante introducido ya tiene practica asignada. Consulte las practicas asignadas.";
+						//verSolicitantes2($msg);
+						header("Location: ../views/coordinador/mensajeAsignacion.php?msg=$msg");
 					}							
 				}else{
-						$msg = "La practica ya ha sido asignada a otro estudiante anteriormente. Intentelo con otra.";
-						verSolicitantes2($msg);					
+						$msg = "La practica ya ha sido asignada a otro estudiante anteriormente. Consulte las practicas asignadas.";
+						//verSolicitantes2($msg);
+						header("Location: ../views/coordinador/mensajeAsignacion.php?msg=$msg");						
 				}
 			}
 		}
@@ -828,9 +936,14 @@ function enviarMensaje(){
 	$correo->Charset='UTF-8';
 
 	$asunto = $_POST["asunto"];
-	$remitente = $_POST["remitente"];
 	$destinatario = $_POST["destinatario"];
 	$mensaje = $_POST["mensaje"];
+	
+	session_start();
+	$login = $_SESSION["name"];
+	$c = new Coordinador();
+	$coordinador = $c->select($login);	
+	$remitente = $coordinador[0]["email"];
 	
 	//Decimos quien envía el correo
 	$correo->SetFrom("tfgpracticasesei@gmail.com","");

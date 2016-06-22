@@ -99,7 +99,55 @@
 						echo "<b style='color:red'>$msgx</b>";
 					}
 				?>
+											
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Asignar Pr&aacute;cticas</b></h3>
+                            </div> 
+					
+						<?php
+							if(isset($_GET["datos"])){
+								$datos = $_GET["datos"];
+								echo "<a href='../../controllers/CoordinadorController.php?action=realizarAsignaciones&datos=".$datos."'>Realizar Asignaciones Automáticas</a>";
+							}
 							
+							if(isset($_GET["msg"])){
+								$msg = $_GET["msg"];
+								echo "<b>$msg</b>";							
+							}
+							
+								echo "<br>";
+								echo "<a href='../../controllers/CoordinadorController.php?action=eliminarAsignaciones'>Eliminar todas las asignaciones realizadas</a>";
+
+						?>
+					
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+				
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Asignación Manual de prácticas</b></h3>
+                            </div> 
+							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login">
+							Nombre de la pr&aacute;ctica:<input type="text" name="nPractica" class="form-control" required>
+							</br>
+							DNI del alumno:<input type="text" name="dni" class="form-control" required>
+							</br>						
+							<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
+								<b>Asignar</b></button>
+							</form>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->	
+				
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-default">
@@ -142,58 +190,17 @@
                 </div>
                 <!-- /.row -->
 				
-				<br>
-				<br>
-				
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Asignar Pr&aacute;cticas</b></h3>
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Listado de pr&aacute;cticas</b></h3>
                             </div> 
-					
-						<?php
-							if(isset($_GET["datos"])){
-								$datos = $_GET["datos"];
-								echo "<a href='../../controllers/CoordinadorController.php?action=realizarAsignaciones&datos=".$datos."'>Realizar Asignaciones Automáticas</a>";
-							}
-							
-							if(isset($_GET["msg"])){
-								$msg = $_GET["msg"];
-								echo "<b>$msg</b>";							
-							}
-							
-								echo "<br>";
-								echo "<a href='../../controllers/CoordinadorController.php?action=eliminarAsignaciones'>Eliminar todas las asignaciones realizadas</a>";
-
-						?>
-					
+							<a href="../../controllers/CoordinadorController.php?action=listaDeAsignadas">Ver lista de practicas asignadas</a> 	
                         </div>
                     </div>
                 </div>
                 <!-- /.row -->
-
-				<br>
-				<br>
-				
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Asignación Manual de prácticas</b></h3>
-                            </div> 
-							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login">
-							Nombre de la pr&aacute;ctica:<input type="text" name="nPractica" class="form-control" required>
-							</br>
-							DNI del alumno:<input type="text" name="dni" class="form-control" required>
-							</br>						
-							<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
-								<b>Asignar</b></button>
-							</form>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->	
 											
             </div>
             <!-- /.container-fluid -->

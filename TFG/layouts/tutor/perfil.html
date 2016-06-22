@@ -155,26 +155,26 @@
 								<h3 class="panel-title"><i class="fa fa-fw"></i><b>Formulario de Modificaci&oacute;n</b></h3>
 							</div>
 							<form class="form-signin" name="f1" onsubmit="return checkPass(this)" action="../../controllers/TutorController.php" method="POST">
-								<b>Login</b><input type="text" name="login" class="form-control" required autofocus>
+								<b>Login</b><input type="text" name="login" value="<?php if(isset($_GET["array"])){}else{echo $datos[0]["login"];} ?>" class="form-control" required autofocus>
 								</br>
 								<b>Password</b><input type="password" name="clave1" class="form-control" required>
 								</br>
 								<b>Repite Password</b><input type="password" name="clave2" class="form-control" required>
 								</br>
-								<b>Nombre</b><input type="text" name="nombre" value="<?php if(isset($_GET["array"])){echo $array["nombre"];} ?>" class="form-control" required>
+								<b>Nombre</b><input type="text" name="nombre" value="<?php if(isset($_GET["array"])){echo $array["nombre"];}else{echo $datos[0]["nombre"];} ?>" class="form-control" required>
 								</br>
-								<b>Apellidos</b><input type="text" name="apellidos" value="<?php if(isset($_GET["array"])){echo $array["apellidos"];} ?>" class="form-control" required>
+								<b>Apellidos</b><input type="text" name="apellidos" value="<?php if(isset($_GET["array"])){echo $array["apellidos"];}else{echo $datos[0]["apellidos"];} ?>" class="form-control" required>
 								</br>
-								<b>Correo Electr&oacute;nico</b><input type="text" name="email" value="<?php if(isset($_GET["array"])){echo $array["email"];} ?>" class="form-control" required>
+								<b>Correo Electr&oacute;nico</b><input type="text" name="email" value="<?php if(isset($_GET["array"])){echo $array["email"];}else{echo $datos[0]["email"];} ?>" class="form-control" required>
 								</br>
-								<b>Telefono</b><input type="text" name="telefono" value="<?php if(isset($_GET["array"])){echo $array["telefono"];} ?>" class="form-control" required>
+								<b>Telefono</b><input type="text" name="telefono" value="<?php if(isset($_GET["array"])){echo $array["telefono"];}else{echo $datos[0]["telefono"];} ?>" class="form-control" required>
 								</br>
-								<b>DNI</b><input type="text" name="dni" value="<?php if(isset($_GET["array"])){echo $array["dni"];} ?>" class="form-control" required>
+								<b>DNI</b><input type="text" name="dni" value="<?php if(isset($_GET["array"])){echo $array["dni"];}else{echo $datos[0]["dni"];} ?>" class="form-control" required>
 								</br>
 								<input type="hidden" name="loginActual" value="<?php if(isset($_GET["datos"])){echo $loginActual;} ?>"/>
-								<b>Centro</b><input type="text" name="centro" value="<?php if(isset($_GET["array"])){echo $array["centro"];} ?>" class="form-control" required>
+								<b>Centro</b><input type="text" name="centro" value="<?php if(isset($_GET["array"])){echo $array["centro"];}else{echo $datos[0]["centro"];} ?>" class="form-control" required>
 								</br>
-								<b>Departamento</b><input type="text" name="departamento" value="<?php if(isset($_GET["array"])){echo $array["departamento"];} ?>" class="form-control" required>
+								<b>Departamento</b><input type="text" name="departamento" value="<?php if(isset($_GET["array"])){echo $array["departamento"];}else{echo $datos[0]["departamento"];} ?>" class="form-control" required>
 								</br>
 								<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
 									<b>Enviar</b></button>

@@ -113,13 +113,17 @@
 									$nombre = $_GET["nombre"];
 									$tipo = $_GET["tipo"];
 									echo '<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="login2">';
-									echo '<b>Introduce nueva fecha:</b><input type="date" id="datepicker" name="fca" class="form-control" placeholder="Fecha limite de entrega" required>';
+									echo '<b>Nombre del Evento</b><input type="text" class="form-control" name="nEv" value="'.$nombre.'" readonly>';
 									echo '<br>';
-									echo '<input type="hidden" name="nEv" value="'.$nombre.'">';
-									echo '<input type="hidden" name="tEv" value="'.$tipo.'">';
-									echo '<button class="btn btn-sm btn-default btn-block" type="submit">
+									echo '<b>Tipo de Evento</b><input type="text" class="form-control" name="tEv" value="'.$tipo.'" readonly>';
+									echo '<br>';
+									echo '<b>Introduce nueva fecha</b><input type="date" id="datepicker" name="fca" class="form-control" placeholder="Fecha limite de entrega" required>';
+									echo '<br>';
+									echo '<button class="btn btn-sm btn-default btn-block" style="background:#E8E8E8" type="submit">
 											Enviar</button>';
-									echo '</form>';									
+									echo '</form>';	
+									echo '<br>';
+									echo '<a href="../../controllers/CoordinadorController.php?action=eventos" class="btn btn-sm btn-default btn-block" style="background:#E8E8E8">Cancelar</a>';
 								}
 							?>
                         </div>

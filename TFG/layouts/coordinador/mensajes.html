@@ -134,8 +134,6 @@
 							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/CoordinadorController.php" method="POST">
 							<b>Asunto</b><input type="text" name="asunto" class="form-control" required>
 							</br>
-							<b>Remitente</b><input type="text" name="remitente" class="form-control" required>
-							</br>
 							<b>Destinatario</b><input type="text" name="destinatario" class="form-control" required>
 							</br>
 							<b>Mensaje</b><textarea name="mensaje" rows="10" cols="40" class="form-control" required></textarea>
@@ -165,16 +163,11 @@
 	
 	<script>
 		function validar(f){
-			remitente = f.remitente.value;
 			destinatario = f.destinatario.value;
 			
-			comprobarRemitente = isValidEmail(remitente);
 			comprobarDestinatario = isValidEmail(destinatario);
 			
-			if(comprobarRemitente == false){
-				alert("|INFO| El formato del correo del remitente no es correcto. Debe ser una dirección de correo válida");
-				return false;
-			}else if(comprobarDestinatario == false){
+			if(comprobarDestinatario == false){
 				alert("|INFO| El formato del correo del destinatario no es correcto. Debe ser una dirección de correo válida");
 				return false;
 			}else{

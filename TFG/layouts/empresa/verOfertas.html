@@ -10,6 +10,8 @@
     <meta name="author" content="">
 
     <title>Empresa-Practicas ESEI</title>
+	
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
     <!-- Bootstrap Core CSS -->
     <link href="../../layouts/coordinador/css/bootstrap.min.css" rel="stylesheet">
@@ -82,42 +84,49 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Mensajes a usuarios
+                           Ofertas publicadas
                         </h1>
                     </div>
                 </div>
                 <!-- /.row -->
 				
-				<?php
-					if(isset($_GET["msg"])){
-						$msg = $_GET["msg"];
-						echo "<b style='color:red'>$msg</b>";
-						echo "</br>";
-						echo "</br>";
-					}
-				?>	
-							
-                <div class="row">
+				<div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Mensaje a un usuario</b></h3>
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Listado de ofertas de la empresa</b></h3>
                             </div> 
-							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/EmpresaController.php" method="POST">
-							<b>Asunto</b><input type="text" name="asunto" class="form-control" required>
-							</br>
-							<b>Destinatario</b><input type="text" name="destinatario" class="form-control" required>
-							</br>
-							<b>Mensaje</b><textarea name="mensaje" rows="10" cols="40" class="form-control" required></textarea>
-							</br>						
-							<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
-								<b>Enviar</b></button>
-							</form>
+							<?php
+								if(isset($_GET["datos"])){
+									$datos = json_decode($_GET["datos"],true);
+									echo "<table class='table'>";
+									echo "<thead>";
+									echo "<tr>";
+										echo "<th>Practica</th>";
+										echo "<th>Fecha de inicio</th>";
+										echo "<th>Fecha de finalizaci&oacute;n</th>";
+									echo "</tr>";
+									echo "</thead>";
+									echo "<tbody>";
+									foreach($datos as $practica){
+										echo "<tr>";
+											echo "<td>".$practica["titulo"]."</td>";
+											echo "<td>".$practica["inicio"]."</td>";
+											echo "<td>".$practica["fin"]."</td>";
+										echo "</tr>";
+									}
+									echo "</tbody>";
+									echo "</table>";
+									echo "<br>";
+									echo "<a href='gestionOfertas.php' style='background:#E8E8E8' class='btn btn-sm btn-default btn-block'><b>Volver al panel de gesti&oacute;n de ofertas</b></a>";
+								}
+							?>
+							
                         </div>
                     </div>
                 </div>
-                <!-- /.row -->				
-
+                <!-- /.row -->
+				
 													
             </div>
             <!-- /.container-fluid -->
@@ -134,24 +143,6 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 	
-	<script>
-		function validar(f){
-			destinatario = f.destinatario.value;
-			
-			comprobarDestinatario = isValidEmail(destinatario);
-			
-			if(comprobarDestinatario == false){
-				alert("|INFO| El formato del correo del destinatario no es correcto. Debe ser una dirección de correo válida");
-				return false;
-			}else{
-				return true;
-			}
-		}
-		
-		function isValidEmail(mail){
-			return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(mail);
-		}		
-	</script>
 
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>

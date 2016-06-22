@@ -31,12 +31,16 @@ if(isset($_GET["action"])){
 		getEmpresa();
 	}
 	
+	if($action == "verOfertas"){
+		verOfertas();
+	}
+	
 }else{
 	if(isset($_POST["login"])&isset($_POST["clave1"])&isset($_POST["nombre"])&isset($_POST["email"])&isset($_POST["telefono"])&isset($_POST["centro"])&isset($_POST["localidad"])&isset($_POST["provincia"])&isset($_POST["calle"])&isset($_POST["nTutor"])&isset($_POST["cTutor"])&isset($_POST["tareas"])){
 		modificarPerfil();
 	}
 	
-	if(isset($_POST["asunto"])&isset($_POST["remitente"])&isset($_POST["destinatario"])&isset($_POST["mensaje"])){
+	if(isset($_POST["asunto"])&isset($_POST["destinatario"])&isset($_POST["mensaje"])){
 		enviarMensaje();
 	}
 	
@@ -47,6 +51,19 @@ if(isset($_GET["action"])){
 	if(isset($_POST["enviarInforme"])){
 		enviarInforme();
 	}
+}
+
+function verOfertas(){
+	session_start();
+	$loginEmpresa = $_SESSION["name"];
+	$e = new Empresa();
+	$empresa = $e->select($loginEmpresa);
+	$id = $empresa[0]["idEmpresa"];
+	
+	$p = new Practicas();
+	$practicas = $p->selectByEmpresa($id);
+	$datos = json_encode($practicas);
+	header("Location: ../views/empresa/verOfertas.php?datos=$datos");
 }
 
 function getEmpresa(){
@@ -253,9 +270,15 @@ function enviarMensaje(){
 	$correo->Charset='UTF-8';
 
 	$asunto = $_POST["asunto"];
-	$remitente = $_POST["remitente"];
 	$destinatario = $_POST["destinatario"];
 	$mensaje = $_POST["mensaje"];
+	
+	session_start();
+	$login = $_SESSION["name"];
+	$e = new Empresa();
+	$empresa = $e->select($login);
+	
+	$remitente = $empresa[0]["email"];
 	
 	//Decimos quien envía el correo
 	$correo->SetFrom("tfgpracticasesei@gmail.com","");

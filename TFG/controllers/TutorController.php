@@ -33,7 +33,7 @@ if(isset($_GET["action"])){
 			modificarPerfil();
 		}
 	
-	if(isset($_POST["asunto"])&isset($_POST["remitente"])&isset($_POST["destinatariox"])&isset($_POST["mensaje"])){
+	if(isset($_POST["asunto"])&isset($_POST["destinatariox"])&isset($_POST["mensaje"])){
 		enviarMensaje();
 	}
 	
@@ -236,9 +236,14 @@ function enviarMensaje(){
 	$correo->Charset='UTF-8';
 
 	$asunto = $_POST["asunto"];
-	$remitente = $_POST["remitente"];
 	$destinatario = $_POST["destinatariox"];
 	$mensaje = $_POST["mensaje"];
+	
+	session_start();
+	$login = $_SESSION["name"];
+	$t = new Tutor();
+	$tutor = $t->select($login);
+	$remitente = $tutor[0]["email"];
 	
 	//Decimos quien envía el correo
 	$correo->SetFrom("tfgpracticasesei@gmail.com","");

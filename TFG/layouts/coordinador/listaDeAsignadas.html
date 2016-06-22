@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Empresa-Practicas ESEI</title>
+    <title>Coordinador-Practicas ESEI</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../../layouts/coordinador/css/bootstrap.min.css" rel="stylesheet">
@@ -40,7 +40,7 @@
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="../../views/empresa/principal.php">Empresa</a>
+                <a class="navbar-brand" href="../../views/coordinador/principal.php">Coordinador</a>
             </div>
             <!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav">
@@ -48,26 +48,32 @@
                             <a href="mensajes.php"><i class="fa fa-fw fa-envelope"></i>Mensajes</a>
                         </li>
                         <li>
-                            <a href="../../controllers/EmpresaController.php?action=verPerfil"><i class="fa fa-fw fa-gear"></i>Perfil</a>
+                            <a href="../../controllers/CoordinadorController.php?action=perfil"><i class="fa fa-fw fa-gear"></i>Perfil</a>
                         </li>
                         <li>
-                            <a href="../../controllers/EmpresaController.php?action=logout"><i class="fa fa-fw fa-power-off"></i>Log Out</a>
+                            <a href="../../controllers/CoordinadorController.php?action=logout"><i class="fa fa-fw fa-power-off"></i>Log Out</a>
                         </li>
 			</ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
-                        <a href="../../views/empresa/principal.php"><i class="fa fa-fw fa-dashboard"></i>Home</a>
+                        <a href="../../views/coordinador/principal.php"><i class="fa fa-fw fa-dashboard"></i>Home</a>
                     </li>
                     <li>
-                        <a href="../../controllers/EmpresaController.php?action=asignaciones"><i class="fa fa-fw fa-edit"></i>Consultar Asignaciones</a>
+                        <a href="../../controllers/CoordinadorController.php?action=eventos"><i class="fa fa-fw fa-table"></i>Gestion del Calendario</a>
                     </li>
                     <li>
-                        <a href="../../controllers/EmpresaController.php?action=formularios"><i class="fa fa-fw fa-edit"></i>Gestion de Formularios</a>
+                        <a href="usuarios.php"><i class="fa fa-fw fa-edit"></i>Administraci&oacute;n de Usuarios</a>
                     </li>
                     <li>
-                        <a href="gestionOfertas.php"><i class="fa fa-fw fa-edit"></i>Gestion de Ofertas</a>
+                        <a href="../../controllers/CoordinadorController.php?action=ofertasPracticas"><i class="fa fa-fw fa-edit"></i>Gesti&oacute;n de las ofertas de empresas</a>
+                    </li>
+                    <li>
+                        <a href="../../controllers/CoordinadorController.php?action=verSolicitantes"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n Estudiante-Empresa</a>
+                    </li>
+                    <li>
+                        <a href="../../controllers/CoordinadorController.php?action=listarPracticasAsignadas"><i class="fa fa-fw fa-edit"></i>Asignaci&oacute;n de Tutores</a>
                     </li>
                 </ul>
             </div>
@@ -82,7 +88,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Mensajes a usuarios
+                           Pr&aacute;cticas asignadas a estudiantes
                         </h1>
                     </div>
                 </div>
@@ -91,34 +97,59 @@
 				<?php
 					if(isset($_GET["msg"])){
 						$msg = $_GET["msg"];
-						echo "<b style='color:red'>$msg</b>";
-						echo "</br>";
-						echo "</br>";
+						echo "<b style='color:red'>".$msg."</b>";
 					}
-				?>	
-							
-                <div class="row">
+				?>
+				<br>
+				
+				<div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Mensaje a un usuario</b></h3>
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Listado de pr&aacute;cticas asignadas a estudiantes</b></h3>
                             </div> 
-							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/EmpresaController.php" method="POST">
-							<b>Asunto</b><input type="text" name="asunto" class="form-control" required>
-							</br>
-							<b>Destinatario</b><input type="text" name="destinatario" class="form-control" required>
-							</br>
-							<b>Mensaje</b><textarea name="mensaje" rows="10" cols="40" class="form-control" required></textarea>
-							</br>						
-							<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
-								<b>Enviar</b></button>
-							</form>
-                        </div>
+								
+							<div>
+							<table class="table">
+							<thead>
+								<tr>
+									<th>Nombre Practica</th>
+									<th>Estudiante Asignado</th>
+									<th></th>
+								<tr>
+							</thead>
+							<tbody>
+							<?php
+								if(isset($_GET["datos"])){
+									$practicas = json_decode($_GET["datos"],true);
+									$i=0;
+									foreach($practicas as $practica){
+										$idP = $practica["Practicas_idPracticas"];
+										echo "<tr>";
+										echo "<td>".$practica["nombrePractica"]."</td>";
+										echo "<td>".$practica["nombreEstudiante"]."</td>";
+										echo "<td>";
+										echo "<a href='../../controllers/CoordinadorController.php?action=eliminarPanelEE&id=".$idP."' class='btn btn-sm btn-default'>Eliminar</a>";
+										echo "</td>";
+										echo "</tr>";
+										$i++;
+									}
+								}
+							?>
+							</tbody>
+							</table>
+							</div>
+							<br>
+								
+							<a href="../../controllers/CoordinadorController.php?action=verSolicitantes" style="background:#E8E8E8" class="btn btn-sm btn-default btn-block"><b>Volver al panel de asignaciones</b></a>
+				
+						</div>
                     </div>
                 </div>
                 <!-- /.row -->				
-
-													
+				
+				
+											
             </div>
             <!-- /.container-fluid -->
 
@@ -134,24 +165,6 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 	
-	<script>
-		function validar(f){
-			destinatario = f.destinatario.value;
-			
-			comprobarDestinatario = isValidEmail(destinatario);
-			
-			if(comprobarDestinatario == false){
-				alert("|INFO| El formato del correo del destinatario no es correcto. Debe ser una dirección de correo válida");
-				return false;
-			}else{
-				return true;
-			}
-		}
-		
-		function isValidEmail(mail){
-			return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(mail);
-		}		
-	</script>
 
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>

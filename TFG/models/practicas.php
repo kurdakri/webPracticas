@@ -82,6 +82,23 @@ class Practicas{
         }
 	}
 	
+	public function selectByEmpresa($id){
+		$this->con = $this->db->getConnection();
+		$sql = 'select * from practicas where Empresa_idEmpresa="' . $id . '" order by inicio';
+        $result = mysql_query($sql, $this->con);
+        if (mysql_num_rows($result) == 0) {
+			$this->db->endConnection();
+            return false;
+        } else {
+            $toret = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                $toret[] = $row;
+            }
+			$this->db->endConnection();
+            return $toret;
+        }
+	}
+	
 	public function insert(){
         $this->con = $this->db->getConnection();
 		$sql = 'insert into practicas(titulo,descripcion,Empresa_idEmpresa,periodo,titulacion,inicio,fin,horario,pformativo) values("' . $this->titulo . '","' .$this->descripcion. '","' .$this->fkidEmpresa. '","' .$this->periodo. '","' .$this->titulacion. '","' .$this->inicio. '","' .$this->fin. '","' .$this->horario. '","' .$this->pformativo. '")';

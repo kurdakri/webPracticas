@@ -117,6 +117,7 @@
 										$fin = $_GET["fin"];
 										$descripcion = $_GET["descripcion"];
 										$pformativo = $_GET["pformativo"];
+										$horario = $_GET["horario"];
 									}
 									
 									echo "<b>Titulo:</b>".$titulo;
@@ -130,6 +131,8 @@
 									echo "<b>Inicio:</b>".$inicio;
 									echo "<br>";
 									echo "<b>Fin:</b>".$fin;
+									echo "<br>";
+									echo "<b>Horario:</b>".$horario;
 									echo "<br>";
 									echo "<b>Descripcion:</b>".$descripcion;
 									echo "<br>";
@@ -154,34 +157,51 @@
 						echo '<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/CoordinadorController.php" method="POST" id="'.$id.'">';
 						echo '<input type="hidden" name="tit" value="'.$titulo.'">';
 						echo '</br>';
-						echo 'Descripci&oacute;n:<textarea name="des" rows="10" cols="40" class="form-control" required></textarea>';
+						echo 'Descripci&oacute;n:<textarea name="des" rows="10" cols="40" class="form-control" required>'.$descripcion.'</textarea>';
 						echo '</br>';
 						echo "<input type='hidden' name='nEm' value='".$_GET["nombreEmpresa"]."' required/>";
 						echo '</br>';
 						echo 'Per&iacute;odo:';
 						echo '<select class="form-control" name="per" form="'.$id.'">';
-						echo '<option value="primero">Primer cuatrimestre</option>';
-						echo '<option value="segundo">Segundo cuatrimestre</option>';
+						if($periodo == "primero"){
+							echo '<option value="primero" selected="selected">Primer cuatrimestre</option>';
+							echo '<option value="segundo">Segundo cuatrimestre</option>';						
+						}else{
+							echo '<option value="primero">Primer cuatrimestre</option>';
+							echo '<option value="segundo" selected="selected">Segundo cuatrimestre</option>';					
+						}
 						echo '</select>';
 						echo '</br>';
 						echo 'Titulaci&oacute;n:';
 						echo '<select class="form-control" name="tcn" form="'.$id.'">';
-						echo '<option value="grado">Grado</option>';
-						echo '<option value="master">M&aacute;ster</option>';
-						echo '<option value="indiferente">Indiferente</option>';
+						if($titulacion =="grado"){
+							echo '<option value="grado" selected="selected">Grado</option>';
+							echo '<option value="master">M&aacute;ster</option>';
+							echo '<option value="indiferente">Indiferente</option>';						
+						}else if($titulacion == "master"){
+							echo '<option value="grado">Grado</option>';
+							echo '<option value="master" selected="selected">M&aacute;ster</option>';
+							echo '<option value="indiferente">Indiferente</option>';						
+						}else{
+							echo '<option value="grado" >Grado</option>';
+							echo '<option value="master">M&aacute;ster</option>';
+							echo '<option value="indiferente" selected="selected">Indiferente</option>';							
+						}
 						echo '</select>';
 						echo '</br>';
-						echo 'Fecha de inicio:<input type="text" id="datepicker" name="ini" class="form-control" required>';
+						echo 'Fecha de inicio:<input type="text" id="datepicker" name="ini" value="'.$inicio.'" class="form-control" required>';
 						echo '</br>';
-						echo 'Fecha de finalizaci&oacute;n:<input type="text" id="datepicker2" name="fn" class="form-control" required>';
+						echo 'Fecha de finalizaci&oacute;n:<input type="text" id="datepicker2" name="fn" value="'.$fin.'" class="form-control" required>';
 						echo '</br>';
-						echo 'Horario de trabajo durante la pr&aacute;ctica:<input type="text" name="hor" class="form-control" placeholder="ej: 10:00-17:00" required>';
+						echo 'Horario de trabajo durante la pr&aacute;ctica:<input type="text" name="hor" class="form-control" value="'.$horario.'" required>';
 						echo '</br>';
-						echo 'Proyecto formativo:<textarea name="pfor" rows="10" cols="40" class="form-control" required></textarea>';
+						echo 'Proyecto formativo:<textarea name="pfor" rows="10" cols="40" class="form-control" required>'.$pformativo.'</textarea>';
 						echo '</br>';							
-						echo '<button class="btn btn-sm btn-default btn-block" type="submit">';
-						echo 'Enviar</button>';
-						echo '</form>';					
+						echo '<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">';
+						echo '<b>Enviar</b></button>';
+						echo '</form>';
+						echo '<br>';
+						echo '<a href="../../controllers/CoordinadorController.php?action=ofertasPracticas" style="background:#E8E8E8" class="btn btn-sm btn-default btn-block"><b>Cancelar</b></a>';
 					}
 				?>
 				

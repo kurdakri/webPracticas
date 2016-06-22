@@ -84,7 +84,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Enviar oferta de pr&aacute;cticas
+                           Gesti&oacute;n de ofertas de pr&aacute;cticas
                         </h1>
                     </div>
                 </div>
@@ -104,12 +104,28 @@
 						header("Location: ../../controllers/EmpresaController.php?action=getEmpresa");					
 					}
 				?>	
+				
+				<div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Ofertas publicadas</b></h3>
+                            </div> 
+							<a href="../../controllers/EmpresaController.php?action=verOfertas"><b>Ver ofertas publicadas de la empresa<b></a>
 							
+							
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+				
+				
+				<br>			
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Formulario</b></h3>
+                                <h3 class="panel-title"><i class="fa fa-fw"></i><b>Enviar una oferta</b></h3>
                             </div> 
 							<form class="form-signin" onsubmit="return validar(this)" name="f1" action="../../controllers/EmpresaController.php" method="POST" id="login">
 							<b>Titulo</b><input type="text" name="titulo" class="form-control" required>

@@ -166,23 +166,23 @@
 								<h3 class="panel-title"><i class="fa fa-fw"></i><b>Formulario de Modificaci&oacute;n</b></h3>
 							</div>
 							<form class="form-signin" name="f1" onsubmit="return checkPass(this)" action="../../controllers/EstudianteController.php" method="POST" id="login">
-								<b>Login</b><input type="text" name="login" class="form-control" required autofocus>
+								<b>Login</b><input type="text" name="login" value="<?php if(isset($_GET["array"])){}else{echo $datos[0]["login"];} ?>" class="form-control" required autofocus>
 								</br>
 								<b>Password</b><input type="password" name="clave1" class="form-control" required>
 								</br>
 								<b>Repite Password</b><input type="password" name="clave2" class="form-control" required>
 								</br>
-								<b>Nombre</b><input type="text" name="nombre" value="<?php if(isset($_GET["array"])){echo $array["nombre"];} ?>" class="form-control" required>
+								<b>Nombre</b><input type="text" name="nombre" value="<?php if(isset($_GET["array"])){echo $array["nombre"];}else{echo $datos[0]["nombre"];} ?>" class="form-control" required>
 								</br>
-								<b>Apellidos</b><input type="text" name="apellidos" value="<?php if(isset($_GET["array"])){echo $array["apellidos"];} ?>" class="form-control" required>
+								<b>Apellidos</b><input type="text" name="apellidos" value="<?php if(isset($_GET["array"])){echo $array["apellidos"];}else{echo $datos[0]["apellidos"];} ?>" class="form-control" required>
 								</br>
-								<b>Correo electr&oacute;nico</b><input type="text" name="email" value="<?php if(isset($_GET["array"])){echo $array["email"];} ?>" class="form-control" required>
+								<b>Correo electr&oacute;nico</b><input type="text" name="email" value="<?php if(isset($_GET["array"])){echo $array["email"];}else{echo $datos[0]["email"];} ?>" class="form-control" required>
 								</br>
-								<b>Telefono</b><input type="text" name="telefono" value="<?php if(isset($_GET["array"])){echo $array["telefono"];} ?>" class="form-control" required>
+								<b>Telefono</b><input type="text" name="telefono" value="<?php if(isset($_GET["array"])){echo $array["telefono"];}else{echo $datos[0]["telefono"];} ?>" class="form-control" required>
 								</br>
-								<b>DNI</b><input type="text" name="dni" value="<?php if(isset($_GET["array"])){echo $array["dni"];} ?>" class="form-control" required>
+								<b>DNI</b><input type="text" name="dni" value="<?php if(isset($_GET["array"])){echo $array["dni"];}else{echo $datos[0]["dni"];} ?>" class="form-control" required>
 								</br>
-								<b>Fecha de Nacimiento</b><input type="text" id="datepicker" name="fNac" value="<?php if(isset($_GET["array"])){echo $array["fNac"];} ?>" class="form-control" required>
+								<b>Fecha de Nacimiento</b><input type="text" id="datepicker" name="fNac" value="<?php if(isset($_GET["array"])){echo $array["fNac"];}else{echo $datos[0]["fechaNac"];} ?>" class="form-control" required>
 								</br>
 								<input type="hidden" name="campus" value="Ourense" class="form-control" required>
 								<input type="hidden" name="facultad" value="ESEI" class="form-control" required>
@@ -193,13 +193,13 @@
 								<option value="Master">Master</option>
 								</select>
 								</br>
-								<b>Curso</b><input type="text" name="curso" placeholder="YYYY/YYYY" value="<?php if(isset($_GET["array"])){echo $array["curso"];} ?>" class="form-control" required>
+								<b>Curso</b><input type="text" name="curso" placeholder="YYYY/YYYY" value="<?php if(isset($_GET["array"])){echo $array["curso"];}else{echo $datos[0]["curso"];} ?>" class="form-control" required>
 								</br>
-								<b>Año de inicio de la titulaci&oacute;n</b><input type="text" name="aInicio" value="<?php if(isset($_GET["array"])){echo $array["aInicio"];} ?>" class="form-control" required>
+								<b>Año de inicio de la titulaci&oacute;n</b><input type="text" name="aInicio" value="<?php if(isset($_GET["array"])){echo $array["aInicio"];}else{echo $datos[0]["inicioTitulacion"];} ?>" class="form-control" required>
 								</br>
-								<b>Nota media del expediente acad&eacute;mico</b><input type="text" name="expA" value="<?php if(isset($_GET["array"])){echo $array["expA"];} ?>" class="form-control">
+								<b>Nota media del expediente acad&eacute;mico</b><input type="text" name="expA" value="<?php if(isset($_GET["array"])){echo $array["expA"];}else{echo $datos[0]["mediaExpediente"];} ?>" class="form-control">
 								</br>
-								<b>Año de pr&aacute;cticas anteriores(si se han hecho)</b><input type="text" name="pAntesYear" value="<?php if(isset($_GET["array"])){echo $array["pAntesYear"];} ?>" class="form-control">
+								<b>Año de pr&aacute;cticas anteriores(si se han hecho)</b><input type="text" name="pAntesYear" value="<?php if(isset($_GET["array"])){echo $array["pAntesYear"];}else{echo $datos[0]["pAntesYear"];} ?>" class="form-control">
 								</br>
 								<button style="background:#E8E8E8" class="btn btn-sm btn-default btn-block" type="submit">
 									<b>Enviar</b></button>
